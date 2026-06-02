@@ -34,12 +34,18 @@ export default function Login() {
     try {
       // DEV pakai vite proxy
       // PROD pakai vercel api
-      const API_URL = "/bapenda-api/pepakraja/wr/data";
+      const API_URL = import.meta.env.DEV
+        ? "/bapenda-api/penatausahaan-dev/api/pepakraja/wr/data"
+        : "/api/auth";
 
-      const headers = {
-        "Content-Type": "application/json",
-        token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
-      };
+      const headers = import.meta.env.DEV
+        ? {
+            "Content-Type": "application/json",
+            token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
+          }
+        : {
+            "Content-Type": "application/json",
+          };
 
       const response = await fetch(API_URL, {
         method: "POST",
