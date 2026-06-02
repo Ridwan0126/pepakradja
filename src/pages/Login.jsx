@@ -36,14 +36,10 @@ export default function Login() {
       // PROD pakai vercel api
       const API_URL = "/bapenda-api/pepakraja/wr/data";
 
-      const headers = import.meta.env.DEV
-        ? {
-            "Content-Type": "application/json",
-            token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
-          }
-        : {
-            "Content-Type": "application/json",
-          };
+      const headers = {
+        "Content-Type": "application/json",
+        token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
+      };
 
       const response = await fetch(API_URL, {
         method: "POST",
