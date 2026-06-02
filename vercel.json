@@ -7,6 +7,14 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    },
+    {
+      "source": "/bapenda-api/(.*)",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/$1"
+    },
+    {
+      "source": "/bapenda-sptrd/(.*)",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/$1"
     }
   ]
 }
