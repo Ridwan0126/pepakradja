@@ -20,6 +20,7 @@ import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import NotFound from "./pages/NotFound";
 import SPTRD from "./pages/SPTRD";
 import Profile from "./pages/Profile";
+import SetPassword from "./pages/SetPassword";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -54,6 +55,8 @@ function App() {
             <Route path="/sptrd" element={<SPTRD />} />
 
             <Route path="/profile" element={<Profile />} />
+
+            <Route path="/setpassword" element={<SetPassword />} />
 
             <Route
               path="/checkout"

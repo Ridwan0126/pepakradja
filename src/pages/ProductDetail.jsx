@@ -128,6 +128,8 @@ export default function ProductDetail() {
 
       dasarPengenaan: product?.dasar_pengenaan || "-",
       dasarPenetapan: product?.dasar_penetapan || "-",
+      pksawal: product?.pks_awal_kontrak,
+      pksakhir: product?.pks_akhir_kontrak,
 
       tarif: product?.tariftbl?.tarif || 0,
       satuan: product?.tariftbl?.satuan?.satuan || "-",
@@ -740,6 +742,16 @@ export default function ProductDetail() {
                   <p className="text-sm font-semibold text-red-700">
                     ⚠️ Obyek retribusi ini sedang digunakan/disewa dan tidak
                     dapat dibuatkan SPTRD.
+                  </p>
+                </div>
+                <div className="mt-3 p-3 rounded-xl bg-red-50 border border-red-200">
+                  <p className="text-sm font-semibold text-red-700">
+                    Sewa : {product.pks_awal_kontrak}
+                  </p>
+                </div>
+                <div className="mt-3 p-3 rounded-xl bg-red-50 border border-red-200">
+                  <p className="text-sm font-semibold text-red-700">
+                    Selesai : {product.pks_akhir_kontrak}
                   </p>
                 </div>
               </>

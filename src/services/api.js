@@ -1,15 +1,47 @@
 import axios from "axios";
 
-// API untuk Retribusi (Real API)
-const retributiAPI = axios.create({
-  baseURL: "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  timeout: 15000,
-});
+/* =========================================
+   RETRIBUSI API (FETCH)
+========================================= */
 
-// API lokal untuk Auth & Orders (Mock/Backend)
+const RETRIBUSI_BASE_URL = "/bapenda-obyek";
+
+const retributiFetch = async (endpoint, params = {}) => {
+  const queryString = new URLSearchParams(params).toString();
+
+  const url = `${RETRIBUSI_BASE_URL}${endpoint}${
+    queryString ? `?${queryString}` : ""
+  }`;
+
+  console.log("Retribusi Request:", url);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
+      Accept: "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+
+    console.error("Retribusi Error:", {
+      status: response.status,
+      statusText: response.statusText,
+      body: errorText,
+    });
+
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+
+  return await response.json();
+};
+
+/* =========================================
+   LOCAL API (AXIOS)
+========================================= */
+
 const localAPI = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
@@ -17,16 +49,16 @@ const localAPI = axios.create({
   },
 });
 
-// Add token to local API requests
 localAPI.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 
-// Handle local API responses
 localAPI.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -35,14 +67,17 @@ localAPI.interceptors.response.use(
       localStorage.removeItem("user");
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   },
 );
 
-// Retribusi API endpoints
+/* =========================================
+   RETRIBUSI ENDPOINTS
+========================================= */
+
 export const retributiAPI_Endpoints = {
-  // Get list of retribusi objects
-  getProducts: (page = 1, limit = 20, filters = {}) => {
+  getProducts: async (page = 1, limit = 20, filters = {}) => {
     const params = {
       limit,
       page,
@@ -50,86 +85,132 @@ export const retributiAPI_Endpoints = {
       sort_order: "desc",
     };
 
-    // Only add search if it has a value
-    if (filters.search && filters.search.trim()) {
+    if (filters.search?.trim()) {
       params.search = filters.search.trim();
     }
 
-    // Only add city if it has a value
-    if (filters.city && filters.city.trim()) {
+    if (filters.city?.trim()) {
       params.id_kota = filters.city;
     }
 
-    // Only add manager if it has a value
-    if (filters.manager && filters.manager.trim()) {
+    if (filters.manager?.trim()) {
       params.id_opd = filters.manager;
     }
 
-    // Only add service type if it has a value
-    if (filters.serviceType && filters.serviceType.trim()) {
-      // If serviceType contains a dot (like 01.01), extract just the gol_id (01)
-      const serviceId = filters.serviceType.includes(".")
+    if (filters.serviceType?.trim()) {
+      params.id_jenis_retribusi = filters.serviceType.includes(".")
         ? filters.serviceType.split(".")[0]
         : filters.serviceType;
-      params.id_jenis_retribusi = serviceId;
+    }
+    if (filters.is_laku !== undefined) {
+      params.is_laku = filters.is_laku;
     }
 
-    return retributiAPI.get("/penakbusiti/obyek-retribusi", { params });
+    const data = await retributiFetch("/pepakraja/obyek", params);
+
+    return {
+      data,
+    };
   },
 
-  // Get single retribusi object detail
-  getProduct: (id) => retributiAPI.get(`/penakbusiti/obyek-retribusi/${id}`),
+  getProduct: async (id) => {
+    const data = await retributiFetch(`/pepakraja/obyek/detail/${id}`);
+    console.log("detals", data);
 
-  // Get list of cities/kabupaten/kota
-  getCities: () => {
-    return retributiAPI.get("/penakbusiti/kota");
+    return {
+      data,
+    };
   },
 
-  // Get list of managers/OPD
-  getManagers: () => {
-    return retributiAPI.get("/penakbusiti/opd");
+  getCities: async () => {
+    const data = await retributiFetch("/penakbusiti/kota");
+
+    return {
+      data,
+    };
+  },
+
+  getManagers: async () => {
+    const data = await retributiFetch("/penakbusiti/opd");
+
+    return {
+      data,
+    };
   },
 };
 
-// Local Auth API endpoints
+/* =========================================
+   AUTH API
+========================================= */
+
 export const authAPI = {
   login: (credentials) => localAPI.post("/auth/login", credentials),
+
   register: (userData) => localAPI.post("/auth/register", userData),
+
   logout: () => localAPI.post("/auth/logout"),
 };
 
-// Local Product API endpoints (fallback)
+/* =========================================
+   PRODUCT API
+========================================= */
+
 export const productAPI = {
   getProducts: (page = 1, limit = 20, filters = {}) =>
     retributiAPI_Endpoints.getProducts(page, limit, filters),
+
   getProduct: (id) => retributiAPI_Endpoints.getProduct(id),
+
   createProduct: (data) => localAPI.post("/products", data),
-  updateProduct: (id, data) => localAPI.put(`/products/${id}`, data),
-  deleteProduct: (id) => localAPI.delete(`/products/${id}`),
+
+  updateProduct: (id, data) => localAPI.put(`/products/detail/${id}`, data),
+
+  deleteProduct: (id) => localAPI.delete(`/products/detail/${id}`),
 };
 
-// Order API endpoints
+/* =========================================
+   ORDER API
+========================================= */
+
 export const orderAPI = {
   getOrders: () => localAPI.get("/orders"),
+
   getOrder: (id) => localAPI.get(`/orders/${id}`),
+
   createOrder: (data) => localAPI.post("/orders", data),
+
   updateOrder: (id, data) => localAPI.put(`/orders/${id}`, data),
 };
 
-// User API endpoints
+/* =========================================
+   USER API
+========================================= */
+
 export const userAPI = {
   getProfile: () => localAPI.get("/users/profile"),
+
   updateProfile: (data) => localAPI.put("/users/profile", data),
+
   getUsers: (page = 1, limit = 20) =>
-    localAPI.get("/users", { params: { page, limit } }),
+    localAPI.get("/users", {
+      params: { page, limit },
+    }),
 };
 
-// Payment API endpoints
+/* =========================================
+   PAYMENT API
+========================================= */
+
 export const paymentAPI = {
   createPaymentIntent: (amount) =>
-    localAPI.post("/payments/create-intent", { amount }),
+    localAPI.post("/payments/create-intent", {
+      amount,
+    }),
+
   confirmPayment: (paymentIntentId) =>
-    localAPI.post("/payments/confirm", { paymentIntentId }),
+    localAPI.post("/payments/confirm", {
+      paymentIntentId,
+    }),
 };
 
-export { localAPI as default };
+export default localAPI;

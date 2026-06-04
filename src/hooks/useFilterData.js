@@ -1,4 +1,8 @@
-import { DUMMY_CITIES, DUMMY_MANAGERS, SERVICE_CATEGORIES } from '../constants/filterData'
+import {
+  DUMMY_CITIES,
+  DUMMY_MANAGERS,
+  SERVICE_CATEGORIES,
+} from "../constants/filterData";
 
 export const useFilterData = () => {
   return {
@@ -6,6 +10,7 @@ export const useFilterData = () => {
     managers: DUMMY_MANAGERS,
     services: SERVICE_CATEGORIES,
     loading: false,
-    error: null
-  }
-}
+    status: "all",
+    error: null,
+  };
+};

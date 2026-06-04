@@ -1,56 +1,134 @@
-import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function SplashScreen({ onFinish }) {
-  const [isVisible, setIsVisible] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false)
-      setTimeout(onFinish, 500)
-    }, 2500)
-
-    return () => clearTimeout(timer)
-  }, [onFinish])
-
-  if (!isVisible) return null
+  const [isVisible, setIsVisible] = useState(true);
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-green-600 via-green-500 to-teal-600 flex items-center justify-center z-50 animate-fade-in">
-      {/* Animated background blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-green-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-glow" />
-        <div className="absolute top-40 right-10 w-72 h-72 bg-teal-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-glow" />
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-glow" />
-      </div>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.8, ease: "easeInOut" },
+          }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "#050505",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            overflow: "hidden",
+          }}
+        >
+          {/* 1. ANIMATED AMBIENT LIGHT (Background Hidup) */}
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              width: "400px",
+              height: "400px",
+              background:
+                "radial-gradient(circle, rgba(255,180,0,0.15) 0%, transparent 70%)",
+              filter: "blur(60px)",
+            }}
+          />
 
-      {/* Main content */}
-      <div className="relative z-10 text-center">
-        {/* Logo container */}
-        <div className="mb-6 animate-scale-in">
-          <div className="w-24 h-24 mx-auto bg-white rounded-full flex items-center justify-center shadow-2xl animate-pulse-glow">
-            <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
-              PR
+          {/* 2. GLASS CARD (Mengacu pada gaya image_5a346c.png) */}
+          <motion.div
+            initial={{ scale: 0.9, y: 50, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15 }}
+            style={{
+              padding: "40px",
+              background: "rgba(20, 20, 25, 0.6)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              borderRadius: "32px",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "300px",
+              boxShadow: "0 30px 60px rgba(0,0,0,0.5)",
+            }}
+          >
+            {/* 3. FLOATING LOGO */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            >
+              <img
+                src="/images/logopepakraja.png"
+                alt="Logo"
+                style={{ width: "120px", height: "auto", marginBottom: "24px" }}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              style={{ textAlign: "center" }}
+            >
+              <h1
+                style={{
+                  color: "#fff",
+                  fontSize: "20px",
+                  fontWeight: "600",
+                  margin: "0 0 8px 0",
+                }}
+              >
+                PEPAK RAJA
+              </h1>
+              <p
+                style={{
+                  color: "rgba(255,255,255,0.4)",
+                  fontSize: "12px",
+                  marginBottom: "32px",
+                }}
+              >
+                Marketplace Retribusi & Pajak
+              </p>
+            </motion.div>
+
+            {/* 4. PROGRESS BAR DENGAN GLOW */}
+            <div
+              style={{
+                width: "100%",
+                height: "6px",
+                background: "rgba(255,255,255,0.1)",
+                borderRadius: "3px",
+                overflow: "hidden",
+              }}
+            >
+              <motion.div
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{
+                  duration: 2.5,
+                  ease: "easeInOut",
+                  onComplete: () => setIsVisible(false),
+                }}
+                onAnimationComplete={() => setTimeout(onFinish, 500)}
+                style={{
+                  height: "100%",
+                  background: "linear-gradient(90deg, #ffb400, #f59e0b)",
+                  boxShadow: "0 0 10px rgba(255,180,0,0.5)",
+                }}
+              />
             </div>
-          </div>
-        </div>
-
-        {/* Title */}
-        <h1 className="text-5xl font-bold text-white mb-2 animate-slide-in-down">
-          PEPAK RAJA
-        </h1>
-
-        {/* Subtitle */}
-        <p className="text-lg text-green-100 mb-8 animate-slide-in-up">
-          Marketplace Retribusi & Pajak
-        </p>
-
-        {/* Loading animation */}
-        <div className="flex gap-2 justify-center items-center">
-          <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
-          <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-          <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
-        </div>
-      </div>
-    </div>
-  )
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }

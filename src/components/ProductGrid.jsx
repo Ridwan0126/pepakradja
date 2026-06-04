@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { retributiAPI_Endpoints } from "../services/api";
 import SkeletonLoader from "./SkeletonLoader";
-import logoApp from "/images/logopepakraja.png"; // 🔥 ganti sesuai path logo kamu
+import logoApp from "/images/logopepakraja.png";
 
 export default function ProductGrid({ filters = {}, searchTerm = "" }) {
   const [products, setProducts] = useState([]);
@@ -12,7 +12,7 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
-  const [totalItems, setTotalItems] = useState(0);
+  const [totalItems, setTotalItems] = useState(500);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
@@ -34,27 +34,42 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
       if (filters.manager) filterParams.manager = filters.manager;
       if (filters.serviceType) filterParams.serviceType = filters.serviceType;
 
+      // 1. FORMAT PASSTHROUGH API SERVER:
+      if (filters.is_laku !== undefined && filters.is_laku !== "") {
+        filterParams.is_laku = filters.is_laku === true ? "true" : "false";
+      }
+
       const response = await retributiAPI_Endpoints.getProducts(
         page,
         itemsPerPage,
         filterParams,
       );
 
-      if (response.data.success) {
-        const newProducts =
-          response.data.data?.data || response.data.data || [];
+      console.log("FULL RESPONSE", response);
+      const payload = response.data;
+      let rawProducts = payload.data || [];
 
-        const updated = append ? [...products, ...newProducts] : newProducts;
+      // 2. CLIENT-SIDE EXTRA FILTERING (DOUBLE PROTECTION):
+      if (filters.is_laku !== undefined && filters.is_laku !== "") {
+        const targetStatus = filters.is_laku === true;
+        rawProducts = rawProducts.filter(
+          (product) => !!product.is_laku === targetStatus,
+        );
+      }
 
-        setProducts(updated);
+      const updated = append ? [...products, ...rawProducts] : rawProducts;
+      setProducts(updated);
 
-        const total = response.data.data.total || updated.length;
-        setTotalItems(total);
-
-        setHasMore(newProducts.length === itemsPerPage);
+      // Sesuaikan info pagination dan tombol load more
+      if (filters.is_laku !== undefined && filters.is_laku !== "") {
+        setTotalItems(rawProducts.length);
+        setHasMore(false); // Saring lokal mengunci halaman awal agar data presisi
+      } else {
+        setTotalItems(payload.total_row || 0);
+        setHasMore(updated.length < payload.total_row);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Gagal memuat produk sesuai filter:", err);
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -68,20 +83,27 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
   };
 
   const displayedCount = products.length;
+
+  // Perbaikan utama: Mendeklarasikan kembali variabel showLoadMore sebelum return JSX
   const showLoadMore = hasMore;
 
   return (
     <div className="w-full">
-      {/* INFO */}
+      {/* INFO PANEL */}
       <div className="flex justify-between items-center mb-6">
-        <p className="text-sm text-gray-600">
-          Menampilkan <b>{displayedCount}</b> dari <b>{totalItems}</b> produk
+        <p className="text-sm text-slate-500 font-medium">
+          Menampilkan{" "}
+          <span className="font-semibold text-slate-900">{displayedCount}</span>{" "}
+          dari{" "}
+          <span className="font-semibold text-slate-900">{totalItems}</span>{" "}
+          produk
         </p>
 
+        {/* SELECT BOX */}
         <select
           value={itemsPerPage}
           onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
-          className="px-3 py-2 border rounded-lg"
+          className="px-4 py-2 text-xs font-semibold border border-slate-200 rounded-full bg-white text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200 transition-all cursor-pointer"
         >
           <option value={20}>20</option>
           <option value={50}>50</option>
@@ -89,16 +111,16 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
         </select>
       </div>
 
-      {/* LOADING */}
+      {/* LOADING STATE */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {[...Array(10)].map((_, i) => (
-            <SkeletonLoader key={i} />
+            <SkeletonLoader key={i} className="rounded-[20px]" />
           ))}
         </div>
       ) : products.length > 0 ? (
         <>
-          {/* GRID */}
+          {/* PRODUCT GRID CONTAINER */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 items-stretch">
             {products.map((product, idx) => {
               const isFallback = !product.foto;
@@ -106,72 +128,87 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
               return (
                 <motion.div
                   key={product.id || idx}
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
+                  whileHover={{ y: -6 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 22,
+                    delay: idx * 0.01,
+                  }}
+                  className="h-full"
                 >
                   <Link
                     to={`/products/${product.id}`}
-                    className={`group flex flex-col h-full rounded-2xl overflow-hidden
-backdrop-blur border transition-all duration-300
-${
-  product.is_laku
-    ? "bg-gray-50 border-red-200"
-    : "bg-white/70 border-gray-200 hover:shadow-2xl hover:-translate-y-1"
-}`}
+                    className={`group flex flex-col h-full rounded-[20px] overflow-hidden border bg-white shadow-[0_4px_16px_rgba(0,0,0,0.02)] transition-all duration-300 ${
+                      product.is_laku
+                        ? "border-slate-100 hover:border-red-500 hover:shadow-xl hover:shadow-red-500/10"
+                        : "border-slate-100 hover:border-emerald-500 hover:shadow-xl hover:shadow-emerald-500/10"
+                    }`}
                   >
-                    {/* IMAGE */}
-                    <div className="relative h-44 bg-gray-100 flex items-center justify-center">
-                      {/* STATUS */}
+                    {/* AREA MEDIA FOTO */}
+                    <div className="relative h-44 bg-slate-100/80 flex items-center justify-center overflow-hidden border-b border-slate-100">
                       <div className="absolute top-3 left-3 z-10">
                         {product.is_laku ? (
-                          <span className="px-3 py-1 rounded-full bg-red-600 text-white text-xs font-semibold shadow-lg">
-                            Sudah Disewa
+                          <span className="px-2.5 py-1 rounded-full bg-red-500 text-white text-[9px] font-bold uppercase tracking-wider shadow-sm">
+                            Tersewa
                           </span>
                         ) : (
-                          <span className="px-3 py-1 rounded-full bg-green-600 text-white text-xs font-semibold shadow-lg">
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[9px] font-bold uppercase tracking-wider shadow-sm">
                             Tersedia
                           </span>
                         )}
                       </div>
+
                       <img
                         src={isFallback ? logoApp : product.foto}
                         alt={product.obyek_retribusi}
                         className={
                           isFallback
-                            ? "max-h-24 object-contain opacity-80"
-                            : "w-full h-full object-cover group-hover:scale-110"
+                            ? "max-h-20 object-contain opacity-40 transition-transform duration-500 ease-out group-hover:scale-105"
+                            : "w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                         }
-                        onError={(e) => (e.target.src = logoApp)}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = logoApp;
+                        }}
                       />
 
+                      {/* BLUR OVERLAY JIKA TERSEWA */}
                       {product.is_laku && (
-                        <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                          <span className="bg-red-600 text-white px-4 py-2 rounded-xl font-bold">
+                        <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] flex items-center justify-center">
+                          <span className="bg-red-500 text-white px-3 py-1.5 rounded-full text-[11px] font-extrabold shadow-md tracking-wide">
                             TERSEWA
                           </span>
                         </div>
                       )}
-
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                     </div>
 
-                    {/* CONTENT */}
-                    <div className="p-3 flex flex-col flex-1">
-                      <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 group-hover:text-blue-600">
+                    {/* DETAIL KONTEN */}
+                    <div className="p-4 flex flex-col flex-1 bg-white">
+                      <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1.5 block">
+                        {product.jenis?.jenis_retribusi || "Retribusi"}
+                      </span>
+
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors duration-200">
                         {product.obyek_retribusi}
                       </h3>
 
-                      <div className="flex items-start gap-1 mt-2">
-                        <MapPin className="w-4 h-4 text-gray-400" />
-                        <p className="text-xs text-gray-500 line-clamp-2">
-                          {product.alamat || product.kecamatan?.kecamatan}
+                      <div className="flex items-start gap-1 mt-3 flex-1">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <p className="text-[11px] text-slate-500 line-clamp-2 font-medium leading-relaxed">
+                          {product.alamat ||
+                            product.kecamatan?.kecamatan ||
+                            "-"}
                         </p>
                       </div>
 
-                      <div className="mt-3 border-t pt-2">
-                        <p className="text-xs text-gray-400">Tarif</p>
-                        <p className="text-blue-600 font-bold">
+                      <div className="mt-4 border-t border-slate-100 pt-3">
+                        <p className="text-[9px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">
+                          Tarif Sewa
+                        </p>
+                        <p className="text-slate-900 font-black text-sm sm:text-base group-hover:text-blue-600 transition-colors duration-200">
                           Rp{" "}
                           {parseInt(
                             product.tariftbl?.tarif || 0,
@@ -179,8 +216,10 @@ ${
                         </p>
                       </div>
 
-                      <div className="flex justify-between items-center mt-3 text-xs text-gray-500">
-                        <span className="truncate">{product.opd?.nama}</span>
+                      <div className="flex justify-between items-center mt-3 text-[10px] text-slate-400 border-t border-slate-50 pt-2 font-medium truncate tracking-wide">
+                        <span className="truncate">
+                          {product.opd?.nama || "-"}
+                        </span>
                       </div>
                     </div>
                   </Link>
@@ -189,15 +228,16 @@ ${
             })}
           </div>
 
-          {/* LOAD MORE */}
+          {/* TOMBOL LOAD MORE */}
           {showLoadMore && (
-            <div className="flex justify-center mt-10">
+            <div className="flex justify-center mt-12">
               <button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="px-8 py-3 rounded-2xl text-white font-semibold 
-                bg-gradient-to-r from-blue-600 to-indigo-600 
-                hover:shadow-xl transition-all"
+                className="px-10 py-3.5 rounded-full text-white font-semibold text-sm
+                bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700
+                shadow-[0_4px_12px_rgba(37,99,235,0.2)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.3)] 
+                hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
               >
                 {loadingMore ? "Memuat..." : "Tampilkan Lebih Banyak"}
               </button>
@@ -205,7 +245,7 @@ ${
           )}
         </>
       ) : (
-        <div className="text-center py-20 text-gray-500">
+        <div className="text-center py-20 text-slate-400 font-medium text-sm tracking-wide">
           Tidak ada produk ditemukan
         </div>
       )}

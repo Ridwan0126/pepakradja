@@ -79,7 +79,7 @@ export default function SPTRD() {
 
     try {
       const res = await fetch(
-        "/bapenda-sptrd/penakbusiti/obyek-retribusi?limit=50&page=1",
+        "/bapenda-sptrd/pepakraja/obyek?limit=50&page=1",
         {
           headers: {
             token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",

@@ -13,7 +13,7 @@ export default function Home() {
   const slides = [
     {
       badge: "Layanan Digital",
-      title: "PEPAKRAJA",
+      title: "PEPAK RADJA",
       description:
         "Platform digital untuk pengelolaan retribusi daerah yang modern dan terintegrasi.",
       cta: "Pelajari",
@@ -31,48 +31,69 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-50 relative overflow-hidden font-sans antialiased selection:bg-blue-500/20">
+      {/* Header Tetap Berada di Atas */}
       <Header />
 
-      {/* Carousel Slider - Added extra padding to account for floating navbar */}
-      <section className="pt-36 md:pt-40 px-4 pb-8">
+      {/* Ambiance Watermark Logo Background Tetap Tembus Pandang */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
+        <img
+          src="/images/logopepakraja.png"
+          alt=""
+          className="absolute left-[-250px] top-1/2 -translate-y-1/2 w-[850px] opacity-[0.06] select-none mix-blend-multiply filter blur-[2px]"
+        />
+      </div>
+
+      {/* Carousel Slider Section - iOS Clean Spacing */}
+      <section className="relative z-10 pt-32 md:pt-36 px-4 pb-6 bg-transparent">
         <div className="max-w-7xl mx-auto">
           <Carousel slides={slides} />
         </div>
       </section>
 
-      {/* Products Section with 2-Column Layout */}
-      <section className="py-8 md:py-10 px-4 bg-slate-50/50">
+      {/* Main Content Products Section */}
+      <section className="relative z-10 py-6 md:py-10 px-4 bg-transparent">
         <div className="max-w-7xl mx-auto">
-          {/* Section Title */}
-          <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 animate-slide-in-down">
+          {/* iOS Styled Section Header */}
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight mb-1 animate-slide-in-down">
               Jelajahi Produk & Layanan
             </h2>
             <p
-              className="text-sm md:text-base text-slate-500"
+              className="text-xs md:text-sm font-semibold text-slate-500 tracking-tight"
               style={{ animationDelay: "100ms" }}
             >
               Temukan semua kebutuhan pajak dan retribusi Anda di satu tempat
+              secara instan
             </p>
           </div>
 
-          {/* 2-Column Layout: Quick Services + Filter */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <QuickServices />
+          {/* DIUBAH: Menggunakan bg-slate-900/10 (kaca agak gelap) untuk pembeda kontras yang elegan */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-5 md:p-6 mb-10 bg-slate-900/10 border border-white/80 backdrop-blur-3xl backdrop-saturate-150 rounded-[28px] shadow-[0_12px_40px_rgba(15,23,42,0.04)] items-start overflow-visible relative z-30">
+            <div className="w-full">
+              <QuickServices />
+            </div>
 
-            <ProductFilter
-              onFilterChange={setFilters}
-              onSearch={setSearchTerm}
-            />
+            {/* overflow-visible agar popover dropdown filter melayang bebas ke atas grid produk */}
+            <div className="w-full overflow-visible">
+              <ProductFilter
+                onFilterChange={setFilters}
+                onSearch={setSearchTerm}
+              />
+            </div>
           </div>
 
-          {/* Product Grid - Full Width */}
-          <ProductGrid filters={filters} searchTerm={searchTerm} />
+          {/* Product Grid Area */}
+          <div className="relative z-10">
+            <ProductGrid filters={filters} searchTerm={searchTerm} />
+          </div>
         </div>
       </section>
 
-      <Footer />
+      {/* Footer Area */}
+      <div className="relative z-10 border-t border-gray-200/50 bg-white/40 backdrop-blur-md">
+        <Footer />
+      </div>
     </div>
   );
 }

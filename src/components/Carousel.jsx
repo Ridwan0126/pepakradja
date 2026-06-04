@@ -1,13 +1,35 @@
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Carousel({ slides = [] }) {
   const [current, setCurrent] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
+  const [direction, setDirection] = useState(0); // -1 untuk kiri, 1 untuk kanan
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+  const timerRef = useRef(null);
 
   const minSwipeDistance = 50;
+
+  // Variasi Animasi dengan transisi interpolation melengkung (Fluid Slider Motion)
+  const slideVariants = {
+    enter: (dir) => ({
+      x: dir > 0 ? "100%" : "-100%",
+      opacity: 0,
+      filter: "blur(4px)",
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+    },
+    exit: (dir) => ({
+      x: dir < 0 ? "100%" : "-100%",
+      opacity: 0,
+      filter: "blur(4px)",
+    }),
+  };
 
   const onTouchStart = (e) => {
     setTouchEnd(null);
@@ -20,13 +42,11 @@ export default function Carousel({ slides = [] }) {
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-
     const distance = touchStart - touchEnd;
 
     if (distance > minSwipeDistance) {
       next();
     }
-
     if (distance < -minSwipeDistance) {
       prev();
     }
@@ -35,19 +55,22 @@ export default function Carousel({ slides = [] }) {
   useEffect(() => {
     if (!autoplay || slides.length === 0) return;
 
-    const timer = setInterval(() => {
+    timerRef.current = setInterval(() => {
+      setDirection(1);
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 6000);
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timerRef.current);
   }, [autoplay, slides.length]);
 
   const prev = () => {
+    setDirection(-1);
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
     setAutoplay(false);
   };
 
   const next = () => {
+    setDirection(1);
     setCurrent((prev) => (prev + 1) % slides.length);
     setAutoplay(false);
   };
@@ -56,98 +79,122 @@ export default function Carousel({ slides = [] }) {
 
   return (
     <div
-      className="relative w-full aspect-[4/1] overflow-hidden rounded-3xl shadow-xl group "
+      className="relative w-full aspect-[4/1] bg-white/70 backdrop-blur-xl rounded-[32px] border border-white/40 shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden group font-sans antialiased"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {/* Slides */}
-      <div
-        className="flex h-full transition-transform duration-700 ease-in-out"
-        style={{
-          transform: `translateX(-${current * 100}%)`,
-        }}
-      >
-        {slides.map((slide, idx) => (
-          <div key={idx} className="relative min-w-full h-full">
-            {/* Background Image */}
-            <img
-              src={slide.backgroundImage}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+      {/* Slider Core Container */}
+      <div className="relative w-full h-full overflow-hidden">
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          <motion.div
+            key={current}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", mass: 0.6, stiffness: 140, damping: 24 },
+              opacity: { duration: 0.35, ease: "easeInOut" },
+              filter: { duration: 0.2 },
+            }}
+            className="absolute inset-0 w-full h-full flex items-center justify-between"
+          >
+            {/* CONTAINER GAMBAR UTAMA */}
+            <div className="absolute inset-0 w-full h-full z-0">
+              <img
+                src={slides[current].backgroundImage}
+                alt=""
+                className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.02]"
+              />
+              {/* GRADASI HALUS */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/50 to-transparent pointer-events-none" />
+            </div>
 
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-black/30" />
-
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent" />
-
-            {/* Content */}
-            <div className="relative z-10 h-full flex items-center justify-between px-6 md:px-12">
-              {/* LEFT CONTENT */}
-              <div className="max-w-xl">
-                <div className="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full mb-4 border border-white/20">
-                  <p className="text-sm font-semibold text-white">
-                    {slide.badge}
+            {/* CONTENT OVERLAY CONTAINER */}
+            <div className="relative z-10 w-full h-full flex items-center justify-between px-12 md:px-24 select-none">
+              {/* SISI KIRI: Detail Teks Informasi Bertema SF Pro Apple */}
+              <div className="max-w-md lg:max-w-xl flex flex-col items-start text-left">
+                {/* Badge Pills Kapsul */}
+                <div className="inline-block px-3 py-1 bg-white/80 border border-white rounded-full mb-3 shadow-sm">
+                  <p className="text-[10px] font-bold tracking-widest uppercase text-blue-600 font-sans">
+                    {slides[current].badge}
                   </p>
                 </div>
 
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                  {slide.title}
+                {/* Judul Utama Pro-Display */}
+                <h2 className="text-xl md:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-2 font-sans">
+                  {slides[current].title}
                 </h2>
 
-                <p className="text-white/90 text-lg mb-6">
-                  {slide.description}
+                {/* Deskripsi */}
+                <p className="text-slate-600 text-[11px] md:text-sm font-medium leading-relaxed line-clamp-2 mb-5 font-sans tracking-wide">
+                  {slides[current].description}
                 </p>
 
-                <button className="px-8 py-3 bg-white text-indigo-600 font-bold rounded-xl hover:scale-105 transition-all">
-                  {slide.cta}
+                {/* Tombol Aksi Khas App Store */}
+                <button className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-xs font-bold rounded-full shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-200 font-sans tracking-wide">
+                  {slides[current].cta || "Mulai Jelajah"}
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* RIGHT IMAGE */}
-              <div className="hidden md:flex items-center justify-center">
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="h-64 lg:h-80 object-contain drop-shadow-2xl animate-float"
+              {/* SISI KANAN: Visual Ilustrasi Produk Terapung */}
+              <div className="hidden md:flex items-center justify-center h-full py-6 z-10 pr-4">
+                <motion.img
+                  key={`carousel-img-${current}`}
+                  initial={{ scale: 0.85, opacity: 0, x: 20 }}
+                  animate={{ scale: 1, opacity: 1, x: 0 }}
+                  exit={{ scale: 0.85, opacity: 0, x: -20 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 160,
+                    damping: 20,
+                    delay: 0.08,
+                  }}
+                  src={slides[current].image}
+                  alt={slides[current].title}
+                  className="h-full max-h-[160px] lg:max-h-[200px] object-contain drop-shadow-[0_12px_32px_rgba(0,0,0,0.12)]"
                 />
               </div>
             </div>
-          </div>
-        ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Navigation Buttons */}
+      {/* Navigasi Kiri (iOS Light Blur System) */}
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/40 transition-smooth backdrop-blur opacity-0 group-hover:opacity-100"
+        className="absolute left-5 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-white/70 hover:bg-white text-slate-800 active:scale-90 border border-white/50 shadow-md backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-250"
       >
-        <ChevronLeft className="w-6 h-6 text-white" />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/40 transition-smooth backdrop-blur opacity-0 group-hover:opacity-100"
-      >
-        <ChevronRight className="w-6 h-6 text-white" />
+        <ChevronLeft className="w-4 h-4 stroke-[3]" />
       </button>
 
-      {/* Dots Indicator */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      {/* Navigasi Kanan (iOS Light Blur System) */}
+      <button
+        onClick={next}
+        className="absolute right-5 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-white/70 hover:bg-white text-slate-800 active:scale-90 border border-white/50 shadow-md backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-250"
+      >
+        <ChevronRight className="w-4 h-4 stroke-[3]" />
+      </button>
+
+      {/* Indikator Halaman (iOS Pill Style Dots) */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 px-3 py-1.5 rounded-full bg-gray-900/10 backdrop-blur-md border border-white/20">
         {slides.map((_, idx) => (
           <button
             key={idx}
             onClick={() => {
+              setDirection(idx > current ? 1 : -1);
               setCurrent(idx);
               setAutoplay(false);
             }}
-            className={`transition-all duration-300 rounded-full ${
+            className={`transition-all duration-300 rounded-full h-1.5 ${
               idx === current
-                ? "w-8 h-2 bg-white"
-                : "w-2 h-2 bg-white/50 hover:bg-white/80"
+                ? "w-5 bg-slate-800 shadow-sm"
+                : "w-1.5 bg-slate-500/40 hover:bg-slate-600"
             }`}
-            aria-label={`Go to slide ${idx + 1}`}
+            aria-label={`Buka slide ${idx + 1}`}
           />
         ))}
       </div>

@@ -35,7 +35,7 @@ export default function Login() {
       // DEV pakai vite proxy
       // PROD pakai vercel api
       const API_URL = import.meta.env.DEV
-        ? "/bapenda-api/penatausahaan-dev/api/pepakraja/wr/data"
+        ? "/bapenda-api/pepakraja/wr/data"
         : "/api/auth";
 
       const headers = import.meta.env.DEV
