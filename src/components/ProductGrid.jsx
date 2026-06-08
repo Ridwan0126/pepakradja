@@ -22,54 +22,114 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
     fetchProducts(1, false);
   }, [JSON.stringify(filters), searchTerm, itemsPerPage]);
 
+  // const fetchProducts = async (page, append = false) => {
+  //   try {
+  //     append ? setLoadingMore(true) : setLoading(true);
+
+  //     const filterParams = {
+  //       search: searchTerm || filters.search || "",
+  //       limit: itemsPerPage, // Menambahkan limit berdasarkan state
+  //     };
+  //     // Pastikan filterParams bersih
+  //     if (filters.city) filterParams.city = String(filters.city);
+  //     if (filters.manager) filterParams.manager = String(filters.manager);
+
+  //     // KIRIM ID LENGKAP:
+  //     // Jika Anda memilih "02.21", ini akan mengirim "02.21" bukan "02"
+  //     if (filters.serviceType) {
+  //       filterParams.id_jenis_retribusi = filters.serviceType;
+  //     }
+
+  //     const response = await retributiAPI_Endpoints.getProducts(
+  //       page,
+  //       itemsPerPage,
+  //       filterParams,
+  //     );
+  //     const payload = response.data || response;
+  //     let rawProducts = payload.data || payload.products || [];
+  //     console.log("Contoh 1 produk pertama dari API:", rawProducts[0]);
+  //     if (filters.serviceType) {
+  //       rawProducts = rawProducts.filter((product) => {
+  //         // Log ini membantu Anda melihat ID apa yang dibandingkan
+  //         // console.log("Cek:", product.jenis?.id, "vs", filters.serviceType);
+  //         return String(product.jenis?.id) === String(filters.serviceType);
+  //       });
+  //     }
+
+  //     // Filter status
+  //     if (filters.is_laku !== undefined && filters.is_laku !== "") {
+  //       const targetStatus = filters.is_laku === true;
+  //       rawProducts = rawProducts.filter(
+  //         (product) => Boolean(product.is_laku) === targetStatus,
+  //       );
+  //     }
+
+  //     const updated = append ? [...products, ...rawProducts] : rawProducts;
+  //     setProducts(updated);
+
+  //     setTotalItems(payload.total_row || payload.total || rawProducts.length);
+  //     setHasMore(updated.length < (payload.total_row || 0));
+  //   } catch (err) {
+  //     console.error(err);
+  //     setProducts(append ? products : []);
+  //   } finally {
+  //     setLoading(false);
+  //     setLoadingMore(false);
+  //   }
+  // };
+
   const fetchProducts = async (page, append = false) => {
     try {
       append ? setLoadingMore(true) : setLoading(true);
 
       const filterParams = {
         search: searchTerm || filters.search || "",
+        limit: 500, // Ambil batch besar agar filter client-side punya banyak bahan
       };
 
-      if (filters.city) filterParams.city = filters.city;
-      if (filters.manager) filterParams.manager = filters.manager;
-      if (filters.serviceType) filterParams.serviceType = filters.serviceType;
-
-      // 1. FORMAT PASSTHROUGH API SERVER:
-      if (filters.is_laku !== undefined && filters.is_laku !== "") {
-        filterParams.is_laku = filters.is_laku === true ? "true" : "false";
-      }
+      if (filters.city) filterParams.city = String(filters.city);
+      if (filters.manager) filterParams.manager = String(filters.manager);
+      if (filters.serviceType)
+        filterParams.id_jenis_retribusi = filters.serviceType;
 
       const response = await retributiAPI_Endpoints.getProducts(
         page,
-        itemsPerPage,
+        20,
         filterParams,
       );
+      const payload = response.data || response;
+      let rawProducts = payload.data || payload.products || [];
 
-      console.log("FULL RESPONSE", response);
-      const payload = response.data;
-      let rawProducts = payload.data || [];
+      // Filter Manual
+      if (filters.serviceType) {
+        rawProducts = rawProducts.filter(
+          (product) =>
+            String(product.jenis?.id).trim() ===
+            String(filters.serviceType).trim(),
+        );
+      }
 
-      // 2. CLIENT-SIDE EXTRA FILTERING (DOUBLE PROTECTION):
       if (filters.is_laku !== undefined && filters.is_laku !== "") {
         const targetStatus = filters.is_laku === true;
         rawProducts = rawProducts.filter(
-          (product) => !!product.is_laku === targetStatus,
+          (product) => Boolean(product.is_laku) === targetStatus,
         );
+      }
+
+      // LOGIKA REKURSI OTOMATIS:
+      // Jika data hasil filter < 20 dan masih ada halaman berikutnya, ambil lagi!
+      if (rawProducts.length < 20 && payload.current_page < payload.last_page) {
+        // Panggil kembali fungsi ini untuk halaman berikutnya
+        return fetchProducts(page + 1, append, rawProducts);
       }
 
       const updated = append ? [...products, ...rawProducts] : rawProducts;
       setProducts(updated);
 
-      // Sesuaikan info pagination dan tombol load more
-      if (filters.is_laku !== undefined && filters.is_laku !== "") {
-        setTotalItems(rawProducts.length);
-        setHasMore(false); // Saring lokal mengunci halaman awal agar data presisi
-      } else {
-        setTotalItems(payload.total_row || 0);
-        setHasMore(updated.length < payload.total_row);
-      }
+      setTotalItems(payload.total_row || 0);
+      setHasMore(updated.length < (payload.total_row || 0));
     } catch (err) {
-      console.error("Gagal memuat produk sesuai filter:", err);
+      console.error(err);
     } finally {
       setLoading(false);
       setLoadingMore(false);

@@ -407,13 +407,13 @@ export default function Header() {
           title: "SKRD",
           path: "/skrd",
         },
-        {
-          title: "SPTRD",
-          path: "/sptrd",
-        },
+        // {
+        //   title: "SPTRD",
+        //   path: "/sptrd",
+        // },
         {
           title: "Pembayaran",
-          path: "/pembayaran",
+          path: "/Transactions",
         },
       ],
     },

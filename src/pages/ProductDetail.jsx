@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Star,
   MapPin,
@@ -10,8 +10,10 @@ import {
   Download,
   Printer,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCartStore } from "../stores/cartStore";
@@ -19,6 +21,7 @@ import { retributiAPI_Endpoints } from "../services/api";
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate(); // Inisialisasi navigate
   const { addItem } = useCartStore();
 
   const [product, setProduct] = useState(null);
@@ -468,42 +471,85 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen pt-[80px]">
+    <div className="bg-[#F2F2F7] min-h-screen pt-[80px]">
       <Header />
 
-      {/* HERO FULL IMAGE */}
       <div className="w-full pt-[30px]">
-        {" "}
-        {/* offset header */}
-        {/* MAIN IMAGE */}
-        <div className="relative w-full h-[420px] md:h-[500px] overflow-hidden">
-          <img
-            src={finalImages[activeImage] || finalImages[0]}
-            className="w-full h-full object-cover"
-          />
+        <div className="relative w-full h-[420px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg group">
+          {/* 1. Tombol Back (Lebih Kontras dengan Shadow) */}
+          <button
+            onClick={() => navigate("/")}
+            className="absolute top-4 left-4 z-30 flex items-center gap-1.5 py-2 px-4 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-all active:scale-95 shadow-xl border border-white/10"
+          >
+            <ChevronLeft className="w-5 h-5" />
+            <span className="font-medium text-sm">Kembali</span>
+          </button>
 
-          {/* overlay gradient biar elegan */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          {/* 2. Tombol Navigasi Kiri */}
+          {activeImage > 0 && (
+            <button
+              onClick={() => setActiveImage((prev) => prev - 1)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/40 hover:bg-black/50 text-white rounded-full backdrop-blur-md transition-all active:scale-90 shadow-2xl"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          )}
 
-          {/* OPTIONAL: judul tipis di bawah (kalau mau) */}
-          <div className="absolute bottom-6 left-6 text-white">
-            <h1 className="text-2xl md:text-3xl font-bold">
+          {/* 3. Tombol Navigasi Kanan */}
+          {activeImage < finalImages.length - 1 && (
+            <button
+              onClick={() => setActiveImage((prev) => prev + 1)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/40 hover:bg-black/50 text-white rounded-full backdrop-blur-md transition-all active:scale-90 shadow-2xl"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          )}
+
+          {/* Image Container */}
+          <AnimatePresence initial={false} mode="wait">
+            <motion.img
+              key={activeImage}
+              src={finalImages[activeImage]}
+              initial={{ opacity: 0, scale: 1.02 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              onDragEnd={(e, { offset }) => {
+                if (offset.x < -100)
+                  setActiveImage((prev) =>
+                    Math.min(prev + 1, finalImages.length - 1),
+                  );
+                if (offset.x > 100)
+                  setActiveImage((prev) => Math.max(prev - 1, 0));
+              }}
+              className="w-full h-full object-cover cursor-grab active:cursor-grabbing"
+            />
+          </AnimatePresence>
+
+          {/* Judul */}
+          <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
               {product.obyek_retribusi}
             </h1>
           </div>
         </div>
+
         {/* THUMBNAILS */}
-        <div className="max-w-7xl mx-auto px-4 mt-4 flex gap-3">
+        <div className="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">
           {finalImages.map((img, index) => (
-            <div
+            <button
               key={index}
               onClick={() => setActiveImage(index)}
-              className={`cursor-pointer w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                activeImage === index ? "border-green-500" : "border-gray-200"
+              className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                activeImage === index
+                  ? "border-blue-500 scale-105 shadow-md"
+                  : "border-transparent opacity-60 hover:opacity-100"
               }`}
             >
               <img src={img} className="w-full h-full object-cover" />
-            </div>
+            </button>
           ))}
         </div>
       </div>

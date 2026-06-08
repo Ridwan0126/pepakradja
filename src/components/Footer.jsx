@@ -43,13 +43,31 @@ export default function Footer() {
                   <div className="absolute inset-0 bg-cyan-500/30 blur-xl rounded-full group-hover:scale-125 transition-all duration-500" />
 
                   <img
+                    src="/images/logo-jateng-official.png"
+                    alt="PEPAK RAJA"
+                    className="relative w-16 h-16 object-contain group-hover:scale-110 transition-all duration-500"
+                  />
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-cyan-500/30 blur-xl rounded-full group-hover:scale-125 transition-all duration-500" />
+
+                  <img
+                    src="/images/logo-bapenda.png"
+                    alt="PEPAK RAJA"
+                    className="relative w-32 h-20 object-contain group-hover:scale-110 transition-all duration-500"
+                  />
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-cyan-500/30 blur-xl rounded-full group-hover:scale-125 transition-all duration-500" />
+
+                  <img
                     src="/images/logopepakraja.png"
                     alt="PEPAK RAJA"
                     className="relative w-16 h-16 object-contain group-hover:scale-110 transition-all duration-500"
                   />
                 </div>
 
-                <div>
+                {/* <div>
                   <h2 className="font-black text-2xl bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                     PEPAK RADJA
                   </h2>
@@ -57,7 +75,7 @@ export default function Footer() {
                   <p className="text-slate-400 text-sm">
                     Marketplace Retribusi Daerah
                   </p>
-                </div>
+                </div> */}
               </Link>
 
               <p className="text-slate-400 leading-relaxed mb-6 max-w-md">

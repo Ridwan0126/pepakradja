@@ -4,9 +4,8 @@ import { useFilterData } from "../hooks/useFilterData";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProductFilter({ onFilterChange, onSearch }) {
-  const [activeTab, setActiveTab] = useState("obyek");
+  const [activeTab, setActiveTab] = useState("obyek"); // State filter lokal di dalam komponen sebelum tombol "Terapkan Filter" diklik
 
-  // State filter lokal di dalam komponen sebelum tombol "Terapkan Filter" diklik
   const [filters, setFilters] = useState({
     search: "",
     city: "",
@@ -17,12 +16,10 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
   });
 
   const [showMobileFilter, setShowMobileFilter] = useState(false);
-  const { cities, managers, services, loading } = useFilterData();
+  const { cities, managers, services, loading } = useFilterData(); // State untuk melacak dropdown mana yang sedang terbuka (Desktop)
 
-  // State untuk melacak dropdown mana yang sedang terbuka (Desktop)
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null); // Ref untuk mendeteksi klik di luar komponen dropdown
 
-  // Ref untuk mendeteksi klik di luar komponen dropdown
   const filterRef = useRef(null);
 
   useEffect(() => {
@@ -38,9 +35,8 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value, limit: 500 }));
     setOpenDropdown(null);
-  };
+  }; // Memastikan data filter dikirim dengan benar ke induk pembungkus (ProductGrid) saat tombol diklik
 
-  // Memastikan data filter dikirim dengan benar ke induk pembungkus (ProductGrid) saat tombol diklik
   const handleApplyFilter = () => {
     onFilterChange?.(filters);
     setShowMobileFilter(false);
@@ -63,46 +59,41 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
   const tabs = [
     { id: "obyek", label: "Obyek", color: "emerald" },
     { id: "bukti", label: "Bukti Bayar", color: "amber" },
-  ];
+  ]; // Opsi status murni menggunakan Boolean (true/false) dan string kosong ("")
 
-  // Opsi status murni menggunakan Boolean (true/false) dan string kosong ("")
   const statusOptions = [
     { value: "", name: "Keseluruhan" },
     { value: true, name: "Tersewa" },
     { value: false, name: "Belum Tersewa" },
-  ];
+  ]; // DIPERBAIKI: Pengecekan tipe data yang aman terhadap boolean murni (true / false)
 
-  // DIPERBAIKI: Pengecekan tipe data yang aman terhadap boolean murni (true / false)
   const getSelectedLabel = (key, list, placeholder) => {
-    const selectedValue = filters[key];
+    const selectedValue = filters[key]; // Jika nilainya murni string kosong, undefined, atau null, kembalikan placeholder
 
-    // Jika nilainya murni string kosong, undefined, atau null, kembalikan placeholder
     if (
       selectedValue === "" ||
       selectedValue === undefined ||
       selectedValue === null
     ) {
       return placeholder;
-    }
+    } // Melakukan pencarian dengan konversi String yang aman untuk membandingkan ID atau Value objek API
 
-    // Melakukan pencarian dengan konversi String yang aman untuk membandingkan ID atau Value objek API
     const found = list.find((item) => {
       const itemVal = item.value !== undefined ? item.value : item.id;
       return String(itemVal) === String(selectedValue);
     });
 
     return found ? found.name : placeholder;
-  };
+  }; // Gaya scrollbar kustom transparan ala iOS agar tidak merusak rounded container kaca
 
-  // Gaya scrollbar kustom transparan ala iOS agar tidak merusak rounded container kaca
   const glassScrollbarClass = `
-    scrollbar-thin 
-    [&::-webkit-scrollbar]:w-1.5
-    [&::-webkit-scrollbar-track]:bg-transparent
-    [&::-webkit-scrollbar-thumb]:bg-slate-400/25
-    [&::-webkit-scrollbar-thumb]:rounded-full
-    hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
-  `;
+scrollbar-thin 
+[&::-webkit-scrollbar]:w-1.5
+[&::-webkit-scrollbar-track]:bg-transparent
+[&::-webkit-scrollbar-thumb]:bg-slate-400/25
+[&::-webkit-scrollbar-thumb]:rounded-full
+hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
+`;
 
   const FilterContent = () => (
     <div className="space-y-4" ref={filterRef}>
@@ -113,6 +104,7 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
           <label className="flex items-center text-xs font-black text-slate-700 tracking-tight mb-2 uppercase">
             Lokasi ({cities.length})
           </label>
+
           <button
             type="button"
             disabled={loading || cities.length === 0}
@@ -122,8 +114,9 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-50"
           >
             <span className="truncate text-left pr-2">
-              {getSelectedLabel("city", cities, "Pilih Lokasi")}
+              {getSelectedLabel("city", cities, "Pilih Lokasi")} 
             </span>
+
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "city" ? "rotate-180" : ""}`}
             />
@@ -144,6 +137,7 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
                 >
                   Pilih Lokasi
                 </button>
+
                 {cities.map((city) => (
                   <button
                     key={city.id}
@@ -157,12 +151,12 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
             )}
           </AnimatePresence>
         </div>
-
         {/* Dropdown 2: Pengelola */}
         <div className="relative z-40">
           <label className="flex items-center text-xs font-black text-slate-700 tracking-tight mb-2 uppercase">
             Pengelola ({managers.length})
           </label>
+
           <button
             type="button"
             disabled={loading || managers.length === 0}
@@ -172,8 +166,9 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-50"
           >
             <span className="truncate text-left pr-2">
-              {getSelectedLabel("manager", managers, "Pilih Pengelola")}
+              {getSelectedLabel("manager", managers, "Pilih Pengelola")} 
             </span>
+
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "manager" ? "rotate-180" : ""}`}
             />
@@ -194,6 +189,7 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
                 >
                   Pilih Pengelola
                 </button>
+
                 {managers.map((manager) => (
                   <button
                     key={manager.id}
@@ -213,6 +209,7 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
           <label className="flex items-center text-xs font-black text-slate-700 tracking-tight mb-2 uppercase">
             Jenis Layanan ({services.length})
           </label>
+
           <button
             type="button"
             disabled={services.length === 0}
@@ -226,6 +223,7 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
             <span className="truncate text-left pr-2">
               {getSelectedLabel("serviceType", services, "Pilih Jenis Layanan")}
             </span>
+
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "serviceType" ? "rotate-180" : ""}`}
             />
@@ -246,13 +244,18 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
                 >
                   Pilih Jenis Layanan
                 </button>
+
                 {services.map((service) => (
                   <button
                     key={service.id}
                     onClick={() =>
                       handleFilterChange("serviceType", service.id)
-                    }
-                    className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors whitespace-normal break-words leading-normal ${String(filters.serviceType) === String(service.id) ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
+                    } // Kirim langsung (string)
+                    className={`... ${
+                      filters.serviceType === service.id // Bandingkan string dengan string
+                        ? "bg-white text-blue-600 shadow-sm"
+                        : "text-slate-800 hover:bg-white/50"
+                    }`}
                   >
                     {service.name}
                   </button>
@@ -261,12 +264,12 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
             )}
           </AnimatePresence>
         </div>
-
         {/* Dropdown 4: Status (is_laku) */}
         <div className="relative z-20">
           <label className="flex items-center text-xs font-black text-slate-700 tracking-tight mb-2 uppercase">
             Status
           </label>
+
           <button
             type="button"
             onClick={() =>
@@ -276,10 +279,12 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
           >
             <span className="truncate text-left pr-2">
               {/* DIPERBAIKI: Pengecekan tipe data murni agar 'false' (Belum Tersewa) tampil dengan benar */}
+
               {filters.is_laku === ""
                 ? "Keseluruhan"
                 : getSelectedLabel("is_laku", statusOptions, "Keseluruhan")}
             </span>
+
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "is_laku" ? "rotate-180" : ""}`}
             />
@@ -308,7 +313,6 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
           </AnimatePresence>
         </div>
       </div>
-
       {/* Buttons */}
       <div className="grid grid-cols-2 gap-3.5 pt-2 relative z-10">
         <button
@@ -317,6 +321,7 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
         >
           Reset
         </button>
+
         <button
           onClick={handleApplyFilter}
           className="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md shadow-blue-500/10 hover:shadow-lg transition-all text-sm"
@@ -332,24 +337,23 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
       {/* Desktop/Tablet Filter Panel */}
       <div
         className="
-          hidden lg:block
-          bg-white/30
-          backdrop-blur-2xl
-          backdrop-saturate-150
-          rounded-3xl
-          border border-white/50
-          shadow-[0_8px_32px_rgba(0,0,0,0.02)]
-          overflow-visible
-          w-full
-          relative
-          z-40
-        "
+hidden lg:block
+bg-white/30
+backdrop-blur-2xl
+backdrop-saturate-150
+rounded-3xl
+border border-white/50
+shadow-[0_8px_32px_rgba(0,0,0,0.02)]
+overflow-visible
+w-full
+relative
+z-40
+"
       >
         <div className="p-5">
           <FilterContent />
         </div>
       </div>
-
       {/* Mobile/SM Filter Button */}
       <div className="lg:hidden mb-4 relative z-40">
         <button
@@ -360,7 +364,6 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
           Filter Pencarian
         </button>
       </div>
-
       {/* Mobile Filter Sheet Overlay */}
       {showMobileFilter && (
         <div className="lg:hidden fixed inset-0 z-50 overflow-y-auto flex flex-col justify-end">
@@ -399,11 +402,10 @@ export default function ProductFilter({ onFilterChange, onSearch }) {
                 </button>
               ))}
             </div>
-
             <FilterContent />
           </div>
         </div>
-      )}
+      )}{" "}
     </>
   );
 }

@@ -69,8 +69,8 @@ export default function Home() {
           </div>
 
           {/* DIUBAH: Menggunakan bg-slate-900/10 (kaca agak gelap) untuk pembeda kontras yang elegan */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-5 md:p-6 mb-10 bg-slate-900/10 border border-white/80 backdrop-blur-3xl backdrop-saturate-150 rounded-[28px] shadow-[0_12px_40px_rgba(15,23,42,0.04)] items-start overflow-visible relative z-30">
-            <div className="w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 p-5 md:p-6 mb-10 bg-slate-900/10 border border-white/80 backdrop-blur-3xl backdrop-saturate-150 rounded-[28px] shadow-[0_12px_40px_rgba(15,23,42,0.04)] items-start overflow-visible relative z-30">
+            <div className="w-full ">
               <QuickServices />
             </div>
 

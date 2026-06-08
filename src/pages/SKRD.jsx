@@ -11,33 +11,22 @@ import Swal from "sweetalert2";
 export default function SKRD() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  // Tambahkan di dalam komponen SKRD
+  const [dataList, setDataList] = useState([]); // List hasil pencarian
+  const [selectedItem, setSelectedItem] = useState(null); // Item yang sedang dibuka detailnya
+  const [filter, setFilter] = useState("semua"); // "semua", "bayar", "belum"
 
+  const filteredData = dataList.filter((item) => {
+    if (filter === "bayar") return item.is_bayar;
+    if (filter === "belum") return !item.is_bayar;
+    return true;
+  });
   const [searchForm, setSearchForm] = useState({
-    id_obyek: "",
     tahun: new Date().getFullYear(),
     bulan: new Date().getMonth() + 1,
   });
 
   const [formData, setFormData] = useState({});
-
-  // DATA SEMENTARA OBYEK
-  const obyekList = [
-    {
-      id: "09.00.00.00.0.01464.02",
-      nama: "Sewa Tanah dan Bangunan - Type 120",
-      id_wr: 3314,
-    },
-    {
-      id: "09.00.00.00.0.01465.02",
-      nama: "Sewa Tanah dan Bangunan - Type 90",
-      id_wr: 3314,
-    },
-    {
-      id: "09.00.00.00.0.01466.02",
-      nama: "Sewa Tanah dan Bangunan - Type 70",
-      id_wr: 3314,
-    },
-  ];
 
   // SESSION LOGIN
   const session =
@@ -93,26 +82,14 @@ export default function SKRD() {
 
   // API
   const handleSearchAPI = async () => {
-    const { id_obyek, tahun, bulan } = searchForm;
-
-    if (!id_obyek) {
-      Swal.fire(
-        "Pilih Obyek",
-        "Silakan pilih obyek retribusi terlebih dahulu",
-        "warning",
-      );
-      return;
-    }
-
-    const selectedObyek = obyekList.find((item) => item.id === id_obyek);
-
-    const id_wr = selectedObyek?.id_wr || 3314;
+    const { tahun, bulan } = searchForm;
+    const id_wr = session?.user?.id_wr || 3314;
 
     setLoading(true);
-
     try {
+      // GANTI URL DI BAWAH INI DENGAN URL API YANG SESUAI
       const res = await fetch(
-        `/bapenda-api/pepakraja/skrd?id_wr=${id_wr}&id_obyek=${id_obyek}&tahun=${tahun}&bulan=${bulan}`,
+        `/bapenda-api/pepakraja/skrd?id_wr=${id_wr}&tahun=${tahun}&bulan=${bulan}`,
         {
           method: "GET",
           headers: {
@@ -124,68 +101,15 @@ export default function SKRD() {
 
       const result = await res.json();
 
-      if (result.code !== "00" || !result.data || result.data.length === 0) {
+      if (result.code === "00" && result.data) {
+        setDataList(result.data);
+      } else {
         Swal.fire("Tidak ditemukan", "Data SKRD tidak ditemukan", "warning");
-        return;
+        setDataList([]);
       }
-
-      const d = result.data[0];
-
-      const pejabat = d.json_pejabat ? JSON.parse(d.json_pejabat) : {};
-
-      setFormData({
-        nomor: d.no_penetapan || "-",
-        nomorGrms: d.no_penetapan_grms || "-",
-        tanggal: formatDate(d.tanggal),
-
-        nama: d.wr?.nama || d.nama_wr || "-",
-        alamat: d.wr?.alamat || d.alamat_wr || "-",
-        nik: d.wr?.nik_npwp || "-",
-        telepon: d.wr?.telepon || "-",
-        npwrd: d.wr?.npwrd || "-",
-
-        obyek: d.nama_obyek || d.obyek?.obyek_retribusi || "-",
-
-        lokasi: d.alamat_obyek || d.obyek?.alamat || "-",
-
-        satuan: d.obyek?.satuan?.deskripsi || d.obyek?.satuan?.satuan || "-",
-
-        jenis: d.obyek?.tariftbl?.penerimaan || "Jasa",
-
-        tarif: d.tarif || 0,
-
-        masa: `${formatDate(d.masa_dari)} - ${formatDate(d.masa_sampai)}`,
-
-        volume: d.volume || 0,
-
-        volumeFull: `${d.volume || 0} ${d.obyek?.satuan?.deskripsi || ""}`,
-
-        total: d.ketetapan || 0,
-
-        jatuhTempo: formatDate(d.jatuh_tempo),
-
-        kepala: pejabat.nama_kepala || "KEPALA UPPD",
-
-        nip: pejabat.nip_kepala || "-",
-
-        kota: pejabat.kota || "KUDUS",
-
-        jabatan: pejabat.jabatan_kepala || "KEPALA UPPD",
-
-        namaOpd: d.opd?.nama || "BADAN PENGELOLA PENDAPATAN DAERAH",
-
-        namaUppd: d.uppd?.nama || "-",
-
-        alamatUppd: d.uppd?.alamat || "-",
-
-        qr: d.qrcode_link || `SKRD-${d.no_penetapan}`,
-      });
-
-      setShowPreviewModal(true);
     } catch (error) {
       console.error(error);
-
-      Swal.fire("Error", "Gagal mengambil data SKRD", "error");
+      Swal.fire("Error", "Gagal mengambil data dari server", "error");
     } finally {
       setLoading(false);
     }
@@ -195,6 +119,47 @@ export default function SKRD() {
   // const handlePrint = () => {
   //   window.print();
   // };
+  // Tambahkan fungsi ini
+  const openDetail = (item) => {
+    const pejabat = item.json_pejabat ? JSON.parse(item.json_pejabat) : {};
+
+    setFormData({
+      nomor: item.no_penetapan || "-",
+      nomorGrms: item.no_penetapan_grms || "-",
+      tanggal: item.tanggal ? formatDate(item.tanggal) : "-",
+
+      // Field Wajib Retribusi
+      nama: item.wr?.nama || item.nama_wr || "-",
+      alamat: item.wr?.alamat || item.alamat_wr || "-",
+      nik: item.wr?.nik_npwp || "-",
+
+      // Field Obyek
+      obyek: item.nama_obyek || item.obyek?.obyek_retribusi || "-",
+      lokasi: item.alamat_obyek || item.obyek?.alamat || "-",
+      satuan:
+        item.obyek?.satuan?.deskripsi || item.obyek?.satuan?.satuan || "-",
+      jenis: item.obyek?.tariftbl?.penerimaan || "Jasa",
+
+      // Field Keuangan
+      total: item.ketetapan || 0,
+      jatuhTempo: item.jatuh_tempo ? formatDate(item.jatuh_tempo) : "-",
+      masa:
+        item.masa_dari && item.masa_sampai
+          ? `${formatDate(item.masa_dari)} - ${formatDate(item.masa_sampai)}`
+          : "-",
+      volumeFull: `${item.volume || 0} ${item.obyek?.satuan?.deskripsi || ""}`,
+
+      // Pejabat
+      kepala: pejabat.nama_kepala || "KEPALA UPPD",
+      nip: pejabat.nip_kepala || "-",
+      kota: pejabat.kota || "KUDUS",
+      jabatan: pejabat.jabatan_kepala || "KEPALA UPPD",
+      namaOpd: item.opd?.nama || "BADAN PENGELOLA PENDAPATAN DAERAH",
+      namaUppd: item.uppd?.nama || "-",
+      qr: item.qrcode_link || `SKRD-${item.no_penetapan}`,
+    });
+    setShowPreviewModal(true);
+  };
 
   const handlePrint = () => {
     const printContent = document.getElementById("skrd-document").outerHTML;
@@ -627,7 +592,7 @@ export default function SKRD() {
           </h1>
 
           <div className="grid md:grid-cols-4 gap-4">
-            <select
+            {/* <select
               className="input-modern"
               value={searchForm.id_obyek}
               onChange={(e) =>
@@ -644,7 +609,7 @@ export default function SKRD() {
                   {item.nama}
                 </option>
               ))}
-            </select>
+            </select> */}
 
             <select
               className="input-modern"
@@ -688,16 +653,54 @@ export default function SKRD() {
             </button>
           </div>
         </div>
-        <Link to="/sptrd">
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-6">
-            <h3 className="font-bold text-blue-700">Belum memiliki SKRD?</h3>
+        <div className="flex gap-2 mb-4 mt-4 rounded-3xl">
+          {["semua", "bayar", "belum"].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-4 py-2 rounded-lg ${filter === f ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
+        </div>
 
-            <p className="text-sm text-gray-600 mt-2">
-              Buat SPTRD terlebih dahulu dan pilih obyek retribusi yang akan
-              diajukan ke OPD terkait.
-            </p>
-          </div>
-        </Link>
+        {/* List Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          {filteredData.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col gap-4"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-bold text-gray-900 text-lg">
+                    {item.no_penetapan}
+                  </h3>
+                  <p className="text-sm text-gray-500 font-medium mt-1">
+                    {item.nama_wr || item.wr?.nama}
+                  </p>
+                </div>
+                <span
+                  className={`px-3 py-1.5 text-[11px] font-bold uppercase rounded-full ${
+                    item.is_bayar
+                      ? "bg-emerald-50 text-emerald-600"
+                      : "bg-rose-50 text-rose-600"
+                  }`}
+                >
+                  {item.is_bayar ? "Lunas" : "Belum Bayar"}
+                </span>
+              </div>
+
+              <button
+                onClick={() => openDetail(item)}
+                className="w-full py-3 bg-gray-100 hover:bg-black text-gray-900 hover:text-white rounded-2xl font-semibold text-sm transition-all duration-300"
+              >
+                Buka Detail
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* MODAL */}

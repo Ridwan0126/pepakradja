@@ -53,20 +53,20 @@ export default function QuickServices() {
       status: "active",
       link: "/transactions",
     },
-    {
-      id: 3,
-      icon: Receipt,
-      title: "SPTRD",
-      count: "Tersedia",
-      color: "from-pink-500 to-rose-500",
-      status: "active",
-      link: "/sptrd",
-      requireLogin: true,
-    },
+    // {
+    //   id: 3,
+    //   icon: Receipt,
+    //   title: "Perjanjian",
+    //   count: "Tersedia",
+    //   color: "from-pink-500 to-rose-500",
+    //   status: "active",
+    //   link: "/sptrd",
+    //   requireLogin: true,
+    // },
     {
       id: 4,
       icon: Flag,
-      title: "SKPD/SKRD",
+      title: "Ketetapan Retribusi",
       count: "Tersedia",
       color: "from-emerald-500 to-green-500",
       status: "active",
@@ -76,7 +76,7 @@ export default function QuickServices() {
     {
       id: 5,
       icon: Users,
-      title: "PAP",
+      title: "Layanan PAP",
       count: "Soon",
       color: "from-orange-500 to-amber-500",
       status: "coming",
@@ -85,7 +85,7 @@ export default function QuickServices() {
     {
       id: 6,
       icon: AlertCircle,
-      title: "NPWPD",
+      title: "NPWRD/NPWPD",
       count: "Soon",
       color: "from-red-500 to-pink-500",
       status: "coming",
@@ -107,7 +107,7 @@ export default function QuickServices() {
               key={service.id}
               to={service.link}
               onClick={(e) => handleServiceClick(service, e)}
-              className="group relative overflow-hidden rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 p-3.5 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] hover:bg-white/50 hover:border-blue-500/20 hover:-translate-y-0.5 flex flex-col justify-between"
+              className="group relative mt-2 overflow-hidden rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 p-3.5 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] hover:bg-white/50 hover:border-2 hover:border-green-500 hover:-translate-y-0.5 flex flex-col justify-between"
             >
               {/* Ambient background glow */}
               <div
@@ -124,7 +124,7 @@ export default function QuickServices() {
 
                 {/* Text Content */}
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-extrabold text-slate-800 font-sans tracking-tight truncate group-hover:text-blue-600 transition-colors">
+                  <h4 className="text-m font-extrabold text-slate-800 font-sans tracking-tight truncate group-hover:text-blue-600 transition-colors">
                     {service.title}
                   </h4>
 
@@ -159,13 +159,13 @@ export default function QuickServices() {
               </div>
 
               {/* DIUBAH: OVERLAY 1 - Muncul jika layanan AKTIF & TIDAK TERKUNCI (Memunculkan panah melayang di tengah ala iOS) */}
-              {isActive && !isLocked && (
+              {/* {isActive && !isLocked && (
                 <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
                   <div className="w-9 h-9 rounded-full bg-white border border-gray-200/60 shadow-md flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
                     <ArrowUpRight className="w-4 h-4 text-blue-600" />
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* OVERLAY 2: Muncul jika statusnya TERKUNCI/LOCKED saat hover */}
               {isLocked && (
@@ -178,9 +178,9 @@ export default function QuickServices() {
 
               {/* OVERLAY 3: Muncul jika statusnya COMING SOON saat hover */}
               {isComing && (
-                <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
-                  <div className="px-4 py-1.5 rounded-full bg-white border border-gray-200/60 shadow-md flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
-                    <span className="text-xs font-black text-orange-500 tracking-tight font-sans uppercase">
+                <div className="absolute inset-0 bg-red-300/50 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-end z-10">
+                  <div className="px-4 py-1.5 mr-4 rounded-full bg-white border border-gray-200/60 shadow-md flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                    <span className="text-xs font-black text-red-500 tracking-tight font-sans uppercase">
                       Soon
                     </span>
                   </div>
