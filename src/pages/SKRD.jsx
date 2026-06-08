@@ -1,5 +1,12 @@
-import { useState } from "react";
-import { FileText, Download, Printer, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  FileText,
+  Download,
+  Printer,
+  Search,
+  X,
+  ChevronDown,
+} from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Link } from "react-router-dom";
 
@@ -7,6 +14,56 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 import Swal from "sweetalert2";
+
+const GlassSelect = ({ value, options, onChange }) => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [value]);
+
+  const selectedLabel =
+    options.find((opt) =>
+      typeof opt === "object" ? opt.value === value : opt === value,
+    )?.label || value;
+
+  return (
+    <div className="relative w-full">
+      <div onClick={() => setOpen(!open)} className="glass-select">
+        <span>{selectedLabel}</span>
+        <ChevronDown size={16} />
+      </div>
+
+      {open && (
+        <>
+          <div className="fixed inset-0" onClick={() => setOpen(false)} />
+
+          <div className="glass-dropdown">
+            {options.map((opt, index) => {
+              const optValue = typeof opt === "object" ? opt.value : opt;
+              const optLabel = typeof opt === "object" ? opt.label : opt;
+
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    onChange(optValue);
+                    setOpen(false);
+                  }}
+                  className={`glass-option ${
+                    value === optValue ? "active" : ""
+                  }`}
+                >
+                  {optLabel}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default function SKRD() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
@@ -592,56 +649,22 @@ export default function SKRD() {
           </h1>
 
           <div className="grid md:grid-cols-4 gap-4">
-            {/* <select
-              className="input-modern"
-              value={searchForm.id_obyek}
-              onChange={(e) =>
-                setSearchForm({
-                  ...searchForm,
-                  id_obyek: e.target.value,
-                })
-              }
-            >
-              <option value="">Pilih Obyek Retribusi</option>
-
-              {obyekList.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.nama}
-                </option>
-              ))}
-            </select> */}
-
-            <select
-              className="input-modern"
+            <GlassSelect
               value={searchForm.tahun}
-              onChange={(e) =>
-                setSearchForm({
-                  ...searchForm,
-                  tahun: e.target.value,
-                })
-              }
-            >
-              {tahunList.map((t) => (
-                <option key={t}>{t}</option>
-              ))}
-            </select>
+              options={tahunList}
+              onChange={(val) => setSearchForm({ ...searchForm, tahun: val })}
+            />
 
-            <select
-              className="input-modern"
+            <GlassSelect
               value={searchForm.bulan}
-              onChange={(e) =>
+              options={bulanList}
+              onChange={(val) =>
                 setSearchForm({
                   ...searchForm,
-                  bulan: e.target.value,
+                  bulan: val,
                 })
               }
-            >
-              {bulanList.map((b) => (
-                <option key={b.value} value={b.value}>
-                  {b.label}
-                </option>
-              ))}
-            </select>
+            />
 
             <button
               onClick={handleSearchAPI}
@@ -1013,7 +1036,127 @@ export default function SKRD() {
           border: none;
           cursor: pointer;
         }
+        .input-modern {
+          width: 100%;
+          padding: 12px 14px;
+          border-radius: 14px;
 
+          background: rgba(255, 255, 255, 0.6);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+
+          border: 1px solid rgba(255, 255, 255, 0.4);
+
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+
+          color: #111;
+          font-size: 14px;
+
+          transition: all 0.25s ease;
+
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+
+          cursor: pointer;
+        }
+        .glass-select {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          padding: 12px 14px;
+          border-radius: 14px;
+
+          background: rgba(255, 255, 255, 0.55);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .glass-dropdown::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .glass-dropdown::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 10px;
+        }
+        .glass-select:hover {
+          background: rgba(255, 255, 255, 0.7);
+        }
+
+        .glass-dropdown {
+          position: absolute;
+          top: 110%;
+          left: 0;
+          right: 0;
+
+          margin-top: 8px;
+          border-radius: 14px;
+
+          background: rgba(255, 255, 255, 0.6);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+
+          z-index: 9999;
+          .glass-dropdown::-webkit-scrollbar {
+            width: 6px;
+          }
+
+          .glass-dropdown::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+          }
+
+          .glass-dropdown::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          /* ✅ INI YANG KAMU BUTUHKAN */
+          max-height: 240px; /* atau 200px / 280px sesuai kebutuhan */
+          overflow-y: auto; /* scroll vertikal */
+        }
+
+        .glass-option {
+          padding: 10px 14px;
+          cursor: pointer;
+          transition: 0.2s;
+        }
+
+        .glass-option:hover {
+          background: rgba(59, 130, 246, 0.15);
+        }
+        /* hover */
+        .input-modern:hover {
+          background: rgba(255, 255, 255, 0.75);
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        /* focus ala iOS glow */
+        .input-modern:focus {
+          outline: none;
+          border: 1px solid rgba(59, 130, 246, 0.6);
+          box-shadow:
+            0 0 0 4px rgba(59, 130, 246, 0.15),
+            0 10px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        /* opsional: arrow custom */
+        .input-modern {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 12px center;
+          background-size: 16px;
+          padding-right: 38px;
+        }
         /* F4 PAPER */
         .skrd-paper {
           width: 100%;
