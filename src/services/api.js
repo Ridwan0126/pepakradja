@@ -4,10 +4,7 @@ import axios from "axios";
    RETRIBUSI API (FETCH)
 ========================================= */
 
-// api.js
-// Gunakan URL lengkap agar browser bisa langsung menuju ke alamat tersebut
-const RETRIBUSI_BASE_URL =
-  "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api";
+const RETRIBUSI_BASE_URL = "/bapenda-obyek";
 
 const retributiFetch = async (endpoint, params = {}) => {
   const queryString = new URLSearchParams(params).toString();
