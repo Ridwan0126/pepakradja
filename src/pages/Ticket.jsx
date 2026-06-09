@@ -14,7 +14,6 @@ import {
   CalendarDays,
   Ticket as TicketIcon,
   ShieldCheck,
-  QrCode,
   CheckCircle2,
   ChevronRight,
   Clock,
@@ -22,6 +21,11 @@ import {
   Loader2,
   Download,
   Sparkles,
+  History,
+  LogIn,
+  Lock,
+  Banknote,
+  Store,
 } from "lucide-react";
 
 import Header from "../components/Header";
@@ -34,9 +38,31 @@ import Footer from "../components/Footer";
    ========================================================================= */
 
 const STORAGE_KEY = "jateng_tickets";
+const SESSION_KEY = "wr_session";
 
 const RUPIAH = (n) =>
   "Rp" + Number(n).toLocaleString("id-ID", { maximumFractionDigits: 0 });
+
+// Baca sesi login dari localStorage (wr_session)
+const readSession = () => {
+  try {
+    const s = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+    if (!s || !s.isLoggedIn) return null;
+    if (s.expiredAt && Date.now() > s.expiredAt) return null; // sesi kedaluwarsa
+    return s;
+  } catch (e) {
+    console.log("[v0] baca sesi gagal:", e);
+    return null;
+  }
+};
+
+const readTickets = () => {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+};
 
 // QR via free image API (no extra npm package needed)
 const qrSrc = (data, size = 260) =>
@@ -203,7 +229,7 @@ function DestinationCard({ item, onSelect, index }) {
               </p>
             </div>
             <span className="flex items-center gap-1 rounded-full bg-slate-900 px-3 py-2 text-xs font-medium text-white transition group-hover:bg-sky-600">
-              Pesan <ChevronRight className="h-3.5 w-3.5" />
+              Minat <ChevronRight className="h-3.5 w-3.5" />
             </span>
           </div>
         </div>
@@ -213,10 +239,11 @@ function DestinationCard({ item, onSelect, index }) {
 }
 
 /* --------------------------- BOOKING SHEET ----------------------------- */
-function BookingSheet({ item, onClose, onIssued }) {
+function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
   // step: detail -> form -> pay -> done
+
   const [step, setStep] = useState("detail");
-  const [nama, setNama] = useState("");
+  const [nama, setNama] = useState(session?.user?.nama || "");
   const [jumlah, setJumlah] = useState(2);
   const today = new Date().toISOString().slice(0, 10);
   const [tanggal, setTanggal] = useState(today);
@@ -225,15 +252,18 @@ function BookingSheet({ item, onClose, onIssued }) {
 
   const total = item.harga * jumlah;
 
-  const qrisPayload = useMemo(
-    () =>
-      `QRIS|BANKJATENG|MERCHANT=PARIWISATA-JATENG|OBJ=${item.id}|AMT=${total}|REF=${genKode()}`,
-    [item.id, total],
-  );
+  // Di dalam BookingSheet
+  const handleBeliClick = () => {
+    if (!session) {
+      onTriggerLogin(item); // Panggil prop yang di-pass dari parent
+    } else {
+      setStep("form");
+    }
+  };
 
   const handlePay = () => {
     setPaying(true);
-    // Simulasi konfirmasi pembayaran nontunai Bank Jateng
+    // Simulasi pencatatan pemesanan (pembayaran offline / di lokasi)
     setTimeout(() => {
       const kode = genKode();
       const expiry = new Date(tanggal + "T23:59:59").toISOString();
@@ -244,20 +274,23 @@ function BookingSheet({ item, onClose, onIssued }) {
         lokasi: item.lokasi,
         kategori: item.kategori,
         img: item.img,
-        namaPemesan: nama.trim() || "Tamu",
+        namaPemesan: nama.trim() || session?.user?.nama || "Tamu",
+        pemesanId: session?.user?.id || null,
+        npwrd: session?.user?.npwrd || null,
         jumlahOrang: jumlah,
         hargaSatuan: item.harga,
         total,
         tanggalKunjungan: tanggal,
         createdAt: new Date().toISOString(),
         expiryDate: expiry,
-        metode: "Bank Jateng (Nontunai)",
+        metode: "Tunai / Bayar di Lokasi",
+        statusBayar: "Belum Dibayar",
         status: "active",
         used: false,
       };
-      // simpan ke localStorage agar bisa di-scan
+      // simpan ke localStorage agar bisa di-scan & jadi riwayat
       try {
-        const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        const list = readTickets();
         list.push(t);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       } catch (e) {
@@ -267,7 +300,7 @@ function BookingSheet({ item, onClose, onIssued }) {
       setPaying(false);
       setStep("done");
       onIssued && onIssued();
-    }, 2200);
+    }, 1600);
   };
 
   const ticketQrData = ticket ? JSON.stringify(ticket) : "";
@@ -354,10 +387,10 @@ function BookingSheet({ item, onClose, onIssued }) {
                 </Glass>
 
                 <button
-                  onClick={() => setStep("form")}
+                  onClick={handleBeliClick}
                   className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 py-4 text-sm font-semibold text-white shadow-lg shadow-sky-500/30 transition active:scale-[0.98]"
                 >
-                  Lanjut Pesan Tiket <ChevronRight className="h-4 w-4" />
+                  Beli Tiket <ChevronRight className="h-4 w-4" />
                 </button>
               </motion.div>
             )}
@@ -448,7 +481,7 @@ function BookingSheet({ item, onClose, onIssued }) {
                   onClick={() => setStep("pay")}
                   className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-4 text-sm font-semibold text-white transition active:scale-[0.98]"
                 >
-                  <Wallet className="h-4 w-4" /> Bayar dengan Bank Jateng
+                  <Wallet className="h-4 w-4" /> Lanjut ke Pembayaran
                 </button>
                 <button
                   onClick={() => setStep("detail")}
@@ -469,28 +502,32 @@ function BookingSheet({ item, onClose, onIssued }) {
                 transition={spring}
                 className="text-center"
               >
-                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-600">
-                  <QrCode className="h-3.5 w-3.5" /> QRIS &middot; Bank Jateng
+                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-600">
+                  <Banknote className="h-3.5 w-3.5" /> Pembayaran di Lokasi
                 </div>
                 <h2 className="mt-3 text-xl font-bold text-slate-900">
-                  Scan untuk Membayar
+                  Konfirmasi Pemesanan
                 </h2>
                 <p className="text-sm text-slate-500">
-                  Gunakan aplikasi Bank Jateng / m-banking
+                  Pembayaran dilakukan secara tunai di loket obyek wisata
                 </p>
 
-                <Glass className="mx-auto mt-5 w-fit rounded-3xl p-5">
-                  <div className="relative">
-                    <img
-                      src={qrSrc(qrisPayload, 220) || "/placeholder.svg"}
-                      alt="QR Pembayaran"
-                      className="h-[220px] w-[220px] rounded-xl"
-                    />
+                <Glass className="mx-auto mt-5 flex w-fit items-center justify-center rounded-3xl p-6">
+                  <div className="relative flex h-[160px] w-[220px] flex-col items-center justify-center gap-2">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100">
+                      <Store className="h-8 w-8 text-amber-500" />
+                    </div>
+                    <p className="text-sm font-semibold text-slate-700">
+                      Bayar di Loket
+                    </p>
+                    <p className="text-center text-[11px] text-slate-400">
+                      Tunjukkan e-tiket Anda kepada petugas saat tiba
+                    </p>
                     {paying && (
                       <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-white/80 backdrop-blur">
                         <Loader2 className="h-8 w-8 animate-spin text-sky-500" />
                         <p className="mt-2 text-xs font-medium text-slate-600">
-                          Memverifikasi pembayaran...
+                          Menyimpan pesanan...
                         </p>
                       </div>
                     )}
@@ -510,6 +547,12 @@ function BookingSheet({ item, onClose, onIssued }) {
                       {item.nama}
                     </span>
                   </div>
+                  <div className="mt-1 flex items-center justify-between text-sm">
+                    <span className="text-slate-500">Metode</span>
+                    <span className="font-medium text-slate-700">
+                      Tunai di Lokasi
+                    </span>
+                  </div>
                 </div>
 
                 <button
@@ -523,7 +566,8 @@ function BookingSheet({ item, onClose, onIssued }) {
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 className="h-4 w-4" /> Saya Sudah Membayar
+                      <CheckCircle2 className="h-4 w-4" /> Konfirmasi Pesan
+                      Tiket
                     </>
                   )}
                 </button>
@@ -554,10 +598,10 @@ function BookingSheet({ item, onClose, onIssued }) {
                   <CheckCircle2 className="h-9 w-9 text-emerald-500" />
                 </motion.div>
                 <h2 className="mt-3 text-center text-xl font-bold text-slate-900">
-                  Pembayaran Berhasil
+                  Pesanan Berhasil
                 </h2>
                 <p className="text-center text-sm text-slate-500">
-                  E-Tiket Anda sudah terbit
+                  E-Tiket Anda sudah terbit &middot; bayar di lokasi
                 </p>
 
                 {/* TICKET */}
@@ -656,6 +700,175 @@ function Info({ label, value }) {
   );
 }
 
+/* --------------------- SWEETALERT: LOGIN REQUIRED ---------------------- */
+function LoginAlert({ onLogin, onCancel }) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-[60] flex items-center justify-center px-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+        onClick={onCancel}
+      />
+      <motion.div
+        initial={{ scale: 0.85, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.9, opacity: 0, y: 10 }}
+        transition={{ type: "spring", stiffness: 360, damping: 26 }}
+        className="relative z-10 w-full max-w-sm rounded-[2rem] border border-white/60 bg-white/90 p-7 text-center shadow-2xl backdrop-blur-2xl"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 320,
+            damping: 18,
+            delay: 0.08,
+          }}
+          className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-100"
+        >
+          <Lock className="h-9 w-9 text-amber-500" />
+        </motion.div>
+        <h3 className="mt-5 text-xl font-bold text-slate-900">
+          Login Diperlukan
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-slate-500">
+          Anda harus masuk terlebih dahulu untuk melakukan pemesanan tiket
+          wisata.
+        </p>
+        <div className="mt-6 flex flex-col gap-2">
+          <button
+            onClick={onLogin}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-sky-500/30 transition active:scale-[0.98]"
+          >
+            <LogIn className="h-4 w-4" /> Login Sekarang
+          </button>
+          <button
+            onClick={onCancel}
+            className="w-full rounded-2xl bg-slate-100 py-3.5 text-sm font-medium text-slate-600 transition active:scale-[0.98]"
+          >
+            Batal
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ----------------------- RIWAYAT PEMESANAN ----------------------------- */
+function HistorySheet({ session, onClose }) {
+  const list = useMemo(() => {
+    const all = readTickets();
+    const mine = session?.user?.id
+      ? all.filter((t) => t.pemesanId === session.user.id)
+      : all;
+    return [...mine].reverse();
+  }, [session]);
+
+  const statusBadge = (t) => {
+    if (t.used) return { txt: "Terpakai", cls: "bg-slate-200 text-slate-600" };
+    if (new Date(t.expiryDate) < new Date())
+      return { txt: "Hangus", cls: "bg-rose-100 text-rose-600" };
+    return { txt: "Aktif", cls: "bg-emerald-100 text-emerald-600" };
+  };
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div
+        className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <motion.div
+        initial={{ y: "100%", opacity: 0.6 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: "100%", opacity: 0.6 }}
+        transition={spring}
+        className="relative z-10 max-h-[88vh] w-full overflow-y-auto rounded-t-[2rem] border border-white/60 bg-white/85 backdrop-blur-2xl sm:max-w-md sm:rounded-[2rem]"
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between bg-white/70 px-5 pb-3 pt-4 backdrop-blur-xl">
+          <div className="flex items-center gap-2">
+            <History className="h-5 w-5 text-sky-500" />
+            <h2 className="text-lg font-bold text-slate-900">
+              Riwayat Pemesanan
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200/80 text-slate-600 transition active:scale-90"
+            aria-label="Tutup"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="px-5 pb-8">
+          {list.length === 0 ? (
+            <div className="py-16 text-center text-slate-400">
+              <TicketIcon className="mx-auto h-10 w-10" />
+              <p className="mt-3 text-sm">Belum ada pemesanan tiket.</p>
+            </div>
+          ) : (
+            <div className="space-y-3 pt-2">
+              {list.map((t, i) => {
+                const b = statusBadge(t);
+                return (
+                  <motion.div
+                    key={t.kode}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ ...spring, delay: i * 0.04 }}
+                  >
+                    <Glass className="flex gap-3 rounded-2xl p-3">
+                      <img
+                        src={t.img || "/placeholder.svg"}
+                        alt={t.objekNama}
+                        className="h-16 w-16 shrink-0 rounded-xl object-cover"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="truncate text-sm font-semibold text-slate-900">
+                            {t.objekNama}
+                          </p>
+                          <span
+                            className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${b.cls}`}
+                          >
+                            {b.txt}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400">{t.lokasi}</p>
+                        <div className="mt-1.5 flex items-center justify-between text-xs">
+                          <span className="text-slate-500">
+                            {t.tanggalKunjungan} &middot; {t.jumlahOrang} org
+                          </span>
+                          <span className="font-bold text-sky-600">
+                            {RUPIAH(t.total)}
+                          </span>
+                        </div>
+                        <p className="mt-1 font-mono text-[10px] tracking-wider text-slate-400">
+                          {t.kode}
+                        </p>
+                      </div>
+                    </Glass>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 /* ------------------------------ MAIN ----------------------------------- */
 export default function Ticket() {
   const [query, setQuery] = useState("");
@@ -664,15 +877,26 @@ export default function Ticket() {
   const [showFilter, setShowFilter] = useState(false);
   const [selected, setSelected] = useState(null);
   const [issuedCount, setIssuedCount] = useState(0);
+  const [session, setSession] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [pendingItem, setPendingItem] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
-    try {
-      const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      setIssuedCount(list.length);
-    } catch (e) {
-      console.log("[v0] baca tiket gagal:", e);
-    }
+    setSession(readSession());
+    setIssuedCount(readTickets().length);
   }, []);
+
+  // Klik "Pesan": wajib login dulu
+  const handleSelect = (item) => {
+    setSelected(item);
+  };
+
+  // Tombol login pada SweetAlert — arahkan ke halaman login.
+  // Untuk demo: jika belum ada sesi, buat sesi dummy lalu lanjutkan pesanan.
+  const handleLogin = () => {
+    window.location.href = "/login";
+  };
 
   const lokasiList = useMemo(
     () => [
@@ -693,23 +917,31 @@ export default function Ticket() {
     });
   }, [query, lokasi, kategori]);
 
+  const triggerLogin = (item) => {
+    setPendingItem(item);
+    setShowLogin(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-white text-slate-900">
       <Header />
 
-      <main className="mx-auto max-w-5xl px-4 pb-16 pt-6">
+      <main className="mx-auto max-w-5xl px-4 pb-16 pt-6 mt-24">
         {/* HERO */}
         <Glass className="overflow-hidden rounded-[2rem] p-6 sm:p-8">
           <div className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-600">
             <Sparkles className="h-3.5 w-3.5" /> Jelajah Jawa Tengah
           </div>
           <h1 className="mt-3 text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-            Pesan Tiket Wisata, Bayar Nontunai
+            Pesan Tiket Wisata Jawa Tengah
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
             Temukan destinasi terbaik Jawa Tengah dan pesan e-tiket dalam
-            hitungan detik. Pembayaran aman lewat{" "}
-            <span className="font-semibold text-slate-800">Bank Jateng</span>.
+            hitungan detik. Pembayaran{" "}
+            <span className="font-semibold text-slate-800">
+              tunai di lokasi
+            </span>{" "}
+            untuk saat ini.
           </p>
 
           {/* SEARCH */}
@@ -733,11 +965,13 @@ export default function Ticket() {
             >
               <SlidersHorizontal className="h-4 w-4" /> Filter
             </button>
+            <button
+              onClick={() => setShowHistory(true)}
+              className="flex items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700 transition active:scale-95"
+            >
+              <History className="h-4 w-4" /> Riwayat
+            </button>
           </div>
-
-          <a href="/scanticket" className="my-button-style">
-            scan
-          </a>
 
           {/* FILTER PANEL */}
           <AnimatePresence>
@@ -825,7 +1059,7 @@ export default function Ticket() {
                 key={item.id}
                 item={item}
                 index={i}
-                onSelect={setSelected}
+                onSelect={handleSelect}
               />
             ))}
           </AnimatePresence>
@@ -845,8 +1079,31 @@ export default function Ticket() {
         {selected && (
           <BookingSheet
             item={selected}
+            session={session}
             onClose={() => setSelected(null)}
             onIssued={() => setIssuedCount((c) => c + 1)}
+            onTriggerLogin={triggerLogin} // <--- Tambahkan ini
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showLogin && (
+          <LoginAlert
+            onLogin={handleLogin}
+            onCancel={() => {
+              setShowLogin(false);
+              setPendingItem(null);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showHistory && (
+          <HistorySheet
+            session={session}
+            onClose={() => setShowHistory(false)}
           />
         )}
       </AnimatePresence>

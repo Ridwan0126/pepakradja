@@ -5,6 +5,7 @@ import Carousel from "../components/Carousel";
 import QuickServices from "../components/QuickServices";
 import ProductFilter from "../components/ProductFilter";
 import ProductGrid from "../components/ProductGrid";
+import CardTicket from "../components/CardTicket";
 
 export default function Home() {
   const [filters, setFilters] = useState({});
@@ -15,7 +16,7 @@ export default function Home() {
       badge: "Layanan Digital",
       title: "PEPAK RADJA",
       description:
-        "Platform digital untuk pengelolaan retribusi daerah yang modern dan terintegrasi.",
+        "Pelayanan Pajak, Retribusi dan Aset Daerah Provinsi Jawa Tengah",
       cta: "Pelajari",
       backgroundImage: "/images/banner-01.png",
       image: "/images/hero1.png",
@@ -27,6 +28,17 @@ export default function Home() {
       cta: "Mulai Sekarang",
       backgroundImage: "/images/banner-02.png",
       image: "/images/hero2.png",
+    },
+  ];
+  const fotos = [
+    {
+      badge: "Layanan Digital",
+      title: "PEPAK RADJA",
+      description:
+        "Pelayanan Pajak, Retribusi dan Aset Daerah Provinsi Jawa Tengah",
+      cta: "Pelajari",
+      backgroundImage: "/images/banner-01.png",
+      image: "/images/hero1.png",
     },
   ];
 
@@ -48,6 +60,12 @@ export default function Home() {
       <section className="relative z-10 pt-32 md:pt-36 px-4 pb-6 bg-transparent">
         <div className="max-w-7xl mx-auto">
           <Carousel slides={slides} />
+        </div>
+      </section>
+
+      <section className="relative z-10 rounded-lg px-4 pb-6 bg-transparent">
+        <div className="max-w-7xl  mx-auto ">
+          <CardTicket fotos={fotos} />
         </div>
       </section>
 

@@ -266,14 +266,19 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
 
                       <div className="mt-4 border-t border-slate-100 pt-3">
                         <p className="text-[9px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">
-                          Tarif Sewa
+                          Tarif
                         </p>
-                        <p className="text-slate-900 font-black text-sm sm:text-base group-hover:text-blue-600 transition-colors duration-200">
-                          Rp{" "}
-                          {parseInt(
-                            product.tariftbl?.tarif || 0,
-                          ).toLocaleString("id-ID")}
-                        </p>
+                        <div className="flex">
+                          <p className="text-slate-900 flex-auto font-black text-sm sm:text-base group-hover:text-blue-600 transition-colors duration-200">
+                            Rp{" "}
+                            {parseInt(
+                              product.tariftbl?.tarif || 0,
+                            ).toLocaleString("id-ID")}
+                          </p>
+                          <p className="text-[9px] mt-1.5 flex uppercase tracking-wider text-end text-slate-400 font-bold ">
+                            {product?.tariftbl?.satuan?.satuan}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </Link>

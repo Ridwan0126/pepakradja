@@ -36,7 +36,7 @@ export default function Footer() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           {/* Footer Main */}
-          <div className="grid pt-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-16">
+          <div className="grid pt-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-2">
             {/* Brand */}
             <div className="lg:col-span-2">
               <Link to="/" className="flex items-center gap-4 mb-6 group">
@@ -80,9 +80,9 @@ export default function Footer() {
               </Link>
 
               <p className="text-slate-400 leading-relaxed mb-6 max-w-md">
-                Platform digital layanan retribusi daerah yang memberikan
-                kemudahan, transparansi, dan keamanan dalam proses pembayaran
-                serta pengelolaan retribusi secara modern.
+                Platform digital layanan retribusi Daerah Provinsi Jawa Tengah
+                yang memberikan kemudahan, transparansi, dan keamanan dalam
+                proses pembayaran serta pengelolaan retribusi secara modern.
               </p>
 
               {/* Social */}
@@ -191,19 +191,18 @@ export default function Footer() {
 
           <div className="pb-10">
             <div className="flex gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-              <Building className="w-10 h-10 text-cyan-400 flex-shrink-0 mt-1" />
               <div>
-                <h4 className="font-bold text-lg text-cyan-400 mb-1">
+                <h4 className="font-bold text-lg text-white mb-1">
                   Dikelola oleh:
                 </h4>
-                <p className="font-semibold text-white">
+                <p className="text-slate-400 leading-relaxed ">
                   Badan Pengelola Pendapatan Daerah Provinsi Jawa Tengah
                 </p>
-                <p className="text-slate-400 text-sm mb-2">
+                <p className="text-slate-400 leading-relaxed ">
                   Bidang Pengelolaan Retribusi, Pendapatan lain dan Pemanfaatan
                   Aset Daerah
                 </p>
-                <p className="text-slate-500 text-sm flex items-center gap-2">
+                <p className="text-slate-400 leading-relaxed  flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
                   Gd.A Lantai V Jl. Pemuda No.1, Dadapsari, Kec. Semarang Utara,
                   Kota Semarang, Jawa Tengah 50173

@@ -588,10 +588,19 @@ export default function ProductDetail() {
             {/* PRICE */}
             <div className="mt-6">
               <p className="text-sm text-gray-500">Tarif</p>
-              <h3 className="text-3xl font-bold text-green-600">
+              {/* <h3 className="text-3xl font-bold text-green-600">
                 Rp{" "}
                 {parseInt(product.tariftbl?.tarif || 0).toLocaleString("id-ID")}
-              </h3>
+              </h3> */}
+              <div className="flex">
+                <h3 className="font-semibold flex-auto text-green-600">
+                  Rp{" "}
+                  {parseInt(product.tariftbl?.tarif || 0).toLocaleString(
+                    "id-ID",
+                  )}
+                </h3>
+                <p>{product.tariftbl?.satuan?.satuan}</p>
+              </div>
             </div>
           </div>
 
