@@ -22,6 +22,8 @@ import SPTRD from "./pages/SPTRD";
 import Profile from "./pages/Profile";
 import SetPassword from "./pages/SetPassword";
 import TentangKami from "./pages/TentangKami";
+import ScanTicket from "./pages/ScanTicket";
+import Ticket from "./pages/Ticket";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -59,6 +61,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
 
             <Route path="/setpassword" element={<SetPassword />} />
+            <Route path="/scanticket" element={<ScanTicket />} />
+            <Route path="/ticket" element={<Ticket />} />
 
             <Route
               path="/checkout"

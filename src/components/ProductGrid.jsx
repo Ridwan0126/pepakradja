@@ -248,7 +248,7 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
                     {/* DETAIL KONTEN */}
                     <div className="p-4 flex flex-col flex-1 bg-white">
                       <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1.5 block">
-                        {product.jenis?.jenis_retribusi || "Retribusi"}
+                        {product.opd?.nama || "-"}
                       </span>
 
                       <h3 className="text-xs sm:text-sm font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors duration-200">
@@ -274,12 +274,6 @@ export default function ProductGrid({ filters = {}, searchTerm = "" }) {
                             product.tariftbl?.tarif || 0,
                           ).toLocaleString("id-ID")}
                         </p>
-                      </div>
-
-                      <div className="flex justify-between items-center mt-3 text-[10px] text-slate-400 border-t border-slate-50 pt-2 font-medium truncate tracking-wide">
-                        <span className="truncate">
-                          {product.opd?.nama || "-"}
-                        </span>
                       </div>
                     </div>
                   </Link>

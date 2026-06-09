@@ -391,7 +391,7 @@ export default function Header() {
       items: [
         {
           title: "Pariwisata",
-          path: "/pariwisata",
+          path: "/ticket",
         },
       ],
     },
