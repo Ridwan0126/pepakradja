@@ -8,6 +8,7 @@ import {
   Phone,
   MapPin,
   Send,
+  Building,
 } from "lucide-react";
 
 export default function Footer() {
@@ -121,7 +122,7 @@ export default function Footer() {
                   { label: "Beranda", href: "/" },
                   { label: "Katalog", href: "/products" },
                   { label: "Keranjang", href: "/cart" },
-                  { label: "Tentang Kami", href: "#" },
+                  { label: "Tentang Kami", href: "/tentangkami" },
                 ].map((item, i) => (
                   <li key={i}>
                     <Link
@@ -173,25 +174,40 @@ export default function Footer() {
                   <Phone className="w-5 h-5 text-cyan-400 mt-1" />
                   <div>
                     <p className="text-slate-500 text-sm">Telepon</p>
-                    <p>+62 xxx xxxx xxxx</p>
+                    <p>(024) 3515514</p>
                   </div>
                 </div>
 
-                <div className="flex gap-3">
-                  <Mail className="w-5 h-5 text-cyan-400 mt-1" />
+                <div className="flex gap-1">
+                  <Mail className="w-10 h-5 text-cyan-400 mt-1" />
                   <div>
                     <p className="text-slate-500 text-sm">Email</p>
-                    <p>support@pepakraja.com</p>
+                    <p>bapenda@jatengprov.go.id</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div className="flex gap-3">
-                  <MapPin className="w-5 h-5 text-cyan-400 mt-1" />
-                  <div>
-                    <p className="text-slate-500 text-sm">Alamat</p>
-                    <p>Semarang, Jawa Tengah</p>
-                  </div>
-                </div>
+          <div className="pb-10">
+            <div className="flex gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+              <Building className="w-10 h-10 text-cyan-400 flex-shrink-0 mt-1" />
+              <div>
+                <h4 className="font-bold text-lg text-cyan-400 mb-1">
+                  Dikelola oleh:
+                </h4>
+                <p className="font-semibold text-white">
+                  Badan Pengelola Pendapatan Daerah Provinsi Jawa Tengah
+                </p>
+                <p className="text-slate-400 text-sm mb-2">
+                  Bidang Pengelolaan Retribusi, Pendapatan lain dan Pemanfaatan
+                  Aset Daerah
+                </p>
+                <p className="text-slate-500 text-sm flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  Gd.A Lantai V Jl. Pemuda No.1, Dadapsari, Kec. Semarang Utara,
+                  Kota Semarang, Jawa Tengah 50173
+                </p>
               </div>
             </div>
           </div>

@@ -52,6 +52,7 @@ export default function QuickServices() {
       color: "from-violet-500 to-purple-500",
       status: "active",
       link: "/transactions",
+      requireLogin: true,
     },
     // {
     //   id: 3,

@@ -20,6 +20,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const navigate = useNavigate();
+  // Tambahkan di dalam komponen Header
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
   // =========================
   // REF
@@ -193,89 +197,54 @@ export default function Header() {
   // =========================
   // SEARCH API
   // =========================
-  const handleSearch = async (keywordSearch = search) => {
+  const handleSearch = async (
+    keywordSearch = search,
+    pageNumber = 1,
+    isLoadMore = false,
+  ) => {
     try {
       const keyword = keywordSearch.toLowerCase().trim();
+      if (!keyword) return;
 
-      if (!keyword) {
+      if (!isLoadMore) {
+        setLastSearch(keywordSearch);
+        setLoadingSearch(true);
         setSearchResults([]);
-
-        setSearchOpen(false);
-
-        return;
+        setPage(1);
+      } else {
+        setIsFetchingMore(true);
       }
-
-      setLastSearch(keywordSearch);
-
-      setLoadingSearch(true);
 
       setSearchOpen(true);
 
-      let allData = [];
+      const response = await fetch(
+        `https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja/obyek?page=${pageNumber}&limit=20&search=${encodeURIComponent(keyword)}`,
+      );
 
-      let currentPage = 1;
+      const result = await response.json();
+      const apiData = result?.data || [];
 
-      let hasMore = true;
+      // Cek apakah masih ada data selanjutnya (asumsi API memberikan info total atau berdasarkan panjang data)
+      setHasMore(apiData.length === 20);
 
-      while (hasMore) {
-        const response = await fetch(
-          `https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja/obyek?page=${currentPage}&limit=100&search=${encodeURIComponent(
-            keyword,
-          )}`,
-        );
-
-        const result = await response.json();
-
-        const apiData = result?.data || [];
-
-        if (apiData.length > 0) {
-          allData = [...allData, ...apiData];
-
-          currentPage++;
-        } else {
-          hasMore = false;
-        }
-
-        if (currentPage > 20) {
-          hasMore = false;
-        }
+      if (isLoadMore) {
+        setSearchResults((prev) => [...prev, ...apiData]);
+      } else {
+        setSearchResults(apiData);
       }
-
-      const filtered = allData.filter((item) => {
-        const obyek = item?.obyek_retribusi?.toLowerCase() || "";
-
-        const opd = item?.opd?.nama?.toLowerCase() || "";
-
-        const uppd = item?.uppd?.nama?.toLowerCase() || "";
-
-        const kota = item?.kota?.kab_kota?.toLowerCase() || "";
-
-        const kecamatan = item?.kecamatan?.kecamatan?.toLowerCase() || "";
-
-        const jenis = item?.jenis?.jenis_retribusi?.toLowerCase() || "";
-
-        return (
-          obyek.includes(keyword) ||
-          opd.includes(keyword) ||
-          uppd.includes(keyword) ||
-          kota.includes(keyword) ||
-          kecamatan.includes(keyword) ||
-          jenis.includes(keyword)
-        );
-      });
-
-      setSearchResults(filtered);
-
-      setSearchOpen(true);
     } catch (err) {
       console.error("SEARCH ERROR:", err);
-
-      setSearchResults([]);
     } finally {
       setLoadingSearch(false);
+      setIsFetchingMore(false);
     }
   };
 
+  const loadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    handleSearch(lastSearch, nextPage, true);
+  };
   // =========================
   // MENU DATA
   // =========================
@@ -865,11 +834,22 @@ export default function Header() {
                             {searchResults.length} Data Retribusi Ditemukan
                           </p>
                         </div>
-                        {loadingSearch && (
-                          <div className="text-xs font-bold text-blue-600 animate-pulse">
-                            Mencari...
-                          </div>
-                        )}
+                        {/* Di dalam DROPDOWN SEARCH LIST PANEL, setelah grid results */}
+                        {!loadingSearch &&
+                          searchResults.length > 0 &&
+                          hasMore && (
+                            <div className="p-4 text-center">
+                              <button
+                                onClick={loadMore}
+                                disabled={isFetchingMore}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
+                              >
+                                {isFetchingMore
+                                  ? "Memuat..."
+                                  : "Tampilkan Lebih Banyak"}
+                              </button>
+                            </div>
+                          )}
                       </div>
                     </div>
 

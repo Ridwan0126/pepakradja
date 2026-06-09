@@ -104,14 +104,11 @@ export default function Register() {
   // =========================================================
   const getKota = async () => {
     try {
-      const response = await fetch(
-        "/api/penatausahaan-dev/api/pepakraja/kota?provinsi=33",
-        {
-          headers: {
-            token: TOKEN,
-          },
+      const response = await fetch("/bapenda-api/pepakraja//kota?provinsi=33", {
+        headers: {
+          token: TOKEN,
         },
-      );
+      });
 
       const result = await response.json();
 
@@ -129,7 +126,7 @@ export default function Register() {
       setIsCheckingToken(true);
 
       const response = await fetch(
-        `/api/penatausahaan-dev/api/pepakraja/wr/set-password?set_password_token=${setPasswordToken}`,
+        `/bapenda-api/pepakraja//wr/set-password?set_password_token=${setPasswordToken}`,
         {
           method: "GET",
           headers: {
@@ -208,7 +205,7 @@ export default function Register() {
       setIsChecking(true);
 
       const response = await fetch(
-        `/api/penatausahaan-dev/api/pepakraja/wr/cek?nik_npwp=${formData.nik_npwp}`,
+        `/bapenda-api/pepakraja//wr/cek?nik_npwp=${formData.nik_npwp}`,
         {
           method: "GET",
           headers: {
@@ -333,7 +330,7 @@ export default function Register() {
 
       console.log("BODY FINAL:", bodyData);
 
-      const response = await fetch("/api/penatausahaan-dev/api/pepakraja/wr", {
+      const response = await fetch("/bapenda-api/pepakraja//wr", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -415,22 +412,19 @@ export default function Register() {
     try {
       setIsSaving(true);
 
-      const response = await fetch(
-        "/api/penatausahaan-dev/api/pepakraja/wr/set-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: TOKEN,
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            set_password_token: setPasswordToken,
-            password: passwordData.password,
-            password_confirmation: passwordData.password_confirmation,
-          }),
+      const response = await fetch("/bapenda-api/pepakraja//wr/set-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: TOKEN,
+          Accept: "application/json",
         },
-      );
+        body: JSON.stringify({
+          set_password_token: setPasswordToken,
+          password: passwordData.password,
+          password_confirmation: passwordData.password_confirmation,
+        }),
+      });
 
       const result = await response.json();
 
@@ -726,7 +720,7 @@ overflow-hidden
                         setSelectedType("");
                         setShowForm(false);
                       }}
-                      className="flex items-center gap-2 text-green-700 font-semibold mb-5 hover:underline"
+                      className="flex items-center gap-2 text-white font-semibold mb-5 hover:underline"
                     >
                       <ArrowLeft className="w-4 h-4" />
                       Kembali
@@ -736,7 +730,7 @@ overflow-hidden
                       {selectedType}
                     </h2>
 
-                    <p className="text-gray-500 mb-8">
+                    <p className="text-white mb-8">
                       Masukkan data wajib retribusi
                     </p>
 
@@ -818,7 +812,7 @@ shadow-cyan-500/30
                         />
 
                         <div>
-                          <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                          <label className="text-sm font-semibold text-white mb-2 block">
                             Alamat
                           </label>
 
@@ -857,7 +851,7 @@ shadow-cyan-500/30
                         />
 
                         <div>
-                          <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                          <label className="text-sm font-semibold text-white mb-2 block">
                             Provinsi
                           </label>
 
@@ -872,7 +866,7 @@ border-white/20
 rounded-2xl
 py-4
 px-4
-text-white
+text-black
 outline-none
 focus:ring-4
 focus:ring-cyan-400/20
@@ -884,7 +878,7 @@ focus:border-cyan-400
                         </div>
 
                         <div>
-                          <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                          <label className="text-sm font-semibold text-white mb-2 block">
                             Kota / Kabupaten
                           </label>
 
@@ -904,14 +898,16 @@ border-white/20
 rounded-2xl
 py-4
 px-4
-text-white
+text-black
 outline-none
 focus:ring-4
 focus:ring-cyan-400/20
 focus:border-cyan-400
 "
                             >
-                              <option value="">Pilih Kota / Kabupaten</option>
+                              <option className="text-white" value="">
+                                Pilih Kota / Kabupaten
+                              </option>
 
                               {kotaList.map((item) => (
                                 <option key={item.id} value={item.id}>
@@ -1072,7 +1068,7 @@ focus:border-cyan-400
 function InputIcon({ label, icon, ...props }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-300 mb-2">
+      <label className="block text-sm font-medium text-white mb-2">
         {label}
       </label>
 
@@ -1110,7 +1106,7 @@ function InputIcon({ label, icon, ...props }) {
 function InputSimple({ label, ...props }) {
   return (
     <div>
-      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+      <label className="text-sm font-semibold text-white mb-2 block">
         {label}
       </label>
 

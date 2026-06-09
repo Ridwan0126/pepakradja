@@ -84,11 +84,6 @@ const SetPassword = () => {
       return;
     }
 
-    if (password.length < 6) {
-      setMessage({ type: "error", text: "Password minimal harus 6 karakter." });
-      return;
-    }
-
     try {
       setSubmitting(true);
       const payload = {
@@ -98,7 +93,7 @@ const SetPassword = () => {
       };
 
       const response = await fetch(
-        "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja//wr/set-password",
+        "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja/wr/set-password", // Perbaikan URL
         {
           method: "POST",
           headers: {
@@ -111,10 +106,9 @@ const SetPassword = () => {
 
       const result = await response.json();
 
-      if (response.ok) {
+      if (result.code === "00") {
+        // Sesuaikan dengan response API Anda
         setMessage({ type: "success", text: "Password berhasil diperbarui." });
-        setPassword("");
-        setConfirmPassword("");
       } else {
         setMessage({
           type: "error",
@@ -122,10 +116,7 @@ const SetPassword = () => {
         });
       }
     } catch (error) {
-      setMessage({
-        type: "error",
-        text: "Terjadi gangguan sistem. Silakan coba lagi.",
-      });
+      setMessage({ type: "error", text: "Terjadi gangguan sistem." });
     } finally {
       setSubmitting(false);
     }

@@ -21,6 +21,7 @@ import NotFound from "./pages/NotFound";
 import SPTRD from "./pages/SPTRD";
 import Profile from "./pages/Profile";
 import SetPassword from "./pages/SetPassword";
+import TentangKami from "./pages/TentangKami";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -51,6 +52,7 @@ function App() {
             <Route path="/transactions" element={<Transactions />} />
 
             <Route path="/skrd" element={<SKRD />} />
+            <Route path="/tentangkami" element={<TentangKami />} />
 
             <Route path="/sptrd" element={<SPTRD />} />
 

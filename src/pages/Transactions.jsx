@@ -113,6 +113,7 @@ export default function TransactionStatus() {
         tanggal: formatDate(item.tanggal),
         nama: item.wr.nama,
         alamat: item.wr.alamat,
+        nik: item.wr.nik_npwp,
         jumlah: jumlahBayar.toLocaleString("id-ID"),
         terbilang: terbilang(jumlahBayar) + " Rupiah",
         jenis_ret: item.obyek.sub_rekening.golongan.golongan,
@@ -232,6 +233,7 @@ export default function TransactionStatus() {
                   <div className="font-normal text-[12px]">
                     UPPD Banjarnegara
                   </div>
+                  <div className="text-right font-bold mt-4">{data.nik}</div>
                   <div className="border-b-2 border-black mt-2"></div>
                 </div>
               </div>
