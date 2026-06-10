@@ -59,20 +59,20 @@ export default function Home() {
       </div>
 
       {/* Carousel Slider Section - iOS Clean Spacing */}
-      <section className="relative z-10 pt-32 md:pt-36 px-4 pb-6 bg-transparent">
+      <section className="relative z-10 pt-28 md:pt-30 px-4 pb-6 bg-transparent">
         <div className="max-w-7xl mx-auto">
           <Carousel slides={slides} />
         </div>
       </section>
 
-      <section className="relative z-10 rounded-lg px-4 pb-6 bg-transparent">
+      <section className="relative z-10 rounded-lg px-4 bg-transparent">
         <div className="max-w-7xl  mx-auto ">
           <CardTicket fotos={fotos} />
         </div>
       </section>
 
       {/* Main Content Products Section */}
-      <section className="relative z-10 py-6 md:py-10 px-4 bg-transparent">
+      <section className="relative z-10 py-6 md:py-6 px-4 bg-transparent">
         <div className="max-w-7xl mx-auto">
           {/* iOS Styled Section Header */}
           <div className="mb-6 md:mb-8">
