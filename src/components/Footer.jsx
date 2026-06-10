@@ -169,8 +169,8 @@ export default function Footer() {
             <div>
               <h3 className="font-bold text-lg mb-5">Kontak</h3>
 
-              <div className="space-y-5">
-                <div className="flex gap-3">
+              <div className="space-y-8">
+                <div className="flex gap-1">
                   <Phone className="w-5 h-5 text-cyan-400 mt-1" />
                   <div>
                     <p className="text-slate-500 text-sm">Telepon</p>

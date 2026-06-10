@@ -530,7 +530,7 @@ export default function ProductDetail() {
 
           {/* Judul */}
           <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
-            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
+            <h1 className="text-2xl md:text-4xl font-bold text-white drop-shadow-md">
               {product.obyek_retribusi}
             </h1>
           </div>
@@ -623,7 +623,7 @@ export default function ProductDetail() {
 
               {product.is_laku ? (
                 <span className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
-                  Sudah Disewa
+                  Tersewa
                 </span>
               ) : (
                 <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
@@ -674,7 +674,7 @@ export default function ProductDetail() {
                 </div>
 
                 <div>
-                  <p className="text-gray-500">Kota</p>
+                  <p className="text-gray-500">Kota / Kabupaten</p>
                   <p className="font-semibold">{product.kota?.kab_kota}</p>
                 </div>
 
@@ -691,7 +691,7 @@ export default function ProductDetail() {
 
             {/* TARIF */}
             <div>
-              <h4 className="font-semibold mb-3">Tarif & Potensi</h4>
+              <h4 className="font-semibold mb-3">Tarif</h4>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-gray-500">Tarif</p>
@@ -716,16 +716,6 @@ export default function ProductDetail() {
                     {product.potensi_retribusi?.volume}
                   </p>
                 </div>
-
-                <div>
-                  <p className="text-gray-500">Potensi Retribusi</p>
-                  <p className="font-semibold text-green-600">
-                    Rp{" "}
-                    {parseInt(
-                      product.potensi_retribusi?.potensi || 0,
-                    ).toLocaleString("id-ID")}
-                  </p>
-                </div>
               </div>
             </div>
 
@@ -739,7 +729,7 @@ export default function ProductDetail() {
                 </div>
 
                 <div>
-                  <p className="text-gray-500">UPPD</p>
+                  <p className="text-gray-500">UPPD / Balai / Pengelola</p>
                   <p className="font-semibold">{product.uppd?.nama}</p>
                 </div>
               </div>
@@ -790,7 +780,7 @@ export default function ProductDetail() {
                   disabled
                   className="w-full py-4 rounded-xl bg-gray-400 text-white font-bold text-lg cursor-not-allowed"
                 >
-                  Obyek Sudah Disewa
+                  Tersewa
                 </button>
 
                 <div className="mt-3 p-3 rounded-xl bg-red-50 border border-red-200">
@@ -815,7 +805,7 @@ export default function ProductDetail() {
                 onClick={handleSPTRD}
                 className="w-full py-4 rounded-xl bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold text-lg hover:scale-105 transition"
               >
-                Buat SPTRD
+                Buat Perjanjian
               </button>
             )}
 

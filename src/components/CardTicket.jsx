@@ -9,6 +9,7 @@ export default function CardTicket({ fotos = [] }) {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const timerRef = useRef(null);
+  const isComing = fotos.status === "coming";
 
   const minSwipeDistance = 50;
 
@@ -78,7 +79,7 @@ export default function CardTicket({ fotos = [] }) {
   if (!fotos || fotos.length === 0) return null;
 
   return (
-    <div className="relative w-full aspect-[4/1] bg-white/70 backdrop-blur-xl rounded-[32px] border border-white/40 shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden group font-sans antialiased">
+    <div className="relative w-full aspect-[1024/123] bg-white/70 backdrop-blur-xl rounded-[32px] border border-white/40 shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden group font-sans antialiased">
       <a href="/ticket" className="">
         <img
           src={fotos[current].backgroundImage}

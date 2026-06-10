@@ -37,8 +37,10 @@ export default function Home() {
       description:
         "Pelayanan Pajak, Retribusi dan Aset Daerah Provinsi Jawa Tengah",
       cta: "Pelajari",
-      backgroundImage: "/images/banner-01.png",
-      image: "/images/hero1.png",
+      backgroundImage: "/images/tikcetbox.jpg",
+      image: "/images/tikcetbox.jpg",
+
+      status: "coming",
     },
   ];
 

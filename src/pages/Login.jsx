@@ -172,19 +172,28 @@ export default function Login() {
             transition={{ duration: 0.8 }}
             className="hidden lg:block"
           >
-            <img
-              src="/images/logopepakraja.png"
-              alt="PEPAKRAJA"
-              className="w-32 mb-8 drop-shadow-[0_0_40px_rgba(34,211,238,0.6)]"
-            />
+            <div className="flex">
+              <img
+                src="/images/logopepakraja.png"
+                alt="PEPAKRAJA"
+                className="m-2 w-32 mb-8 drop-shadow-[0_0_40px_rgba(34,211,238,0.6)]"
+              />
+
+              <img
+                src="/images/massajak.png"
+                alt="PEPAKRAJA"
+                className="w-40 h-40 m-2 mb-8 drop-shadow-[0_0_40px_rgba(34,211,238,0.6)]"
+              />
+            </div>
 
             <h1 className="text-6xl font-black text-white leading-tight">
-              PEPAKRAJA
+              PEPAK RADJA
             </h1>
 
             <p className="text-cyan-200 text-xl mt-5 max-w-xl">
-              Sistem Penatausahaan Retribusi Daerah yang modern, terintegrasi,
-              aman dan real-time untuk mendukung pengelolaan pendapatan daerah.
+              Platform digital layanan retribusi Daerah Provinsi Jawa Tengah
+              yang memberikan kemudahan, transparansi, dan keamanan dalam proses
+              pembayaran serta pengelolaan retribusi secara modern.
             </p>
 
             <div className="grid grid-cols-3 gap-4 mt-10">
@@ -223,6 +232,19 @@ export default function Login() {
                   alt="PEPAKRAJA"
                   className="w-24"
                 />
+                <div className="flex">
+                  <img
+                    src="/images/logopepakraja.png"
+                    alt="PEPAKRAJA"
+                    className="w-24"
+                  />
+
+                  <img
+                    src="/images/massajak.png"
+                    alt="PEPAKRAJA"
+                    className="w-24"
+                  />
+                </div>
               </div>
 
               {/* HEADER */}
@@ -230,7 +252,7 @@ export default function Login() {
                 <h2 className="mt-5 text-4xl font-black">Selamat Datang</h2>
 
                 <p className="text-gray-300 mt-2">
-                  Login menggunakan NPWRD dan Password
+                  Login menggunakan NPWRD/Email dan Password
                 </p>
               </div>
 
@@ -250,7 +272,7 @@ export default function Login() {
                 {/* NPWRD */}
                 <div>
                   <label className="block text-sm mb-2 text-gray-300">
-                    NPWRD
+                    NPWRD/Email
                   </label>
 
                   <div className="relative">
@@ -260,7 +282,7 @@ export default function Login() {
                       type="number"
                       value={npwrd}
                       onChange={(e) => setNpwrd(e.target.value)}
-                      placeholder="Masukkan NPWRD"
+                      placeholder="Masukkan NPWRD/Email"
                       required
                       className="w-full bg-white/10 border border-white/20 rounded-2xl py-4 pl-12 pr-4 outline-none text-white placeholder:text-gray-400 focus:ring-4 focus:ring-cyan-400/20 focus:border-cyan-400 transition-all"
                     />
@@ -326,7 +348,7 @@ export default function Login() {
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-5 h-5" />
+                        {/* <Sparkles className="w-5 h-5" /> */}
                         Masuk Sekarang
                       </>
                     )}

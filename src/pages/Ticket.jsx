@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -26,6 +27,7 @@ import {
   Lock,
   Banknote,
   Store,
+  ChevronLeft,
 } from "lucide-react";
 
 import Header from "../components/Header";
@@ -881,6 +883,7 @@ export default function Ticket() {
   const [showLogin, setShowLogin] = useState(false);
   const [pendingItem, setPendingItem] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSession(readSession());
@@ -926,7 +929,14 @@ export default function Ticket() {
     <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-white text-slate-900">
       <Header />
 
-      <main className="mx-auto max-w-5xl px-4 pb-16 pt-6 mt-24">
+      <main className="mx-auto max-w-5xl px-4 pb-16 pt-6 mt-20">
+        <button
+          onClick={() => navigate("/")}
+          className=" top-4 left-4 mb-2 flex items-center gap-1.5 py-2 px-4 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-all active:scale-95 shadow-xl border border-white/10"
+        >
+          <ChevronLeft className="w-5 h-5" />
+          <span className="font-medium text-sm">Kembali</span>
+        </button>
         {/* HERO */}
         <Glass className="overflow-hidden rounded-[2rem] p-6 sm:p-8">
           <div className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-600">
