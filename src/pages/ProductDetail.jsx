@@ -33,6 +33,8 @@ export default function ProductDetail() {
   const [formData, setFormData] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
 
+  const [showInfo, setShowInfo] = useState(false); // State untuk popup cara pengajuan
+
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -847,6 +849,13 @@ export default function ProductDetail() {
         <div className="fixed inset-0 z-50 bg-black/70 overflow-y-auto">
           <div className="sticky top-0 z-50 bg-black/70 backdrop-blur-lg p-4 flex justify-center gap-3 print:hidden">
             <button
+              onClick={() => setShowInfo(true)}
+              className="btn-action bg-yellow-600 hover:bg-yellow-700"
+            >
+              Cara Pengajuan
+            </button>
+
+            <button
               onClick={handleDownloadPDF}
               className="btn-action bg-blue-700"
             >
@@ -1056,6 +1065,37 @@ export default function ProductDetail() {
                 <span>*Coret yang tidak perlu</span>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {showInfo && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold">Tahapan Pengajuan</h3>
+              <button onClick={() => setShowInfo(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <ol className="list-decimal list-inside space-y-3 text-gray-700">
+              <li>
+                Datang ke pengelola terkait dan menyerahkan dokumen perjanjian.
+              </li>
+              <li>
+                Petugas akan menginput data dan melakukan verifikasi perjanjian
+                kerja sama.
+              </li>
+              <li>Anda mendapatkan tanda bukti pembayaran (TBP).</li>
+              <li>
+                Tanda bukti pembayaran bisa Anda cek atau unduh dari aplikasi.
+              </li>
+            </ol>
+            <button
+              onClick={() => setShowInfo(false)}
+              className="mt-6 w-full py-2 bg-gray-200 rounded-lg font-semibold hover:bg-gray-300"
+            >
+              Tutup
+            </button>
           </div>
         </div>
       )}
