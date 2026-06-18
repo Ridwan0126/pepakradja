@@ -89,7 +89,7 @@ export default function TransactionStatus() {
 
     try {
       const response = await fetch(
-        `/bapenda-api/pepakraja/tbp/detail?id_wr=${idWr}&no_penetapan=${encodeURIComponent(skrd.trim())}`,
+        `/bapenda/pepakraja/tbp/detail?id_wr=${idWr}&no_penetapan=${encodeURIComponent(skrd.trim())}`,
         {
           headers: {
             token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",

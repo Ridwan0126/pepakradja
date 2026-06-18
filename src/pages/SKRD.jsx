@@ -146,7 +146,7 @@ export default function SKRD() {
     try {
       // GANTI URL DI BAWAH INI DENGAN URL API YANG SESUAI
       const res = await fetch(
-        `/bapenda-api/pepakraja/skrd?id_wr=${id_wr}&tahun=${tahun}&bulan=${bulan}`,
+        `/bapenda/pepakraja/skrd?id_wr=${id_wr}&tahun=${tahun}&bulan=${bulan}`,
         {
           method: "GET",
           headers: {

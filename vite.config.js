@@ -40,26 +40,11 @@ export default defineConfig({
           path.replace(/^\/api\/pepakraja/, "/penatausahaan/api/pepakraja"),
       },
 
-      // 3. API Existing
-      "/bapenda-api": {
+      "/bapenda": {
         target: "https://rpp.bapenda.jatengprov.go.id",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/bapenda-api/, "/penatausahaan/api"),
-      },
-      "/bapenda-obyek": {
-        target: "https://rpp.bapenda.jatengprov.go.id",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) =>
-          path.replace(/^\/bapenda-obyek/, "/penatausahaan/api"),
-      },
-      "/bapenda-sptrd": {
-        target: "https://rpp.bapenda.jatengprov.go.id",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) =>
-          path.replace(/^\/bapenda-sptrd/, "/penatausahaan/api"),
+        rewrite: (path) => path.replace(/^\/bapenda/, "/penatausahaan/api"),
       },
 
       // 4. Catch-all /api (Mengarah ke root domain)

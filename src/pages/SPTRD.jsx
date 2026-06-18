@@ -78,15 +78,12 @@ export default function SPTRD() {
     setLoadingSearch(true);
 
     try {
-      const res = await fetch(
-        "/bapenda-sptrd/pepakraja/obyek?limit=50&page=1",
-        {
-          headers: {
-            token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-            Accept: "application/json",
-          },
+      const res = await fetch("/bapenda/pepakraja/obyek?limit=50&page=1", {
+        headers: {
+          token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
+          Accept: "application/json",
         },
-      );
+      });
 
       const result = await res.json();
 

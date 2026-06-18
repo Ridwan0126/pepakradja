@@ -104,7 +104,7 @@ export default function Register() {
   // =========================================================
   const getKota = async () => {
     try {
-      const response = await fetch("/bapenda-api/kota?provinsi=33", {
+      const response = await fetch("/bapenda/kota?provinsi=33", {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
           Accept: "application/json",
@@ -137,7 +137,7 @@ export default function Register() {
       setIsCheckingToken(true);
 
       const response = await fetch(
-        `/bapenda-api/pepakraja/wr/set-password?set_password_token=${setPasswordToken}`,
+        `/bapenda/pepakraja/wr/set-password?set_password_token=${setPasswordToken}`,
         {
           method: "GET",
           headers: {
@@ -216,7 +216,7 @@ export default function Register() {
       setIsChecking(true);
 
       const response = await fetch(
-        `/bapenda-api/pepakraja/wr/cek?nik_npwp=${formData.nik_npwp}`,
+        `/bapenda/pepakraja/wr/cek?nik_npwp=${formData.nik_npwp}`,
         {
           method: "GET",
           // Coba ubah menjadi:
@@ -342,7 +342,7 @@ export default function Register() {
 
       console.log("BODY FINAL:", bodyData);
 
-      const response = await fetch("/bapenda-api/pepakraja/wr", {
+      const response = await fetch("/bapenda/pepakraja/wr", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -424,7 +424,7 @@ export default function Register() {
     try {
       setIsSaving(true);
 
-      const response = await fetch("/bapenda-api/pepakraja/wr/set-password", {
+      const response = await fetch("/bapenda/pepakraja/wr/set-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

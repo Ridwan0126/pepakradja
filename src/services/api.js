@@ -4,7 +4,7 @@ import axios from "axios";
    RETRIBUSI API (FETCH)
 ========================================= */
 
-const RETRIBUSI_BASE_URL = "/bapenda-obyek";
+const RETRIBUSI_BASE_URL = "/bapenda";
 
 const retributiFetch = async (endpoint, params = {}) => {
   const queryString = new URLSearchParams(params).toString();

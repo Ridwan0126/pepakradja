@@ -9,17 +9,10 @@
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/:path*"
     },
     {
-      "source": "/bapenda-api/:path*",
+      "source": "/bapenda/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
     },
-    {
-      "source": "/bapenda-sptrd/:path*",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
-    },
-    {
-      "source": "/bapenda-obyek/:path*",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
-    },
+
     {
       "source": "/(.*)",
       "destination": "/index.html"
