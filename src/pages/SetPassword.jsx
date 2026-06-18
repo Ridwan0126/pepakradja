@@ -9,28 +9,46 @@ const SetPassword = () => {
   const [loading, setLoading] = useState(true);
   const [password, setPassword] = useState("");
 
+  // Definisikan header yang diperlukan
+  const apiHeaders = {
+    "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1", // Ganti dengan nama header yang benar jika berbeda
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+
   useEffect(() => {
-    // Menggunakan path yang sudah di-proxy di vercel.json
-    axios
-      .get(`/api/set-password/?set_password_token=${token}`)
-      .then(() => setIsValid(true))
-      .catch(() => {
-        Swal.fire("Error", "Token tidak valid", "error");
-      })
-      .finally(() => setLoading(false));
+    const verifyToken = async () => {
+      try {
+        // Request dengan menyertakan headers
+        await axios.get(`/api/set-password/?set_password_token=${token}`, {
+          headers: apiHeaders,
+        });
+        setIsValid(true);
+      } catch (error) {
+        Swal.fire("Error", "Token tidak valid atau akses ditolak.", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (token) verifyToken();
   }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Gunakan path yang sama untuk POST
-      await axios.post("/api/set-password/", {
-        set_password_token: token,
-        password: password,
-      });
+      await axios.post(
+        "/api/set-password/",
+        {
+          set_password_token: token,
+          password: password,
+        },
+        {
+          headers: apiHeaders, // Jangan lupa sertakan header juga saat POST
+        },
+      );
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
     } catch (error) {
-      Swal.fire("Gagal", "Terjadi kesalahan sistem", "error");
+      Swal.fire("Gagal", "Terjadi kesalahan saat menyimpan password.", "error");
     }
   };
 
@@ -40,7 +58,7 @@ const SetPassword = () => {
     <div className="container">
       {isValid ? (
         <form onSubmit={handleSubmit}>
-          <h2>Set Password</h2>
+          <h2>Set Password Baru</h2>
           <input
             type="password"
             placeholder="Masukkan password baru"
