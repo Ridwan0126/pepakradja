@@ -37,6 +37,7 @@ const SetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validasi sederhana di sisi client
     if (password !== passwordConfirmation) {
       Swal.fire(
         "Gagal",
@@ -47,8 +48,7 @@ const SetPassword = () => {
     }
 
     try {
-      // Pastikan URL tujuan di axios.post sesuai dengan 'source' di vercel.json
-      const response = await axios.post(
+      await axios.post(
         "/api/set-password",
         {
           set_password_token: token,
@@ -56,26 +56,13 @@ const SetPassword = () => {
           password_confirmation: passwordConfirmation,
         },
         {
-          headers: {
-            "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
+          headers: apiHeaders,
         },
       );
-
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
     } catch (error) {
-      // Cek detail error di console
-      console.error("Error Response Data:", error.response?.data);
-      console.error("Error Status:", error.response?.status);
-
-      Swal.fire(
-        "Gagal",
-        "Terjadi kesalahan: " +
-          (error.response?.data?.message || "Periksa koneksi atau token"),
-        "error",
-      );
+      console.log(error.response?.data); // TAMBAHKAN INI
+      Swal.fire("Gagal", JSON.stringify(error.response?.data), "error");
     }
   };
 
