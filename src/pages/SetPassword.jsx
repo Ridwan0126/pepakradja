@@ -41,14 +41,12 @@ const SetPassword = () => {
 
       try {
         setLoadingToken(true);
-        const params = new URLSearchParams({ set_password_token: token });
         const response = await fetch(
-          `/bapenda-api/wr/set-password?set_password_token=?${params.toString()}`,
+          `/bapenda-api/pepakraja/wr/set-password?set_password_token=${token}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Referer: "https://rpp.bapenda.jatengprov.go.id/",
             },
           },
         );
@@ -95,7 +93,9 @@ const SetPassword = () => {
 
       const response = await fetch("/bapenda-api/pepakraja/wr/set-password", {
         method: "POST",
-
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
 
