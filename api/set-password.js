@@ -23,6 +23,13 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(targetUrl, fetchOptions);
+    const status = response.status;
+    const responseText = await response.text();
+
+    console.log("Status dari Bapenda:", status);
+    console.log("Isi respons mentah:", responseText); // Lihat di log Vercel!
+
+    res.status(status).json({ status, body: responseText });
 
     // Jika response bukan JSON (misal HTML halaman error), tangani agar tidak crash
     const contentType = response.headers.get("content-type");
