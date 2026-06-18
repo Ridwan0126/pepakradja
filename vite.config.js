@@ -6,28 +6,68 @@ export default defineConfig({
 
   server: {
     proxy: {
-      // API Lama
+      // 1. Penanganan /api/set-password (Spesifik)
+      "/api/set-password": {
+        target: "https://rpp.bapenda.jatengprov.go.id",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) =>
+          path.replace(
+            /^\/api\/set-password/,
+            "/penatausahaan/api/pepakraja/wr/set-password",
+          ),
+        // Menambahkan header untuk menyamai konfigurasi headers di vercel.json
+        configure: (proxy) => {
+          proxy.on("proxyReq", (proxyReq) => {
+            proxyReq.setHeader(
+              "Referer",
+              "https://rpp.bapenda.jatengprov.go.id/",
+            );
+            proxyReq.setHeader(
+              "Origin",
+              "https://rpp.bapenda.jatengprov.go.id/",
+            );
+          });
+        },
+      },
+
+      // 2. Penanganan /api/pepakraja/
+      "/api/pepakraja": {
+        target: "https://rpp.bapenda.jatengprov.go.id",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) =>
+          path.replace(/^\/api\/pepakraja/, "/penatausahaan/api/pepakraja"),
+      },
+
+      // 3. API Existing
       "/bapenda-api": {
         target: "https://rpp.bapenda.jatengprov.go.id",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/bapenda-api/, "/penatausahaan/api"),
       },
-
       "/bapenda-obyek": {
         target: "https://rpp.bapenda.jatengprov.go.id",
         changeOrigin: true,
         secure: false,
         rewrite: (path) =>
-          path.replace(/^\/bapenda-obyek/, "penatausahaan/api"),
+          path.replace(/^\/bapenda-obyek/, "/penatausahaan/api"),
       },
-      // API Baru SPTRD
       "/bapenda-sptrd": {
         target: "https://rpp.bapenda.jatengprov.go.id",
         changeOrigin: true,
         secure: false,
         rewrite: (path) =>
           path.replace(/^\/bapenda-sptrd/, "/penatausahaan/api"),
+      },
+
+      // 4. Catch-all /api (Mengarah ke root domain)
+      // Pastikan diletakkan di urutan paling bawah agar tidak membajak path lain
+      "^/api/": {
+        target: "https://rpp.bapenda.jatengprov.go.id",
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
