@@ -37,15 +37,6 @@ const SetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi sederhana di sisi client
-    if (password !== passwordConfirmation) {
-      Swal.fire(
-        "Gagal",
-        "Password dan Konfirmasi Password tidak cocok!",
-        "warning",
-      );
-      return;
-    }
     const payload = {
       set_password_token: token,
       password: password,
@@ -57,23 +48,18 @@ const SetPassword = () => {
       "Data yang akan dikirim ke API:",
       JSON.stringify(payload, null, 2),
     );
-    try {
-      await axios.post(
-        "/api/set-password",
-        {
-          set_password_token: token,
-          password: password,
-          password_confirmation: passwordConfirmation,
-        },
-        {
-          headers: apiHeaders,
-        },
-      );
 
+    try {
+      const response = await axios.post("/api/set-password", payload, {
+        headers: apiHeaders,
+      });
+      console.log("Respon sukses dari server:", response.data);
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
     } catch (error) {
-      console.log(error.response?.data); // TAMBAHKAN INI
-      Swal.fire("Gagal", JSON.stringify(error.response?.data), "error");
+      // LOG RESPON ERROR LENGKAP
+      console.error("Data error dari server:", error.response?.data);
+      console.error("Status error:", error.response?.status);
+      Swal.fire("Gagal", "Cek Console untuk detail error", "error");
     }
   };
 
