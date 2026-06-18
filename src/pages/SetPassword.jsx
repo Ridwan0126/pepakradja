@@ -7,21 +7,20 @@ const SetPassword = () => {
   const { token } = useParams();
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [password, setPassword] = useState("");
 
-  // Definisikan header yang diperlukan
+  // State untuk form
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
   const apiHeaders = {
     "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
     Accept: "application/json",
     "Content-Type": "application/json",
-    Referer: "https://rpp.bapenda.jatengprov.go.id/", // Memberitahu server asal request
-    Origin: "https://rpp.bapenda.jatengprov.go.id/",
   };
 
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        // Request dengan menyertakan headers
         await axios.get(`/api/set-password/?set_password_token=${token}`, {
           headers: apiHeaders,
         });
@@ -37,15 +36,27 @@ const SetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validasi sederhana di sisi client
+    if (password !== passwordConfirmation) {
+      Swal.fire(
+        "Gagal",
+        "Password dan Konfirmasi Password tidak cocok!",
+        "warning",
+      );
+      return;
+    }
+
     try {
       await axios.post(
         "/api/set-password/",
         {
           set_password_token: token,
           password: password,
+          password_confirmation: passwordConfirmation, // Sesuai format body yang Anda minta
         },
         {
-          headers: apiHeaders, // Jangan lupa sertakan header juga saat POST
+          headers: apiHeaders,
         },
       );
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
@@ -61,16 +72,29 @@ const SetPassword = () => {
       {isValid ? (
         <form onSubmit={handleSubmit}>
           <h2>Set Password Baru</h2>
+
+          <label>Password Baru:</label>
           <input
             type="password"
             placeholder="Masukkan password baru"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Simpan</button>
+
+          <label>Konfirmasi Password:</label>
+          <input
+            type="password"
+            placeholder="Ulangi password baru"
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            required
+          />
+
+          <button type="submit">Simpan Password</button>
         </form>
       ) : (
-        <p>Maaf, token tidak valid.</p>
+        <p>Maaf, token tidak valid atau telah kadaluwarsa.</p>
       )}
     </div>
   );
