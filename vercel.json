@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/set-password/(.*)",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password/$1"
+      "source": "/api/set-password/:path*",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password/:path*"
     },
     {
       "source": "/api/pepakraja/(.*)",

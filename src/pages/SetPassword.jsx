@@ -11,9 +11,11 @@ const SetPassword = () => {
 
   // Definisikan header yang diperlukan
   const apiHeaders = {
-    "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1", // Ganti dengan nama header yang benar jika berbeda
+    "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
     Accept: "application/json",
     "Content-Type": "application/json",
+    Referer: "https://rpp.bapenda.jatengprov.go.id/", // Memberitahu server asal request
+    Origin: "https://rpp.bapenda.jatengprov.go.id/",
   };
 
   useEffect(() => {
