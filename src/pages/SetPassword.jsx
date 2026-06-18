@@ -42,7 +42,7 @@ const SetPassword = () => {
       try {
         setLoadingToken(true);
         const response = await fetch(
-          `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/set_password_token=${token}`,
+          `/bapenda-api/pepakraja/set_password_token=${token}`,
           {
             method: "GET",
             headers: {
@@ -93,7 +93,7 @@ const SetPassword = () => {
       };
 
       const response = await fetch(
-        "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password", // Perbaikan URL
+        "/bapenda-api/pepakraja/wr/set-password", // <--- Ubah ini
         {
           method: "POST",
           headers: {
