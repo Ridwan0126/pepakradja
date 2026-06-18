@@ -38,31 +38,42 @@ const SetPassword = () => {
     e.preventDefault();
 
     if (password !== passwordConfirmation) {
-      Swal.fire("Gagal", "Password tidak cocok!", "warning");
+      Swal.fire(
+        "Gagal",
+        "Password dan Konfirmasi Password tidak cocok!",
+        "warning",
+      );
       return;
     }
 
     try {
-      const response = await axios({
-        method: "post",
-        url: "/api/set-password", // Sesuaikan dengan path rewrite Anda
-        data: JSON.stringify({
+      // Pastikan URL tujuan di axios.post sesuai dengan 'source' di vercel.json
+      const response = await axios.post(
+        "/api/set-password",
+        {
           set_password_token: token,
           password: password,
           password_confirmation: passwordConfirmation,
-        }),
-        headers: {
-          ...apiHeaders,
-          "Content-Type": "application/json",
         },
-      });
+        {
+          headers: {
+            "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        },
+      );
 
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
     } catch (error) {
-      console.error("Error Detail:", error.response);
+      // Cek detail error di console
+      console.error("Error Response Data:", error.response?.data);
+      console.error("Error Status:", error.response?.status);
+
       Swal.fire(
         "Gagal",
-        error.response?.data?.message || "Terjadi kesalahan server",
+        "Terjadi kesalahan: " +
+          (error.response?.data?.message || "Periksa koneksi atau token"),
         "error",
       );
     }
