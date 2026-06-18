@@ -31,15 +31,6 @@ export default defineConfig({
         },
       },
 
-      // 2. Penanganan /api/pepakraja/
-      "/api/pepakraja": {
-        target: "https://rpp.bapenda.jatengprov.go.id",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) =>
-          path.replace(/^\/api\/pepakraja/, "/penatausahaan/api/pepakraja"),
-      },
-
       "/bapenda": {
         target: "https://rpp.bapenda.jatengprov.go.id",
         changeOrigin: true,
