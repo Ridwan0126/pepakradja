@@ -61,7 +61,8 @@ const SetPassword = () => {
       );
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
     } catch (error) {
-      Swal.fire("Gagal", "Terjadi kesalahan saat menyimpan password.", "error");
+      console.log(error.response?.data); // TAMBAHKAN INI
+      Swal.fire("Gagal", JSON.stringify(error.response?.data), "error");
     }
   };
 
