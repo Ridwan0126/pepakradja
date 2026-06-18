@@ -11,8 +11,7 @@ export default defineConfig({
         target: "https://rpp.bapenda.jatengprov.go.id",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) =>
-          path.replace(/^\/bapenda-api/, "/penatausahaan-dev/api"),
+        rewrite: (path) => path.replace(/^\/bapenda-api/, "/penatausahaan/api"),
       },
 
       "/bapenda-obyek": {
@@ -20,7 +19,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) =>
-          path.replace(/^\/bapenda-obyek/, "penatausahaan-dev/api"),
+          path.replace(/^\/bapenda-obyek/, "penatausahaan/api"),
       },
       // API Baru SPTRD
       "/bapenda-sptrd": {

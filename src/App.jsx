@@ -60,7 +60,7 @@ function App() {
 
             <Route path="/profile" element={<Profile />} />
 
-            <Route path="/setpassword" element={<SetPassword />} />
+            <Route path="/setpassword/:token" element={<SetPassword />} />
             <Route path="/scanticket" element={<ScanTicket />} />
             <Route path="/ticket" element={<Ticket />} />
 

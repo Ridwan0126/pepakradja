@@ -92,6 +92,7 @@ const DESTINASI = [
     img: "/images/borobudur.png",
     desc: "Candi Buddha terbesar di dunia, warisan dunia UNESCO dengan panorama matahari terbit yang ikonik.",
     jam: "06.00 - 17.00",
+    satuan: "orang",
   },
   {
     id: "OBJ-002",
@@ -103,6 +104,7 @@ const DESTINASI = [
     img: "/images/prambanan.png",
     desc: "Kompleks candi Hindu termegah di Indonesia dengan arsitektur menjulang yang memukau.",
     jam: "06.30 - 17.00",
+    satuan: "orang",
   },
   {
     id: "OBJ-003",
@@ -114,6 +116,7 @@ const DESTINASI = [
     img: "/images/dieng.png",
     desc: "Negeri di atas awan dengan telaga warna, kawah, dan udara sejuk pegunungan.",
     jam: "24 Jam",
+    satuan: "orang",
   },
   {
     id: "OBJ-004",
@@ -125,6 +128,7 @@ const DESTINASI = [
     img: "/images/lawangsewu.png",
     desc: "Bangunan kolonial bersejarah dengan seribu pintu, ikon Kota Semarang.",
     jam: "08.00 - 21.00",
+    satuan: "orang",
   },
   {
     id: "OBJ-005",
@@ -136,6 +140,7 @@ const DESTINASI = [
     img: "/images/karimunjawa.png",
     desc: "Gugusan pulau tropis dengan air laut sebening kristal, surga snorkeling.",
     jam: "07.00 - 18.00",
+    satuan: "orang",
   },
   {
     id: "OBJ-006",
@@ -147,6 +152,7 @@ const DESTINASI = [
     img: "/images/ponggok.png",
     desc: "Mata air jernih untuk snorkeling dan foto bawah air yang fenomenal.",
     jam: "07.00 - 17.00",
+    satuan: "orang",
   },
   {
     id: "OBJ-007",
@@ -158,6 +164,7 @@ const DESTINASI = [
     img: "/images/kotalama.png",
     desc: "Little Netherlands dengan deretan bangunan tua estetik dan Gereja Blenduk.",
     jam: "24 Jam",
+    satuan: "orang",
   },
   {
     id: "OBJ-008",
@@ -169,6 +176,7 @@ const DESTINASI = [
     img: "/images/saloka.png",
     desc: "Taman rekreasi keluarga terbesar di Jawa Tengah dengan puluhan wahana seru.",
     jam: "09.00 - 17.00",
+    satuan: "orang",
   },
 ];
 

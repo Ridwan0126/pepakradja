@@ -8,12 +8,12 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja/wr/data",
+      "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/data",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
+          token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
         },
         body: JSON.stringify(req.body),
       },

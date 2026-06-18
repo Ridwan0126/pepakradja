@@ -31,7 +31,7 @@ export default function Register() {
   // =========================================================
   // TOKEN
   // =========================================================
-  const TOKEN = "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9";
+  const TOKEN = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
   const CS_NUMBER = "081234567890";
 
   // =========================================================
@@ -71,7 +71,7 @@ export default function Register() {
   // FORM DATA REGISTER
   // =========================================================
   const [formData, setFormData] = useState({
-    dokumen: "nik",
+    dokumen: "NIK",
     nik_npwp: "",
     nama: "",
     alamat: "",
@@ -104,17 +104,28 @@ export default function Register() {
   // =========================================================
   const getKota = async () => {
     try {
-      const response = await fetch("/bapenda-api/pepakraja//kota?provinsi=33", {
+      const response = await fetch("/bapenda-api/kota?provinsi=33", {
         headers: {
-          token: TOKEN,
+          Authorization: `Bearer ${TOKEN}`,
+          Accept: "application/json",
         },
       });
 
       const result = await response.json();
 
-      setKotaList(result || []);
+      // Log untuk memastikan struktur data
+      console.log("Struktur API:", result);
+
+      // Jika result berupa array:
+      if (Array.isArray(result)) {
+        setKotaList(result);
+      }
+      // Jika result adalah objek { data: [...] }:
+      else if (result.data && Array.isArray(result.data)) {
+        setKotaList(result.data);
+      }
     } catch (err) {
-      console.log(err);
+      console.error("Gagal load kota:", err);
     }
   };
 
@@ -126,7 +137,7 @@ export default function Register() {
       setIsCheckingToken(true);
 
       const response = await fetch(
-        `/bapenda-api/pepakraja//wr/set-password?set_password_token=${setPasswordToken}`,
+        `/bapenda-api/pepakraja/wr/set-password?set_password_token=${setPasswordToken}`,
         {
           method: "GET",
           headers: {
@@ -205,9 +216,10 @@ export default function Register() {
       setIsChecking(true);
 
       const response = await fetch(
-        `/bapenda-api/pepakraja//wr/cek?nik_npwp=${formData.nik_npwp}`,
+        `/bapenda-api/pepakraja/wr/cek?nik_npwp=${formData.nik_npwp}`,
         {
           method: "GET",
+          // Coba ubah menjadi:
           headers: {
             token: TOKEN,
             Accept: "application/json",
@@ -330,7 +342,7 @@ export default function Register() {
 
       console.log("BODY FINAL:", bodyData);
 
-      const response = await fetch("/bapenda-api/pepakraja//wr", {
+      const response = await fetch("/bapenda-api/pepakraja/wr", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -412,7 +424,7 @@ export default function Register() {
     try {
       setIsSaving(true);
 
-      const response = await fetch("/bapenda-api/pepakraja//wr/set-password", {
+      const response = await fetch("/bapenda-api/pepakraja/wr/set-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -657,7 +669,7 @@ overflow-hidden
                 </h1>
 
                 <p className="text-gray-300 mt-4 leading-relaxed">
-                  Sistem Penatausahaan Retribusi Jawa Tengah Terintegrasi
+                  Pendaftaran Wajib Retribusi Jawa Tengah
                 </p>
 
                 <div className="mt-10 space-y-4">
@@ -702,14 +714,20 @@ overflow-hidden
                         title="Perseorangan"
                         desc="Pendaftaran individu"
                         icon={<User className="w-8 h-8" />}
-                        onClick={() => setSelectedType("Perseorangan")}
+                        onClick={() => {
+                          setSelectedType("Perseorangan");
+                          setFormData((prev) => ({ ...prev, dokumen: "NIK" })); // Set otomatis ke NIK
+                        }}
                       />
 
                       <TypeCard
                         title="Badan Usaha"
                         desc="Pendaftaran perusahaan"
                         icon={<Building2 className="w-8 h-8" />}
-                        onClick={() => setSelectedType("Badan Usaha")}
+                        onClick={() => {
+                          setSelectedType("Badan Usaha");
+                          setFormData((prev) => ({ ...prev, dokumen: "NPWP" })); // Set otomatis ke NPWP
+                        }}
                       />
                     </div>
                   </motion.div>
@@ -741,19 +759,24 @@ overflow-hidden
 
                     {!showForm && (
                       <div className="space-y-5">
-                        <SelectDokumen
-                          formData={formData}
-                          handleChange={handleChange}
-                        />
+                        <div className="bg-white/5 border border-cyan-400/30 rounded-2xl p-4 text-center">
+                          <p className="text-cyan-300 font-semibold text-sm">
+                            Anda mendaftar sebagai {selectedType}
+                          </p>
+                          <p className="text-white font-bold text-lg">
+                            Silahkan masukkan{" "}
+                            {formData.dokumen === "NIK" ? "NIK" : "NPWP"}
+                          </p>
+                        </div>
 
                         <InputIcon
-                          label={formData.dokumen === "nik" ? "NIK" : "NPWP"}
+                          label={formData.dokumen === "NIK" ? "NIK" : "NPWP"}
                           icon={<CreditCard className="w-5 h-5" />}
                           name="nik_npwp"
                           value={formData.nik_npwp}
                           onChange={handleChange}
                           placeholder={`Masukkan ${
-                            formData.dokumen === "nik" ? "NIK" : "NPWP"
+                            formData.dokumen === "NIK" ? "NIK" : "NPWP"
                           }`}
                         />
 
@@ -801,7 +824,7 @@ shadow-cyan-500/30
                         />
 
                         <InputIcon
-                          label={formData.dokumen === "nik" ? "NIK" : "NPWP"}
+                          label={formData.dokumen === "NIK" ? "NIK" : "NPWP"}
                           icon={<CreditCard className="w-5 h-5" />}
                           name="nik_npwp"
                           value={formData.nik_npwp}
@@ -863,6 +886,7 @@ shadow-cyan-500/30
                           <select
                             name="provinsi"
                             value={formData.provinsi}
+                            onChange={handleChange}
                             className="
 w-full
 bg-white/10
@@ -914,11 +938,13 @@ focus:border-cyan-400
                                 Pilih Kota / Kabupaten
                               </option>
 
-                              {kotaList.map((item) => (
-                                <option key={item.id} value={item.id}>
-                                  {item.kab_kota}
-                                </option>
-                              ))}
+                              {Array.isArray(kotaList) &&
+                                kotaList.length > 0 &&
+                                kotaList.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {item.text} {/* Perbaikan di sini */}
+                                  </option>
+                                ))}
                             </select>
                           </div>
                         </div>
@@ -1062,9 +1088,9 @@ focus:ring-cyan-400/20
 focus:border-cyan-400
 "
       >
-        <option value="nik">NIK</option>
+        <option value="NIK">NIK</option>
 
-        <option value="npwp">NPWP</option>
+        <option value="NPWP">NPWP</option>
       </select>
     </div>
   );

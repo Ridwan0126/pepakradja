@@ -82,7 +82,7 @@ export default function SPTRD() {
         "/bapenda-sptrd/pepakraja/obyek?limit=50&page=1",
         {
           headers: {
-            token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
+            token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
             Accept: "application/json",
           },
         },

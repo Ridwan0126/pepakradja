@@ -190,8 +190,11 @@ export default function Footer() {
           </div>
 
           <div className="pb-10">
-            <div className="flex gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-              <div>
+            {/* Tambahkan items-center jika ingin gambar vertikalnya di tengah, 
+      atau hapus jika ingin tetap di atas */}
+            <div className="flex items-start gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+              {/* Tambahkan flex-1 agar div ini memenuhi ruang yang tersedia */}
+              <div className="flex-1">
                 <h4 className="font-bold text-lg text-white mb-1">
                   Dikelola oleh:
                 </h4>
@@ -202,11 +205,26 @@ export default function Footer() {
                   Bidang Pengelolaan Retribusi, Pendapatan lain dan Pemanfaatan
                   Aset Daerah
                 </p>
-                <p className="text-slate-400 leading-relaxed  flex items-center gap-2">
+
+                <a
+                  href="https://maps.app.goo.gl/zXWremXXt2ccvmtr6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-400 hover:text-cyan-400 leading-relaxed flex items-center gap-2 mt-2"
+                >
                   <MapPin className="w-4 h-4" />
                   Gd.A Lantai V Jl. Pemuda No.1, Dadapsari, Kec. Semarang Utara,
                   Kota Semarang, Jawa Tengah 50173
-                </p>
+                </a>
+              </div>
+
+              {/* Flex-shrink-0 memastikan gambar tidak mengecil saat teks panjang */}
+              <div className="flex-shrink-0">
+                <img
+                  src="/images/massajak.png"
+                  alt="PEPAK RAJA"
+                  className="w-38 h-36 object-contain group-hover:scale-110 transition-all duration-500"
+                />
               </div>
             </div>
           </div>

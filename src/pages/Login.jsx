@@ -41,7 +41,7 @@ export default function Login() {
       const headers = import.meta.env.DEV
         ? {
             "Content-Type": "application/json",
-            token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
+            token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
           }
         : {
             "Content-Type": "application/json",

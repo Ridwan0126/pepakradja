@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Lock,
@@ -13,8 +13,8 @@ import {
 
 const SetPassword = () => {
   const [searchParams] = useSearchParams();
-  const tokenFromUrl = searchParams.get("token");
-
+  // const token = searchParams.get("token");
+  const { token } = useParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,11 +25,11 @@ const SetPassword = () => {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
-  const HEADER_TOKEN = "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9/wr/set-password?";
+  const HEADER_TOKEN = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1/wr/set-password?";
 
   useEffect(() => {
     const checkTokenValidity = async () => {
-      if (!tokenFromUrl) {
+      if (!token) {
         setIsTokenValid(false);
         setMessage({
           type: "error",
@@ -42,7 +42,7 @@ const SetPassword = () => {
       try {
         setLoadingToken(true);
         const response = await fetch(
-          `https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja/set_password_token=${tokenFromUrl}`,
+          `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/set_password_token=${token}`,
           {
             method: "GET",
             headers: {
@@ -73,7 +73,7 @@ const SetPassword = () => {
     };
 
     checkTokenValidity();
-  }, [tokenFromUrl]);
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,13 +87,13 @@ const SetPassword = () => {
     try {
       setSubmitting(true);
       const payload = {
-        set_password_token: tokenFromUrl,
+        set_password_token: token,
         password: password,
         password_confirmation: confirmPassword,
       };
 
       const response = await fetch(
-        "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja/wr/set-password", // Perbaikan URL
+        "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password", // Perbaikan URL
         {
           method: "POST",
           headers: {

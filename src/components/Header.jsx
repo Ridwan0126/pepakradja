@@ -218,7 +218,7 @@ export default function Header() {
       setSearchOpen(true);
 
       const response = await fetch(
-        `https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/pepakraja/obyek?page=${pageNumber}&limit=20&search=${encodeURIComponent(keyword)}`,
+        `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/obyek?page=${pageNumber}&limit=20&search=${encodeURIComponent(keyword)}`,
       );
 
       const result = await response.json();
@@ -481,9 +481,9 @@ export default function Header() {
                       <span className="text-sm sm:text-base md:text-lg font-bold text-slate-800">
                         PEPAK RADJA
                       </span>
-                      <span className="text-xs text-slate-500 font-medium">
+                      {/* <span className="text-xs text-slate-500 font-medium">
                         Marketplace Retribusi
-                      </span>
+                      </span> */}
                     </div>
                   </Link>
 
@@ -884,7 +884,7 @@ export default function Header() {
                                 <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-100 border border-gray-200 flex-shrink-0">
                                   {photo ? (
                                     <img
-                                      src={`https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/storage/${photo}`}
+                                      src={`https://rpp.bapenda.jatengprov.go.id/penatausahaan/storage/${photo}`}
                                       alt="foto"
                                       className="w-full h-full object-cover"
                                     />
@@ -971,7 +971,7 @@ export default function Header() {
                           <div className="h-[320px] sm:h-[380px] bg-slate-900 flex items-center justify-center overflow-hidden">
                             {activeImage ? (
                               <img
-                                src={`https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/storage/${activeImage}`}
+                                src={`https://rpp.bapenda.jatengprov.go.id/penatausahaan/storage/${activeImage}`}
                                 alt="detail"
                                 className="w-full h-full object-cover brightness-95"
                               />
@@ -994,7 +994,7 @@ export default function Header() {
                                 }`}
                               >
                                 <img
-                                  src={`https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/storage/${photo}`}
+                                  src={`https://rpp.bapenda.jatengprov.go.id/penatausahaan/storage/${photo}`}
                                   className="w-full h-full object-cover"
                                   alt=""
                                 />

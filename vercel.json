@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/bapenda-api/(.*)",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/$1"
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/$1"
     },
     {
       "source": "/bapenda-sptrd/(.*)",
@@ -10,7 +10,7 @@
     },
     {
       "source": "/bapenda-obyek/(.*)",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan-dev/api/$1"
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/$1"
     },
     {
       "source": "/api/:path*",

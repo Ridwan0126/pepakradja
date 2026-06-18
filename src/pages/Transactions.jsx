@@ -92,7 +92,7 @@ export default function TransactionStatus() {
         `/bapenda-api/pepakraja/tbp/detail?id_wr=${idWr}&no_penetapan=${encodeURIComponent(skrd.trim())}`,
         {
           headers: {
-            token: "mQ8xL2vNpR7kHdYcTa4ZwEuBjF1sGn9",
+            token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
             Accept: "application/json",
           },
         },
