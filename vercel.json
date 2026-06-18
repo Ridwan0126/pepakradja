@@ -1,9 +1,5 @@
 {
   "rewrites": [
-    {
-      "source": "/api/set-password/:path*",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password/:path*"
-    },
     { "source": "/api/bapenda/(.*)", "destination": "/api/bapenda" },
     {
       "source": "/bapenda/:path*",
@@ -13,15 +9,6 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/set-password/:path*",
-      "headers": [
-        { "key": "Referer", "value": "https://rpp.bapenda.jatengprov.go.id/" },
-        { "key": "Origin", "value": "https://rpp.bapenda.jatengprov.go.id/" }
-      ]
     }
   ]
 }
