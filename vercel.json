@@ -17,6 +17,10 @@
       "destination": "https://rpp.bapenda.jatengprov.go.id/:path*"
     },
     {
+      "source": "/api/pepakraja/(.*)",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

@@ -42,13 +42,8 @@ const SetPassword = () => {
       try {
         setLoadingToken(true);
         const response = await fetch(
-          `/bapenda-api/pepakraja/wr/set-password?set_password_token=${token}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
+          `/api/pepakraja/wr/set-password?set_password_token=${token}`,
+          { method: "GET" },
         );
 
         if (response.ok) {
@@ -91,7 +86,7 @@ const SetPassword = () => {
         password_confirmation: confirmPassword,
       };
 
-      const response = await fetch("/bapenda-api/pepakraja/wr/set-password", {
+      const response = await fetch("/api/pepakraja/wr/set-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
