@@ -41,8 +41,9 @@ const SetPassword = () => {
 
       try {
         setLoadingToken(true);
+        const params = new URLSearchParams({ set_password_token: token });
         const response = await fetch(
-          `/bapenda-api/pepakraja/set_password?token=${token}`,
+          `/bapenda-api/pepakraja/wr/set-password?${params.toString()}`,
           {
             method: "GET",
             headers: {
