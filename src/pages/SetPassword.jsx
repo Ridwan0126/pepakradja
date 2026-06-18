@@ -47,7 +47,6 @@ const SetPassword = () => {
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${HEADER_TOKEN}`,
               "Content-Type": "application/json",
             },
           },
