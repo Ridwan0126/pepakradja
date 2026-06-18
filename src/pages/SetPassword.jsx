@@ -37,32 +37,34 @@ const SetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi sederhana di sisi client
     if (password !== passwordConfirmation) {
-      Swal.fire(
-        "Gagal",
-        "Password dan Konfirmasi Password tidak cocok!",
-        "warning",
-      );
+      Swal.fire("Gagal", "Password tidak cocok!", "warning");
       return;
     }
 
     try {
-      await axios.post(
-        "/api/set-password",
-        {
+      const response = await axios({
+        method: "post",
+        url: "/api/set-password", // Sesuaikan dengan path rewrite Anda
+        data: JSON.stringify({
           set_password_token: token,
           password: password,
           password_confirmation: passwordConfirmation,
+        }),
+        headers: {
+          ...apiHeaders,
+          "Content-Type": "application/json",
         },
-        {
-          headers: apiHeaders,
-        },
-      );
+      });
+
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
     } catch (error) {
-      console.log(error.response?.data); // TAMBAHKAN INI
-      Swal.fire("Gagal", JSON.stringify(error.response?.data), "error");
+      console.error("Error Detail:", error.response);
+      Swal.fire(
+        "Gagal",
+        error.response?.data?.message || "Terjadi kesalahan server",
+        "error",
+      );
     }
   };
 
