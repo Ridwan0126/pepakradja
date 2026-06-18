@@ -46,7 +46,17 @@ const SetPassword = () => {
       );
       return;
     }
+    const payload = {
+      set_password_token: token,
+      password: password,
+      password_confirmation: passwordConfirmation,
+    };
 
+    // LOG DATA KE CONSOLE BROWSER (F12)
+    console.log(
+      "Data yang akan dikirim ke API:",
+      JSON.stringify(payload, null, 2),
+    );
     try {
       await axios.post(
         "/api/set-password",
@@ -59,6 +69,7 @@ const SetPassword = () => {
           headers: apiHeaders,
         },
       );
+
       Swal.fire("Berhasil", "Password berhasil diatur!", "success");
     } catch (error) {
       console.log(error.response?.data); // TAMBAHKAN INI
