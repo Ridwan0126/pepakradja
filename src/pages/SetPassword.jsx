@@ -21,7 +21,7 @@ const SetPassword = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        await axios.get(`/api/set-password/?set_password_token=${token}`, {
+        await axios.get(`/api/set-password?set_password_token=${token}`, {
           headers: apiHeaders,
         });
         setIsValid(true);
@@ -49,11 +49,11 @@ const SetPassword = () => {
 
     try {
       await axios.post(
-        "/api/set-password/",
+        "/api/set-password",
         {
           set_password_token: token,
           password: password,
-          password_confirmation: passwordConfirmation, // Sesuai format body yang Anda minta
+          password_confirmation: passwordConfirmation,
         },
         {
           headers: apiHeaders,
