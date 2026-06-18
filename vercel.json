@@ -9,7 +9,7 @@
       "source": "/bapenda/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
     },
-    { "source": "/api/(.*)", "destination": "/api/$1" },
+
     {
       "source": "/(.*)",
       "destination": "/index.html"
