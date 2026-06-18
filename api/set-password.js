@@ -3,26 +3,49 @@ export default async function handler(req, res) {
   const targetUrl = `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password?${query}`;
 
   try {
-    const response = await fetch(targetUrl, {
+    // 1. Persiapkan header (hindari meneruskan semua header dari browser
+    // karena bisa menyebabkan masalah dengan Host/Connection)
+    const fetchOptions = {
       method: req.method,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-        "X-Requested-With": "XMLHttpRequest", // Tambahkan ini
+        Referer: "https://rpp.bapenda.jatengprov.go.id/",
+        Origin: "https://rpp.bapenda.jatengprov.go.id/",
       },
-      body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
-    });
+    };
 
-    // Cek status secara eksplisit
+    if (req.method !== "GET" && req.body) {
+      fetchOptions.body = JSON.stringify(req.body);
+    }
+
+    // 2. Lakukan request ke server Bapenda
+    const response = await fetch(targetUrl, fetchOptions);
     const status = response.status;
     const responseText = await response.text();
 
     console.log("Status dari Bapenda:", status);
-    console.log("Isi respons mentah:", responseText); // Lihat di log Vercel!
+    console.log("Isi respons mentah:", responseText);
 
-    res.status(status).json({ status, body: responseText });
+    // 3. Coba deteksi apakah JSON atau bukan
+    let finalData;
+    try {
+      finalData = JSON.parse(responseText);
+    } catch (e) {
+      // Jika bukan JSON, bungkus pesan errornya
+      finalData = {
+        message: "Server Bapenda tidak memberikan JSON",
+        raw: responseText.substring(0, 500),
+      };
+    }
+
+    // 4. Kirim satu kali saja
+    return res.status(status).json(finalData);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error pada Proxy:", error);
+    return res
+      .status(500)
+      .json({ error: "Gagal berkomunikasi", details: error.message });
   }
 }
