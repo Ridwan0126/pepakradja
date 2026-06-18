@@ -3,17 +3,18 @@ export default async function handler(req, res) {
   const targetUrl = `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password?${query}`;
 
   try {
+    // Ambil header dari request asal (dari browser user)
+    const { "x-api-key": apiKey, ...headersToForward } = req.headers;
+
     const fetchOptions = {
       method: req.method,
       headers: {
+        ...headersToForward, // Meneruskan header asli user
         "Content-Type": "application/json",
         Accept: "application/json",
-        "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-        // Menyamarkan identitas agar dianggap berasal dari domain Bapenda
+        "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1", // Tetap kirim API Key Anda
         Referer: "https://rpp.bapenda.jatengprov.go.id/",
         Origin: "https://rpp.bapenda.jatengprov.go.id/",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
       },
     };
 
@@ -22,12 +23,18 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(targetUrl, fetchOptions);
-    const data = await response.json();
+
+    // Jika response bukan JSON (misal HTML halaman error), tangani agar tidak crash
+    const contentType = response.headers.get("content-type");
+    const data =
+      contentType && contentType.includes("application/json")
+        ? await response.json()
+        : { message: "Server Bapenda mengembalikan error non-JSON" };
 
     res.status(response.status).json(data);
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Gagal berkomunikasi dengan server Bapenda" });
+      .json({ error: "Gagal berkomunikasi", details: error.message });
   }
 }
