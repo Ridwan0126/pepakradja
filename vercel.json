@@ -1,36 +1,24 @@
 {
   "rewrites": [
     {
-      "source": "/api/set-password",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password"
-    },
-    {
       "source": "/api/set-password/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password/:path*"
-    },
-    {
-      "source": "/api/pepakraja/(.*)",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/$1"
-    },
-    {
-      "source": "/bapenda-api/(.*)",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/$1"
     },
     {
       "source": "/api/pepakraja/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/:path*"
     },
     {
-      "source": "/bapenda-sptrd/(.*)",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/$1"
+      "source": "/bapenda-api/:path*",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
     },
     {
-      "source": "/bapenda-obyek/(.*)",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/$1"
+      "source": "/bapenda-sptrd/:path*",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
     },
     {
-      "source": "/api/:path*",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/:path*"
+      "source": "/bapenda-obyek/:path*",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
     },
     {
       "source": "/(.*)",
@@ -39,7 +27,7 @@
   ],
   "headers": [
     {
-      "source": "/api/set-password/(.*)",
+      "source": "/api/set-password/:path*",
       "headers": [
         { "key": "Referer", "value": "https://rpp.bapenda.jatengprov.go.id/" },
         { "key": "Origin", "value": "https://rpp.bapenda.jatengprov.go.id/" }
