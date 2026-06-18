@@ -21,7 +21,7 @@ const SetPassword = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        await axios.get(`/api/set-password?set_password_token=${token}`, {
+        await axios.get(`/api/set-password/?set_password_token=${token}`, {
           headers: apiHeaders,
         });
         setIsValid(true);
