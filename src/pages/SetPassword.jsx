@@ -42,7 +42,7 @@ const SetPassword = () => {
       try {
         setLoadingToken(true);
         const response = await fetch(
-          `/bapenda-api/pepakraja/set_password_token=${token}`,
+          `/bapenda-api/pepakraja/set_password?token=${token}`,
           {
             method: "GET",
             headers: {
@@ -92,17 +92,14 @@ const SetPassword = () => {
         password_confirmation: confirmPassword,
       };
 
-      const response = await fetch(
-        "/bapenda-api/pepakraja/wr/set-password", // <--- Ubah ini
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${HEADER_TOKEN}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
+      const response = await fetch("/bapenda-api/pepakraja/wr/set-password", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${HEADER_TOKEN}`,
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 
