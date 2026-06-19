@@ -41,18 +41,28 @@ const SetPassword = () => {
       return;
     }
 
-    const response = await fetch(BASE_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: API_KEY,
-      },
-      body: JSON.stringify({
-        set_password_token: token,
-        password: password,
-        password_confirmation: confirmPassword,
-      }),
-    });
+    fetch(`${BASE_URL}?set_password_token=${token}`, {
+      method: "GET",
+      headers: { token: API_KEY },
+    })
+      .then((res) => {
+        // Pastikan status OK (200-299)
+        if (!res.ok) throw new Error("Server error");
+        return res.json();
+      })
+      .then((res) => {
+        if (res.code === "00") {
+          setIsValid(true);
+          setUserData(res.data);
+        } else {
+          setMessage("Token tidak valid.");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setMessage("Gagal terhubung ke API atau API sedang down.");
+      })
+      .finally(() => setLoading(false));
 
     const result = await response.json();
     if (result.code === "00") {
