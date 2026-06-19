@@ -31,11 +31,12 @@ const SetPassword = () => {
           response.data,
         );
 
-        if (response.data.success || response.status === 200) {
+        if (response.data.success === true) {
           setIsValid(true);
         } else {
-          throw new Error(response.data.error || "Token tidak valid");
+          throw new Error("Token tidak valid");
         }
+        console.log("VERIFY RESPONSE:", JSON.stringify(response.data, null, 2));
       } catch (error) {
         console.error(
           "[v0] Token verification error:",
@@ -86,6 +87,7 @@ const SetPassword = () => {
         response.status,
         response.data,
       );
+      console.log("FULL RESPONSE:", JSON.stringify(response.data, null, 2));
 
       if (response.data.success === true) {
         Swal.fire("Berhasil", "Password berhasil diatur!", "success").then(

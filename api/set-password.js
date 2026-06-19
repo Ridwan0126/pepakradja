@@ -27,22 +27,16 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(targetUrl, fetchOptions);
-    const status = response.status;
+
     const responseText = await response.text();
 
-    console.log("Status dari Bapenda:", status);
-    console.log("Isi respons mentah:", responseText); // Lihat di log Vercel!
+    console.log("Status dari Bapenda:", response.status);
+    console.log("Isi respons mentah:", responseText);
 
-    res.status(status).json({ status, body: responseText });
-
-    // Jika response bukan JSON (misal HTML halaman error), tangani agar tidak crash
-    const contentType = response.headers.get("content-type");
-    const data =
-      contentType && contentType.includes("application/json")
-        ? await response.json()
-        : { message: "Server Bapenda mengembalikan error non-JSON" };
-
-    res.status(response.status).json(data);
+    return res.status(response.status).json({
+      success: response.ok,
+      body: responseText,
+    });
   } catch (error) {
     res
       .status(500)
