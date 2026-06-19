@@ -8,17 +8,29 @@ export default async function handler(req, res) {
 
   try {
     // 2. Ambil API_KEY dari environment variable
-    const API_KEY =
-      process.env.BAPENDA_API_KEY || "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
-    const API_BASE_URL =
-      process.env.BAPENDA_API_BASE_URL ||
-      "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr";
+    const API_KEY = process.env.BAPENDA_API_KEY;
+    const API_BASE_URL = process.env.BAPENDA_API_BASE_URL;
 
-    if (!API_KEY) {
-      console.error("[Error] API_KEY tidak ditemukan di environment variables");
-      return res
-        .status(500)
-        .json({ success: false, error: "Konfigurasi server salah" });
+    console.log("[API Proxy] Environment Check:", {
+      API_KEY_EXISTS: !!API_KEY,
+      API_BASE_URL_EXISTS: !!API_BASE_URL,
+      METHOD: req.method,
+      QUERY: req.query,
+    });
+
+    if (!API_KEY || !API_BASE_URL) {
+      console.error("[Error] Missing environment variables:", {
+        API_KEY: API_KEY ? "SET" : "MISSING",
+        API_BASE_URL: API_BASE_URL ? "SET" : "MISSING",
+      });
+      return res.status(500).json({
+        success: false,
+        error: "Environment variables tidak dikonfigurasi",
+        details: {
+          API_KEY: API_KEY ? "SET" : "MISSING",
+          API_BASE_URL: API_BASE_URL ? "SET" : "MISSING",
+        },
+      });
     }
 
     // 3. Bangun URL
@@ -28,6 +40,12 @@ export default async function handler(req, res) {
     }
 
     // 4. Lakukan Fetch
+    console.log("[API Proxy] Requesting:", {
+      URL: targetUrl,
+      METHOD: req.method,
+      HAS_API_KEY: !!API_KEY,
+    });
+
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: {
@@ -38,19 +56,28 @@ export default async function handler(req, res) {
     });
 
     // 5. Tangani Response
-    const data = await response.json().catch(() => ({})); // Menangani jika response bukan JSON
+    const data = await response.json().catch(() => ({}));
 
-    console.log(`[API Proxy] Status Target: ${response.status}`);
+    console.log("[API Proxy] Response:", {
+      STATUS: response.status,
+      SUCCESS: response.ok,
+      HAS_DATA: !!data,
+    });
+
+    if (!response.ok) {
+      console.error("[API Proxy] Error Response:", {
+        STATUS: response.status,
+        DATA: data,
+      });
+    }
 
     // Kembalikan status dari API asli ke klien
     return res.status(response.status).json(data);
   } catch (error) {
     console.error("[API Proxy] Exception:", error);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        error: "Gagal memproses request ke server Bapenda",
-      });
+    return res.status(500).json({
+      success: false,
+      error: "Gagal memproses request ke server Bapenda",
+    });
   }
 }
