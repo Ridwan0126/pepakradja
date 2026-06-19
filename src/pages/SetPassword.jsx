@@ -16,6 +16,7 @@ const SetPassword = () => {
     "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
     Accept: "application/json",
     "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   };
 
   useEffect(() => {
