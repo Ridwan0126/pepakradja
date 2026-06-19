@@ -5,16 +5,18 @@ export default async function handler(req, res) {
       : `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password`;
   try {
     // Ambil header dari request asal (dari browser user)
-    const { "x-api-key": apiKey, ...headersToForward } = req.headers;
-
+    const headersToForward = {};
+    // Di dalam fetchOptions, tambahkan User-Agent
     const fetchOptions = {
       method: req.method,
       headers: {
-        ...headersToForward,
+        ...headersToForward, // Hati-hati: forward header asli kadang membawa referer/user-agent yang salah
         "Content-Type": "application/json",
         Accept: "application/json",
         "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-        Host: "rpp.bapenda.jatengprov.go.id", // Hardcode host tujuan yang benar
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Host: "rpp.bapenda.jatengprov.go.id",
         Referer: "https://rpp.bapenda.jatengprov.go.id/",
         Origin: "https://rpp.bapenda.jatengprov.go.id/",
       },
