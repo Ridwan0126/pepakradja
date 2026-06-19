@@ -15,7 +15,9 @@ export default async function handler(req, res) {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
         // Tambahkan header Referer yang mengarah ke domain mereka
+        Host: "rpp.bapenda.jatengprov.go.id",
         Referer: "https://rpp.bapenda.jatengprov.go.id/",
+        Origin: "https://rpp.bapenda.jatengprov.go.id/",
       },
     };
 
