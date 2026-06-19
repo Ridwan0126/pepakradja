@@ -26,6 +26,7 @@ export default async function handler(req, res) {
     // Ambil API key dari environment variable
     const API_KEY = xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1;
     const API_BASE_URL =
+      process.env.BAPENDA_API_BASE_URL ||
       "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr";
 
     if (!API_KEY) {
@@ -47,12 +48,11 @@ export default async function handler(req, res) {
     }
 
     // Header yang akan diteruskan ke Bapenda API
+    // Token header: xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1
     const fetchHeaders = {
       "Content-Type": "application/json",
       Accept: "application/json",
-      "x-api-key": API_KEY,
-      Referer: "https://rpp.bapenda.jatengprov.go.id/",
-      Origin: "https://rpp.bapenda.jatengprov.go.id/",
+      Authorization: `Bearer ${API_KEY}`,
     };
 
     // Konfigurasi fetch
