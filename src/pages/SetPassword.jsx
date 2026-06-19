@@ -24,7 +24,7 @@ const SetPassword = () => {
       try {
         console.log("[v0] Verifying token...");
         const response = await axios.get(
-          `/wr/set-password?set_password_token=${encodeURIComponent(token)}`,
+          `/api/set-password?set_password_token=${encodeURIComponent(token)}`,
         );
         console.log(
           "[v0] Token verification response:",
@@ -80,8 +80,8 @@ const SetPassword = () => {
       console.log("[v0] Submitting password change...");
 
       // Ganti bagian axios.post di handleSubmit menjadi:
-      const response = await axios.post("/wr/set-password", payload, {
-        headers: apiHeaders, // Pastikan apiHeaders sudah didefinisikan sebelumnya
+      const response = await axios.post("/api/set-password", payload, {
+        headers: apiHeaders,
       });
       console.log(
         "[v0] Password change response:",
