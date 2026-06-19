@@ -23,7 +23,7 @@ const SetPassword = () => {
       try {
         console.log("[v0] Verifying token...");
         const response = await axios.get(
-          `/api/set-password/?set_password_token=${encodeURIComponent(token)}`,
+          `/api/set-password?set_password_token=${encodeURIComponent(token)}`,
         );
         console.log(
           "[v0] Token verification response:",
