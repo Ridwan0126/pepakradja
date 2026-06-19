@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     req.method === "GET"
       ? `${baseUrl}?${new URLSearchParams(req.query)}`
       : baseUrl;
-
+  //sudah tidak di gunakan
   try {
     const fetchOptions = {
       method: req.method,
