@@ -1,10 +1,11 @@
 export default async function handler(req, res) {
-  // 1. Perbaiki struktur URL (hapus / sebelum ?)
-  const baseUrl =
-    "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password";
-  const query = new URLSearchParams(req.query).toString();
-  const targetUrl = req.method === "GET" ? `${baseUrl}?${query}` : baseUrl;
+  const { set_password_token } = req.query;
 
+  // Konstruksi URL tujuan
+  const targetUrl =
+    req.method === "GET"
+      ? `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password?set_password_token=${encodeURIComponent(set_password_token)}`
+      : `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password`;
   try {
     const fetchOptions = {
       method: req.method,
