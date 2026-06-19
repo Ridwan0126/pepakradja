@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") return res.status(200).end();
-
+  // cara set nya
   try {
     // 2. Ambil API_KEY dari environment variable
     const API_KEY = process.env.BAPENDA_API_KEY;
