@@ -21,11 +21,18 @@ const SetPassword = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        await axios.get(`/api/set-password/?set_password_token=${token}`, {
-          headers: apiHeaders,
-        });
+        console.log("[v0] Verifying token:", token?.substring(0, 10) + "...");
+        const response = await axios.get(
+          `/api/set-password/?set_password_token=${encodeURIComponent(token)}`,
+        );
+        console.log("[v0] Token verification response:", response.status);
         setIsValid(true);
       } catch (error) {
+        console.error(
+          "[v0] Token verification error:",
+          error.response?.status,
+          error.message,
+        );
         Swal.fire("Error", "Token tidak valid atau akses ditolak.", "error");
       } finally {
         setLoading(false);
@@ -57,15 +64,18 @@ const SetPassword = () => {
     console.log("[v0] Submitting payload:", JSON.stringify(payload, null, 2));
 
     try {
-      const response = await axios.post("/api/set-password", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-        },
-      });
+      console.log(
+        "[v0] Submitting password change for token:",
+        token?.substring(0, 10) + "...",
+      );
 
-      console.log("[v0] Response success:", response.data);
+      const response = await axios.post("/api/set-password", payload);
+
+      console.log(
+        "[v0] Password change response:",
+        response.status,
+        response.data,
+      );
 
       if (
         response.data.success ||
@@ -74,7 +84,6 @@ const SetPassword = () => {
       ) {
         Swal.fire("Berhasil", "Password berhasil diatur!", "success").then(
           () => {
-            // Redirect ke login atau halaman lain
             window.location.href = "/login";
           },
         );
@@ -83,12 +92,10 @@ const SetPassword = () => {
         Swal.fire("Gagal", `API Response: ${response.data.status}`, "error");
       }
     } catch (error) {
-      console.error("[v0] Error response:", error.response?.data);
-      console.error("[v0] Error status:", error.response?.status);
-      console.error("[v0] Error message:", error.message);
-
+      console.error("[v0] Error:", error.response?.data || error.message);
       const errorMsg =
         error.response?.data?.error ||
+        error.response?.data?.details ||
         error.message ||
         "Gagal mengatur password";
       Swal.fire("Gagal", errorMsg, "error");
