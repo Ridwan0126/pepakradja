@@ -33,10 +33,10 @@ export default async function handler(req, res) {
     console.log("Status dari Bapenda:", response.status);
     console.log("Isi respons mentah:", responseText);
 
-    // return res.status(response.status).json({
-    //   success: response.ok,
-    //   body: responseText,
-    // });
+    return res.status(response.status).json({
+      success: response.ok,
+      body: responseText,
+    });
   } catch (error) {
     res
       .status(500)
