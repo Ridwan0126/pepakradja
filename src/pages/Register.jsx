@@ -653,10 +653,22 @@ overflow-hidden
               <div className="relative z-10">
                 <div className="flex mb-8">
                   <img
+                    src="/images/logo-jateng-official.png"
+                    alt="Logo"
+                    className="w-32 h-32 object-contain drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]"
+                  />
+                  <img
+                    src="/images/logo-bapenda.png"
+                    alt="Logo"
+                    className="w-32 h-32 object-contain drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]"
+                  />
+
+                  <img
                     src="/images/logopepakraja.png"
                     alt="Logo"
                     className="w-32 h-32 object-contain drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]"
                   />
+
                   <img
                     src="/images/massajak.png"
                     alt="Logo"
