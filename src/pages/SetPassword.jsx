@@ -37,29 +37,61 @@ const SetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validasi password
+    if (password.length < 8) {
+      Swal.fire("Validasi", "Password minimal 8 karakter", "warning");
+      return;
+    }
+
+    if (password !== passwordConfirmation) {
+      Swal.fire("Validasi", "Password tidak cocok", "warning");
+      return;
+    }
+
     const payload = {
       set_password_token: token,
       password: password,
       password_confirmation: passwordConfirmation,
     };
 
-    // LOG DATA KE CONSOLE BROWSER (F12)
-    console.log(
-      "Data yang akan dikirim ke API:",
-      JSON.stringify(payload, null, 2),
-    );
+    console.log("[v0] Submitting payload:", JSON.stringify(payload, null, 2));
 
     try {
       const response = await axios.post("/api/set-password", payload, {
-        headers: apiHeaders,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
+        },
       });
-      console.log("Respon sukses dari server:", response.data);
-      Swal.fire("Berhasil", "Password berhasil diatur!", "success");
+
+      console.log("[v0] Response success:", response.data);
+
+      if (
+        response.data.success ||
+        response.data.status === 200 ||
+        response.data.status === 201
+      ) {
+        Swal.fire("Berhasil", "Password berhasil diatur!", "success").then(
+          () => {
+            // Redirect ke login atau halaman lain
+            window.location.href = "/login";
+          },
+        );
+      } else {
+        console.error("[v0] Unexpected response:", response.data);
+        Swal.fire("Gagal", `API Response: ${response.data.status}`, "error");
+      }
     } catch (error) {
-      // LOG RESPON ERROR LENGKAP
-      console.error("Data error dari server:", error.response?.data);
-      console.error("Status error:", error.response?.status);
-      Swal.fire("Gagal", "Cek Console untuk detail error", "error");
+      console.error("[v0] Error response:", error.response?.data);
+      console.error("[v0] Error status:", error.response?.status);
+      console.error("[v0] Error message:", error.message);
+
+      const errorMsg =
+        error.response?.data?.error ||
+        error.message ||
+        "Gagal mengatur password";
+      Swal.fire("Gagal", errorMsg, "error");
     }
   };
 
