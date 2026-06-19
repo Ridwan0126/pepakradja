@@ -1,50 +1,47 @@
 export default async function handler(req, res) {
-  const baseUrl =
-    "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password";
+  const query = new URLSearchParams(req.query).toString();
+  const targetUrl = `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password?${query}`;
 
   try {
-    let targetUrl = baseUrl;
+    // Ambil header dari request asal (dari browser user)
+    const { "x-api-key": apiKey, ...headersToForward } = req.headers;
+
     const fetchOptions = {
-      method: req.method, // 'GET' atau 'POST' diteruskan dari client
+      method: req.method,
       headers: {
-        "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
+        ...headersToForward, // Meneruskan header asli user
         "Content-Type": "application/json",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        Accept: "application/json",
+        "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1", // Tetap kirim API Key Anda
         Referer: "https://rpp.bapenda.jatengprov.go.id/",
         Origin: "https://rpp.bapenda.jatengprov.go.id/",
-        Host: "rpp.bapenda.jatengprov.go.id",
       },
     };
 
-    // LOGIKA PERBEDAAN METHOD
-    if (req.method === "GET") {
-      // Untuk GET: tambahkan query parameter ke URL
-      const query = new URLSearchParams(req.query).toString();
-      targetUrl = `${baseUrl}?${query}`;
-    } else if (req.method === "POST") {
-      // Untuk POST: kirimkan body JSON
+    if (req.method !== "GET" && req.body) {
       fetchOptions.body = JSON.stringify(req.body);
-    } else {
-      return res.status(405).json({ error: "Method tidak diizinkan" });
     }
 
-    // Eksekusi request ke Bapenda
     const response = await fetch(targetUrl, fetchOptions);
-
-    // Parsing response
+    const status = response.status;
     const responseText = await response.text();
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (e) {
-      data = { raw_response: responseText };
-    }
 
-    return res.status(response.status).json(data);
+    console.log("Status dari Bapenda:", status);
+    console.log("Isi respons mentah:", responseText); // Lihat di log Vercel!
+
+    res.status(status).json({ status, body: responseText });
+
+    // Jika response bukan JSON (misal HTML halaman error), tangani agar tidak crash
+    const contentType = response.headers.get("content-type");
+    const data =
+      contentType && contentType.includes("application/json")
+        ? await response.json()
+        : { message: "Server Bapenda mengembalikan error non-JSON" };
+
+    res.status(response.status).json(data);
   } catch (error) {
-    return res
+    res
       .status(500)
-      .json({ error: "Proxy gagal", details: error.message });
+      .json({ error: "Gagal berkomunikasi", details: error.message });
   }
 }
