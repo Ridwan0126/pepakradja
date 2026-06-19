@@ -46,6 +46,7 @@ const SetPassword = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
           token: API_KEY,
         },
         body: JSON.stringify({
