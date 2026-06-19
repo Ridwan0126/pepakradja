@@ -13,12 +13,14 @@ export default async function handler(req, res) {
     const fetchOptions = {
       method: req.method,
       headers: {
-        ...headersToForward, // Meneruskan header asli user
+        ...headersToForward,
         "Content-Type": "application/json",
         Accept: "application/json",
-        "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1", // Tetap kirim API Key Anda
+        "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
         Referer: "https://rpp.bapenda.jatengprov.go.id/",
         Origin: "https://rpp.bapenda.jatengprov.go.id/",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36", // ← TAMBAH INI
       },
     };
 
