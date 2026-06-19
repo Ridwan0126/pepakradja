@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
-  const query = new URLSearchParams(req.query).toString();
-  const targetUrl = `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password?${query}`;
-
+  const targetUrl =
+    req.method === "GET"
+      ? `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password?${new URLSearchParams(req.query).toString()}`
+      : `https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password`;
   try {
     // Ambil header dari request asal (dari browser user)
     const { "x-api-key": apiKey, ...headersToForward } = req.headers;

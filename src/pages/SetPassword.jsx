@@ -77,8 +77,10 @@ const SetPassword = () => {
     try {
       console.log("[v0] Submitting password change...");
 
-      const response = await axios.post("/api/set-password", payload);
-
+      // Ganti bagian axios.post di handleSubmit menjadi:
+      const response = await axios.post("/api/set-password", payload, {
+        headers: apiHeaders, // Pastikan apiHeaders sudah didefinisikan sebelumnya
+      });
       console.log(
         "[v0] Password change response:",
         response.status,
