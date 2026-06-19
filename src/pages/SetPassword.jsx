@@ -1,148 +1,95 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import Swal from "sweetalert2";
+import { useParams, useNavigate } from "react-router-dom";
 
 const SetPassword = () => {
   const { token } = useParams();
-  const [isValid, setIsValid] = useState(false);
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
-
-  // State untuk form
+  const [isValid, setIsValid] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  const apiHeaders = {
-    "x-api-key": "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    "X-Requested-With": "XMLHttpRequest",
-  };
-
+  const BASE_URL = "/api-proxy/set-password";
+  const API_KEY = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
+  // 1. Cek Token saat komponen dimuat
   useEffect(() => {
-    const verifyToken = async () => {
-      try {
-        console.log("[v0] Verifying token...");
-        const response = await axios.get(
-          `/api/set-password?set_password_token=${encodeURIComponent(token)}`,
-        );
-        console.log(
-          "[v0] Token verification response:",
-          response.status,
-          response.data,
-        );
-
-        if (response.data.success === true) {
+    fetch(`${BASE_URL}?set_password_token=${token}`, {
+      method: "GET",
+      headers: { token: API_KEY },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.code === "00") {
           setIsValid(true);
+          setUserData(res.data);
         } else {
-          throw new Error("Token tidak valid");
+          setMessage("Token tidak valid atau sudah kadaluwarsa.");
         }
-        console.log("VERIFY RESPONSE:", JSON.stringify(response.data, null, 2));
-      } catch (error) {
-        console.error(
-          "[v0] Token verification error:",
-          error.response?.data || error.message,
-        );
-        const errorMsg =
-          error.response?.data?.error ||
-          "Token tidak valid atau akses ditolak.";
-        Swal.fire("Error", errorMsg, "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (token) verifyToken();
+      })
+      .catch(() => setMessage("Terjadi kesalahan koneksi server."))
+      .finally(() => setLoading(false));
   }, [token]);
 
+  // 2. Handler submit password
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validasi password
-    if (password.length < 8) {
-      Swal.fire("Validasi", "Password minimal 8 karakter", "warning");
+    if (password !== confirmPassword) {
+      alert("Password tidak cocok!");
       return;
     }
 
-    if (password !== passwordConfirmation) {
-      Swal.fire("Validasi", "Password tidak cocok", "warning");
-      return;
-    }
+    const response = await fetch(BASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: API_KEY,
+      },
+      body: JSON.stringify({
+        set_password_token: token,
+        password: password,
+        password_confirmation: confirmPassword,
+      }),
+    });
 
-    const payload = {
-      set_password_token: token,
-      password: password,
-      password_confirmation: passwordConfirmation,
-    };
-
-    console.log("[v0] Submitting payload:", JSON.stringify(payload, null, 2));
-
-    try {
-      console.log("[v0] Submitting password change...");
-
-      // Ganti bagian axios.post di handleSubmit menjadi:
-      const response = await axios.post("/api/set-password", payload, {
-        headers: apiHeaders,
-      });
-      console.log(
-        "[v0] Password change response:",
-        response.status,
-        response.data,
-      );
-      console.log("FULL RESPONSE:", JSON.stringify(response.data, null, 2));
-
-      if (response.data.success === true) {
-        Swal.fire("Berhasil", "Password berhasil diatur!", "success").then(
-          () => {
-            window.location.href = "/login";
-          },
-        );
-      } else {
-        const errMsg = response.data.error || "Gagal mengatur password";
-        console.error("[v0] Submission failed:", errMsg);
-        Swal.fire("Gagal", errMsg, "error");
-      }
-    } catch (error) {
-      console.error("[v0] Error:", error.response?.data || error.message);
-      const errorMsg =
-        error.response?.data?.error ||
-        error.response?.data?.details ||
-        error.message ||
-        "Gagal mengatur password";
-      Swal.fire("Gagal", errorMsg, "error");
+    const result = await response.json();
+    if (result.code === "00") {
+      alert("Password berhasil diset!");
+      navigate("/login");
+    } else {
+      alert(result.message || "Gagal mengubah password.");
     }
   };
 
-  if (loading) return <div>Memeriksa Token...</div>;
+  if (loading) return <div>Memeriksa token...</div>;
+  if (!isValid) return <div>{message}</div>;
 
   return (
-    <div className="container">
-      {isValid ? (
-        <form onSubmit={handleSubmit}>
-          <h2>Set Password Baru</h2>
-
-          <label>Password Baru:</label>
-          <input
-            type="password"
-            placeholder="Masukkan password baru"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <label>Konfirmasi Password:</label>
-          <input
-            type="password"
-            placeholder="Ulangi password baru"
-            value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
-            required
-          />
-
-          <button type="submit">Simpan Password</button>
-        </form>
-      ) : (
-        <p>Maaf, token tidak valid atau telah kadaluwarsa.</p>
-      )}
+    <div className="p-8">
+      <h2>Set Password untuk {userData?.nama}</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          type="password"
+          placeholder="Password Baru"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="border p-2"
+        />
+        <input
+          type="password"
+          placeholder="Konfirmasi Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          className="border p-2"
+        />
+        <button type="submit" className="bg-blue-500 text-white p-2">
+          Simpan Password
+        </button>
+      </form>
     </div>
   );
 };

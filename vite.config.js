@@ -37,6 +37,12 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/bapenda/, "/penatausahaan/api"),
       },
+      "/api-proxy": {
+        target:
+          "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-proxy/, ""),
+      },
 
       // 4. Catch-all /api (Mengarah ke root domain)
       // Pastikan diletakkan di urutan paling bawah agar tidak membajak path lain

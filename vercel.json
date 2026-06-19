@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    {
+      "source": "/api-proxy/(.*)",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/:1"
+    },
     { "source": "/api/bapenda/(.*)", "destination": "/api/bapenda" },
     {
       "source": "/bapenda/:path*",
