@@ -2,6 +2,15 @@ const API_KEY = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
 const TARGET_API =
   "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password";
 
+// Helper function untuk detect if response is an error HTML page
+function isErrorHtmlResponse(text) {
+  return (
+    text.includes("Request Rejected") ||
+    text.includes("<html>") ||
+    text.includes("<!DOCTYPE")
+  );
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -15,133 +24,137 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  if (req.method === "GET") {
-    // Verifikasi token
-    const { set_password_token } = req.query;
+  try {
+    if (req.method === "GET") {
+      // Verify token
+      const { set_password_token } = req.query;
 
-    console.log(
-      "[v0] GET request with token:",
-      set_password_token?.substring(0, 10) + "...",
-    );
+      if (!set_password_token) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Token tidak ditemukan" });
+      }
 
-    if (!set_password_token) {
-      return res.status(400).json({ error: "Token tidak ditemukan" });
-    }
+      console.log("[v0] GET: Verifying token");
 
-    try {
-      const targetUrl = `${TARGET_API}?set_password_token=${encodeURIComponent(set_password_token)}`;
+      const verifyUrl = `${TARGET_API}?set_password_token=${encodeURIComponent(set_password_token)}`;
 
-      console.log("[v0] Fetching from:", targetUrl);
-
-      const response = await fetch(targetUrl, {
+      const response = await fetch(verifyUrl, {
         method: "GET",
         headers: {
           "x-api-key": API_KEY,
           Accept: "application/json",
-          "User-Agent": "Pepakraja-App/1.0",
+          "User-Agent": "Pepakraja-Client/1.0",
         },
       });
 
-      console.log("[v0] Response status:", response.status);
+      const responseText = await response.text();
 
-      let responseData;
-      const contentType = response.headers.get("content-type");
-
-      if (contentType && contentType.includes("application/json")) {
-        try {
-          responseData = await response.json();
-        } catch {
-          responseData = await response.text();
-        }
-      } else {
-        responseData = await response.text();
-      }
-
+      console.log("[v0] GET Response status:", response.status);
       console.log(
-        "[v0] Response data:",
-        typeof responseData === "string"
-          ? responseData.substring(0, 100)
-          : responseData,
+        "[v0] GET Response (first 200 chars):",
+        responseText.substring(0, 200),
       );
 
-      res.status(response.status).json({
-        status: response.status,
+      // Check if response is error HTML
+      if (isErrorHtmlResponse(responseText)) {
+        return res.status(403).json({
+          success: false,
+          error: "API menolak request - periksa API key atau token",
+          details: responseText.substring(0, 100),
+        });
+      }
+
+      // Try to parse as JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        data = responseText;
+      }
+
+      return res.status(response.status).json({
         success: response.status === 200,
-        data: responseData,
+        status: response.status,
+        data: data,
       });
-    } catch (error) {
-      console.error("[v0] Error verifying token:", error.message);
-      res
-        .status(500)
-        .json({ error: "Gagal verifikasi token", details: error.message });
-    }
-  } else if (req.method === "POST") {
-    // Set password baru
-    try {
+    } else if (req.method === "POST") {
+      // Set password
       const { set_password_token, password, password_confirmation } = req.body;
 
       if (!set_password_token || !password || !password_confirmation) {
-        return res.status(400).json({ error: "Data tidak lengkap" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Data tidak lengkap" });
       }
 
-      console.log(
-        "[v0] POST request with token:",
-        set_password_token?.substring(0, 10) + "...",
-      );
+      console.log("[v0] POST: Setting password for token");
 
-      const fetchOptions = {
+      const response = await fetch(TARGET_API, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           "x-api-key": API_KEY,
-          "User-Agent": "Pepakraja-App/1.0",
+          "User-Agent": "Pepakraja-Client/1.0",
         },
         body: JSON.stringify({
           set_password_token,
           password,
           password_confirmation,
         }),
-      };
+      });
 
-      console.log("[v0] Sending POST to:", TARGET_API);
+      const responseText = await response.text();
 
-      const response = await fetch(TARGET_API, fetchOptions);
-
-      console.log("[v0] Response status:", response.status);
-
-      let responseData;
-      const contentType = response.headers.get("content-type");
-
-      if (contentType && contentType.includes("application/json")) {
-        try {
-          responseData = await response.json();
-        } catch {
-          responseData = await response.text();
-        }
-      } else {
-        responseData = await response.text();
-      }
-
+      console.log("[v0] POST Response status:", response.status);
       console.log(
-        "[v0] Response:",
-        typeof responseData === "string"
-          ? responseData.substring(0, 100)
-          : responseData,
+        "[v0] POST Response (first 300 chars):",
+        responseText.substring(0, 300),
       );
 
-      res.status(response.status).json({
+      // Check if response is error HTML (even if status is 200)
+      if (isErrorHtmlResponse(responseText)) {
+        console.log(
+          "[v0] ERROR: API returned HTML error page despite 200 status",
+        );
+        return res.status(403).json({
+          success: false,
+          error:
+            "API menolak request - kemungkinan masalah WAF atau format request",
+          debugInfo: {
+            statusFromAPI: response.status,
+            responsePreview: responseText.substring(0, 150),
+          },
+        });
+      }
+
+      // Try to parse as JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        data = responseText;
+      }
+
+      const isSuccess = response.status === 200 || response.status === 201;
+
+      return res.status(response.status).json({
+        success: isSuccess,
         status: response.status,
-        success: response.status === 200 || response.status === 201,
-        data: responseData,
+        data: data,
       });
-    } catch (error) {
-      console.error("[v0] Error setting password:", error.message);
-      res
-        .status(500)
-        .json({ error: "Gagal set password", details: error.message });
+    } else {
+      return res
+        .status(405)
+        .json({ success: false, error: "Method tidak diizinkan" });
     }
-  } else {
-    res.status(405).json({ error: "Method tidak diizinkan" });
+  } catch (error) {
+    console.error("[v0] Backend error:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Error di backend",
+      details: error.message,
+    });
   }
 }

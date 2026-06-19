@@ -21,19 +21,30 @@ const SetPassword = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        console.log("[v0] Verifying token:", token?.substring(0, 10) + "...");
+        console.log("[v0] Verifying token...");
         const response = await axios.get(
           `/api/set-password/?set_password_token=${encodeURIComponent(token)}`,
         );
-        console.log("[v0] Token verification response:", response.status);
-        setIsValid(true);
+        console.log(
+          "[v0] Token verification response:",
+          response.status,
+          response.data,
+        );
+
+        if (response.data.success || response.status === 200) {
+          setIsValid(true);
+        } else {
+          throw new Error(response.data.error || "Token tidak valid");
+        }
       } catch (error) {
         console.error(
           "[v0] Token verification error:",
-          error.response?.status,
-          error.message,
+          error.response?.data || error.message,
         );
-        Swal.fire("Error", "Token tidak valid atau akses ditolak.", "error");
+        const errorMsg =
+          error.response?.data?.error ||
+          "Token tidak valid atau akses ditolak.";
+        Swal.fire("Error", errorMsg, "error");
       } finally {
         setLoading(false);
       }
@@ -64,10 +75,7 @@ const SetPassword = () => {
     console.log("[v0] Submitting payload:", JSON.stringify(payload, null, 2));
 
     try {
-      console.log(
-        "[v0] Submitting password change for token:",
-        token?.substring(0, 10) + "...",
-      );
+      console.log("[v0] Submitting password change...");
 
       const response = await axios.post("/api/set-password", payload);
 
@@ -77,19 +85,16 @@ const SetPassword = () => {
         response.data,
       );
 
-      if (
-        response.data.success ||
-        response.data.status === 200 ||
-        response.data.status === 201
-      ) {
+      if (response.data.success === true) {
         Swal.fire("Berhasil", "Password berhasil diatur!", "success").then(
           () => {
             window.location.href = "/login";
           },
         );
       } else {
-        console.error("[v0] Unexpected response:", response.data);
-        Swal.fire("Gagal", `API Response: ${response.data.status}`, "error");
+        const errMsg = response.data.error || "Gagal mengatur password";
+        console.error("[v0] Submission failed:", errMsg);
+        Swal.fire("Gagal", errMsg, "error");
       }
     } catch (error) {
       console.error("[v0] Error:", error.response?.data || error.message);
