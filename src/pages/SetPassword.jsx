@@ -12,7 +12,7 @@ const SetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const BASE_URL = "/api-proxy/set-password";
+  const BASE_URL = "/api/set-password";
   const API_KEY = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
   // 1. Cek Token saat komponen dimuat
   useEffect(() => {
