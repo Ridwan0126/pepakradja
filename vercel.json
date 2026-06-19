@@ -4,12 +4,18 @@
       "source": "/api-proxy/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/:path*"
     },
-    { "source": "/api/bapenda/(.*)", "destination": "/api/bapenda" },
     {
       "source": "/bapenda/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
     },
-    { "source": "/api/(.*)", "destination": "/api/$1" },
+    {
+      "source": "/api/bapenda/(.*)",
+      "destination": "/api/bapenda"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
