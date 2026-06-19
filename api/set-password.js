@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
   try {
     // Ambil API key dari environment variable
-    const API_KEY = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
+    const API_KEY = process.env.BAPENDA_API_KEY;
     const API_BASE_URL =
       process.env.BAPENDA_API_BASE_URL ||
       "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr";
