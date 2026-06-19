@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // const query = new URLSearchParams(req.query).toString();
   const baseUrl =
     "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password";
 
@@ -29,17 +28,20 @@ export default async function handler(req, res) {
 
     const response = await fetch(targetUrl, fetchOptions);
     const status = response.status;
+    const responseText = await response.text();
 
     console.log("Status dari Bapenda:", status);
+    console.log("Isi respons mentah:", responseText); // Lihat di log Vercel!
+
+    res.status(status).json({ status, body: responseText });
 
     // Jika response bukan JSON (misal HTML halaman error), tangani agar tidak crash
-    if (contentType?.includes("application/json")) {
-      data = await response.json();
-    } else {
-      data = {
-        raw: await response.text(),
-      };
-    }
+    const contentType = response.headers.get("content-type");
+    const data =
+      contentType && contentType.includes("application/json")
+        ? await response.json()
+        : { message: "Server Bapenda mengembalikan error non-JSON" };
+
     res.status(response.status).json(data);
   } catch (error) {
     res
