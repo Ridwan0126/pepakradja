@@ -10,10 +10,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-
-  "env": {
-    "BAPENDA_API_BASE_URL": "@bapenda_api_base_url",
-    "BAPENDA_API_KEY": "@bapenda_api_key"
-  }
+  ]
 }
