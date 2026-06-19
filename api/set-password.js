@@ -2,12 +2,10 @@ const API_KEY = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
 const TARGET_API =
   "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password";
 
-// Helper function untuk detect if response is an error HTML page
+// Helper function untuk detect if response is the specific error HTML page from WAF
 function isErrorHtmlResponse(text) {
   return (
-    text.includes("Request Rejected") ||
-    text.includes("<html>") ||
-    text.includes("<!DOCTYPE")
+    text.includes("Request Rejected") && text.includes("Your support ID is:")
   );
 }
 
@@ -42,9 +40,14 @@ export default async function handler(req, res) {
       const response = await fetch(verifyUrl, {
         method: "GET",
         headers: {
-          "x-api-key": API_KEY,
+          "Content-Type": "application/json",
           Accept: "application/json",
-          "User-Agent": "Pepakraja-Client/1.0",
+          "x-api-key": API_KEY,
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          Host: "rpp.bapenda.jatengprov.go.id",
+          Referer: "https://rpp.bapenda.jatengprov.go.id/",
+          Origin: "https://rpp.bapenda.jatengprov.go.id/",
         },
       });
 
@@ -96,7 +99,11 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "x-api-key": API_KEY,
-          "User-Agent": "Pepakraja-Client/1.0",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          Host: "rpp.bapenda.jatengprov.go.id",
+          Referer: "https://rpp.bapenda.jatengprov.go.id/",
+          Origin: "https://rpp.bapenda.jatengprov.go.id/",
         },
         body: JSON.stringify({
           set_password_token,
