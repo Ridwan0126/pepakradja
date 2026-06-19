@@ -36,17 +36,12 @@ const SetPassword = () => {
   // 2. Handler submit password
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Password tidak cocok!");
-      return;
-    }
 
     try {
       const response = await fetch(BASE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
           token: API_KEY,
         },
         body: JSON.stringify({
@@ -56,8 +51,18 @@ const SetPassword = () => {
         }),
       });
 
-      const result = await response.json();
+      // AMBIL TEKS DULU UNTUK DEBUGGING
+      const text = await response.text();
 
+      // CEK APAKAH TEKS DIMULAI DENGAN '{' (JSON)
+      if (!text.trim().startsWith("{")) {
+        console.error("Respon Server:", text); // Lihat di console kenapa server kirim HTML
+        throw new Error(
+          "Server tidak mengembalikan JSON. Mungkin akses diblokir.",
+        );
+      }
+
+      const result = JSON.parse(text);
       if (result.code === "00") {
         alert("Password berhasil diset!");
         navigate("/login");
@@ -65,8 +70,7 @@ const SetPassword = () => {
         alert(result.message || "Gagal mengubah password.");
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Terjadi kesalahan koneksi ke server.");
+      alert("Koneksi gagal. Cek Konsol (F12) untuk detail respon server.");
     }
   };
 
