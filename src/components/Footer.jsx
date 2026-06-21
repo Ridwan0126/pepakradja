@@ -273,7 +273,7 @@ export default function Footer() {
           className="block hover:scale-110 transition-transform duration-300"
         >
           <img
-            src="/images/logopepakraja.png"
+            src="/images/call.png"
             alt="PEPAK RAJA"
             className="w-16 h-16 object-contain floating-logo"
           />
