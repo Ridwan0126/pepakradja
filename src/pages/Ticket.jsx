@@ -1034,7 +1034,14 @@ export default function Ticket() {
               onClick={() => setShowHistory(true)}
               className="flex items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700 transition active:scale-95"
             >
-              <History className="h-4 w-4" /> Riwayat
+              {session && (
+                <button
+                  onClick={() => setShowHistory(true)}
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700 transition active:scale-95"
+                >
+                  <History className="h-4 w-4" /> Riwayat
+                </button>
+              )}{" "}
             </button>
           </div>
 
@@ -1107,11 +1114,6 @@ export default function Ticket() {
           <h2 className="text-lg font-semibold text-slate-900">
             {filtered.length} Destinasi
           </h2>
-          {issuedCount > 0 && (
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
-              {issuedCount} tiket terbit
-            </span>
-          )}
         </div>
 
         <motion.div
