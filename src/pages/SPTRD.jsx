@@ -240,10 +240,7 @@ export default function SPTRD() {
       telepon: wr.telepon || "-",
       email: wr.email || "-",
 
-      pelayanan:
-        selectedObyek?.jenis?.jenis_retribusi ||
-        selectedObyek?.tariftbl?.penerimaan ||
-        "-",
+      pelayanan: selectedObyek?.golongan?.golongan || "-",
 
       obyek: selectedObyek?.obyek_retribusi || "-",
 
