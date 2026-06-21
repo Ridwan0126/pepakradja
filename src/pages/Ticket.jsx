@@ -772,7 +772,6 @@ function LoginAlert({ onLogin, onCancel }) {
 /* ----------------------- RIWAYAT PEMESANAN ----------------------------- */
 function HistorySheet({ session, onClose }) {
   const [selectedTicket, setSelectedTicket] = useState(null);
-
   const list = useMemo(() => {
     const all = readTickets();
     const mine = session?.user?.id
@@ -781,188 +780,69 @@ function HistorySheet({ session, onClose }) {
     return [...mine].reverse();
   }, [session]);
 
-  const statusBadge = (t) => {
-    if (t.used) return { txt: "Terpakai", cls: "bg-slate-200 text-slate-600" };
-    if (new Date(t.expiryDate) < new Date())
-      return { txt: "Hangus", cls: "bg-rose-100 text-rose-600" };
-    return { txt: "Aktif", cls: "bg-emerald-100 text-emerald-600" };
-  };
-
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div
-        className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
         onClick={onClose}
       />
       <motion.div
-        initial={{ y: "100%", opacity: 0.6 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: "100%", opacity: 0.6 }}
-        transition={spring}
-        className="relative z-10 max-h-[88vh] w-full overflow-y-auto rounded-t-[2rem] border border-white/60 bg-white/85 backdrop-blur-2xl sm:max-w-md sm:rounded-[2rem]"
+        className="relative z-10 w-full max-w-md max-h-[85vh] flex flex-col bg-white/90 backdrop-blur-2xl rounded-t-[2rem] sm:rounded-[2rem] overflow-hidden"
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between bg-white/70 px-5 pb-3 pt-4 backdrop-blur-xl">
-          <div className="flex items-center gap-2">
-            <History className="h-5 w-5 text-sky-500" />
-            <h2 className="text-lg font-bold text-slate-900">
-              Riwayat Pemesanan
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200/80 text-slate-600 transition active:scale-90"
-            aria-label="Tutup"
-          >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+          <h2 className="text-lg font-bold">Riwayat Pemesanan</h2>
+          <button onClick={onClose} className="p-2 rounded-full bg-slate-100">
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="px-5 pb-8">
+        {/* Container Scrollable */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-3">
           {list.length === 0 ? (
-            <div className="py-16 text-center text-slate-400">
-              <TicketIcon className="mx-auto h-10 w-10" />
-              <p className="mt-3 text-sm">Belum ada pemesanan tiket.</p>
-            </div>
+            <p className="text-center text-slate-400 py-10">
+              Belum ada riwayat.
+            </p>
           ) : (
-            <div className="space-y-3 pt-2">
-              {list.map((t, i) => {
-                const b = statusBadge(t);
-                return (
-                  <motion.div
-                    key={t.kode}
-                    onClick={() => setSelectedTicket(t)}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ ...spring, delay: i * 0.04 }}
-                  >
-                    <Glass className="flex gap-3 rounded-2xl p-3">
-                      <img
-                        src={t.img || "/placeholder.svg"}
-                        alt={t.objekNama}
-                        className="h-16 w-16 shrink-0 rounded-xl object-cover"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className="truncate text-sm font-semibold text-slate-900">
-                            {t.objekNama}
-                          </p>
-                          <span
-                            className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${b.cls}`}
-                          >
-                            {b.txt}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-400">{t.lokasi}</p>
-                        <div className="mt-1.5 flex items-center justify-between text-xs">
-                          <span className="text-slate-500">
-                            {t.tanggalKunjungan} &middot; {t.jumlahOrang} org
-                          </span>
-                          <span className="font-bold text-sky-600">
-                            {RUPIAH(t.total)}
-                          </span>
-                        </div>
-                        <p className="mt-1 font-mono text-[10px] tracking-wider text-slate-400">
-                          {t.kode}
-                        </p>
-                      </div>
-                    </Glass>
-                  </motion.div>
-                );
-              })}
-              // Di dalam HistorySheet, setelah penutup list.map
-              <AnimatePresence>
-                {selectedTicket && (
-                  <motion.div
-                    className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <div
-                      className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-                      onClick={() => setSelectedTicket(null)}
-                    />
-                    <motion.div
-                      initial={{ y: "100%" }}
-                      animate={{ y: 0 }}
-                      exit={{ y: "100%" }}
-                      className="relative z-10 w-full max-w-md bg-white rounded-t-[2rem] p-6 pb-8"
-                    >
-                      <button
-                        onClick={() => setSelectedTicket(null)}
-                        className="absolute right-4 top-4 p-2 rounded-full bg-slate-100"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-
-                      <h2 className="text-lg font-bold mb-6">Detail E-Tiket</h2>
-
-                      {/* REUSE TICKET COMPONENT */}
-                      <div className="relative overflow-hidden rounded-3xl border border-slate-200 shadow-xl">
-                        {/* Header Ticket */}
-                        <div className="bg-sky-500 px-5 py-3 text-white flex justify-between">
-                          <span className="text-sm font-semibold">
-                            E-Tiket Wisata
-                          </span>
-                          <span className="text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">
-                            {selectedTicket.statusBayar === "Lunas"
-                              ? "LUNAS"
-                              : "AKTIF"}
-                          </span>
-                        </div>
-
-                        <div className="p-5 bg-white">
-                          <p className="text-xl font-bold">
-                            {selectedTicket.objekNama}
-                          </p>
-                          <p className="text-sm text-slate-500">
-                            {selectedTicket.lokasi}
-                          </p>
-
-                          <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
-                            <Info
-                              label="Pemesan"
-                              value={selectedTicket.namaPemesan}
-                            />
-                            <Info
-                              label="Tanggal"
-                              value={selectedTicket.tanggalKunjungan}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Perforation line */}
-                        <div className="relative flex items-center bg-white">
-                          <div className="h-5 w-5 -translate-x-2.5 rounded-full bg-slate-100" />
-                          <div className="flex-1 border-t-2 border-dashed border-slate-200" />
-                          <div className="h-5 w-5 translate-x-2.5 rounded-full bg-slate-100" />
-                        </div>
-
-                        {/* QR Area */}
-                        <div className="flex flex-col items-center pb-6 pt-3 bg-white">
-                          <img
-                            src={qrSrc(JSON.stringify(selectedTicket), 220)}
-                            alt="QR Tiket"
-                            className="h-40 w-40"
-                          />
-                          <p className="mt-3 font-mono font-bold">
-                            {selectedTicket.kode}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            list.map((t) => (
+              <button
+                key={t.kode}
+                onClick={() => setSelectedTicket(t)}
+                className="w-full"
+              >
+                <div className="flex gap-4 p-4 rounded-2xl border border-slate-100 bg-white hover:bg-slate-50 text-left transition">
+                  <img
+                    src={t.img}
+                    className="h-16 w-16 rounded-xl object-cover"
+                    alt=""
+                  />
+                  <div>
+                    <p className="font-semibold text-sm">{t.objekNama}</p>
+                    <p className="text-[11px] text-slate-500">
+                      {t.tanggalKunjungan}
+                    </p>
+                    <p className="text-xs font-bold text-sky-600 mt-1">
+                      {RUPIAH(t.total)}
+                    </p>
+                  </div>
+                </div>
+              </button>
+            ))
           )}
         </div>
       </motion.div>
+
+      {/* Modal Detail */}
+      <AnimatePresence>
+        {selectedTicket && (
+          <TicketDetailView
+            ticket={selectedTicket}
+            onClose={() => setSelectedTicket(null)}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
