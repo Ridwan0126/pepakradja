@@ -824,6 +824,13 @@ function TicketDetailView({ ticket, onClose }) {
     </motion.div>
   );
 }
+const statusBadge = (t) => {
+  if (t.used) return { txt: "Terpakai", cls: "bg-slate-200 text-slate-700" };
+  if (new Date(t.expiryDate) < new Date())
+    return { txt: "Hangus", cls: "bg-rose-100 text-rose-700" };
+  return { txt: "Aktif", cls: "bg-emerald-100 text-emerald-700" };
+};
+
 /* ----------------------- RIWAYAT PEMESANAN ----------------------------- */
 function HistorySheet({ session, onClose }) {
   const [selectedTicket, setSelectedTicket] = useState(null);
