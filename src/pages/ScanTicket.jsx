@@ -99,10 +99,13 @@ function extractKode(raw) {
   if (!raw) return null;
   const text = String(raw).trim();
   try {
+    // Coba parse jika formatnya JSON
     const obj = JSON.parse(text);
     if (obj && obj.kode) return obj.kode;
   } catch {
-    /* bukan JSON */
+    // Jika bukan JSON, mungkin langsung kodenya
+    // Bersihkan jika ada karakter aneh
+    return text.replace(/[^a-zA-Z0-9-]/g, "");
   }
   return text;
 }
