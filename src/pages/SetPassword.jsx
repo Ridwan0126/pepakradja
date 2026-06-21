@@ -89,7 +89,7 @@ const SetPassword = () => {
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-800">Atur Password</h2>
         <p className="text-gray-500 text-sm mt-1">
-          Halo, {userData?.nama}. Masukkan password baru Anda.
+          Halo, {userData?.nama}. Masukkan password Anda.
         </p>
       </div>
 
