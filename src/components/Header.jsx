@@ -478,7 +478,7 @@ export default function Header() {
                           exit={{ opacity: 0, scale: 0.8 }}
                           transition={{ duration: 0.2 }}
                           // Mengatur posisi tepat di bawah dan kanan logo
-                          className="absolute top-10 left-8 z-[9999] w-24 pointer-events-none"
+                          className="absolute top-10 left-8 z-[9999] w-32 pointer-events-none"
                         >
                           <img
                             src="/images/popupsajak.png"
