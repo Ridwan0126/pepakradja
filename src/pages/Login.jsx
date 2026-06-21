@@ -180,9 +180,9 @@ export default function Login() {
               />
 
               <img
-                src="/images/massajak.png"
+                src="/images/massajakBregada.png"
                 alt="PEPAKRAJA"
-                className="w-40 h-40 m-2 mb-8 drop-shadow-[0_0_40px_rgba(34,211,238,0.6)]"
+                className="w-38 h-40 m-2 mb-8 drop-shadow-[0_0_40px_rgba(34,211,238,0.6)]"
               />
             </div>
 

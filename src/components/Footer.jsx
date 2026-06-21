@@ -82,7 +82,13 @@ export default function Footer() {
               <p className="text-slate-400 leading-relaxed mb-6 max-w-md">
                 Platform digital layanan retribusi Daerah Provinsi Jawa Tengah
                 yang memberikan kemudahan, transparansi, dan keamanan dalam
-                proses pembayaran serta pengelolaan retribusi secara modern.
+                proses pembayaran serta pengelolaan retribusi secara modern.{" "}
+                <a
+                  className="text-blue-400 hover:text-cyan-400"
+                  href="/tentangkami"
+                >
+                  (baca selengkapnya)
+                </a>
               </p>
 
               {/* Social */}

@@ -44,7 +44,7 @@ export default function Header() {
 
   // SEARCH
   const [searchOpen, setSearchOpen] = useState(false);
-
+  const [showTooltip, setShowTooltip] = useState(false);
   const [search, setSearch] = useState("");
 
   const [lastSearch, setLastSearch] = useState("");
@@ -463,11 +463,35 @@ export default function Header() {
                   </button>
 
                   {/* LOGO & APP TITLE */}
-                  <Link to="/" className="flex items-center gap-2 sm:gap-3">
+                  <Link
+                    to="/"
+                    className="flex items-center gap-2 sm:gap-3 group relative"
+                    onMouseEnter={() => setShowTooltip(true)}
+                    onMouseLeave={() => setShowTooltip(false)}
+                  >
+                    {/* TOOLTIP CONTAINER - Diposisikan relatif terhadap Link */}
+                    <AnimatePresence>
+                      {showTooltip && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{ duration: 0.2 }}
+                          // Mengatur posisi tepat di bawah dan kanan logo
+                          className="absolute top-10 left-8 z-[9999] w-24 pointer-events-none"
+                        >
+                          <img
+                            src="/images/popupsajak.png"
+                            alt="Home Mascot"
+                            className="w-full h-auto drop-shadow-lg"
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* LOGO */}
                     <motion.div
-                      whileHover={{
-                        scale: 1.05,
-                      }}
+                      whileHover={{ scale: 1.05 }}
                       className="flex items-center justify-center"
                     >
                       <img
@@ -477,13 +501,11 @@ export default function Header() {
                       />
                     </motion.div>
 
+                    {/* TITLE */}
                     <div className="hidden sm:flex flex-col leading-tight">
                       <span className="text-sm sm:text-base md:text-lg font-bold text-slate-800">
                         PEPAK RADJA
                       </span>
-                      {/* <span className="text-xs text-slate-500 font-medium">
-                        Marketplace Retribusi
-                      </span> */}
                     </div>
                   </Link>
 
