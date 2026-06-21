@@ -45,7 +45,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-50 relative overflow-hidden font-sans antialiased selection:bg-blue-500/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-50 isolate relative overflow-hidden font-sans antialiased selection:bg-blue-500/20">
       {/* Header Tetap Berada di Atas */}
       <Header />
 

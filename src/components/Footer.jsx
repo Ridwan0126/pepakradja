@@ -275,7 +275,7 @@ export default function Footer() {
           <img
             src="/images/call.png"
             alt="PEPAK RAJA"
-            className="w-16 h-16 object-contain floating-logo"
+            className="w-20 h-20 object-contain floating-logo"
           />
         </a>
       </div>
