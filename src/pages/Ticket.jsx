@@ -768,7 +768,62 @@ function LoginAlert({ onLogin, onCancel }) {
     </motion.div>
   );
 }
-
+function TicketDetailView({ ticket, onClose }) {
+  if (!ticket) return null;
+  return (
+    <motion.div
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-white rounded-3xl p-6 shadow-2xl"
+      >
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <h2 className="text-xl font-bold mb-6 text-center">E-Tiket Anda</h2>
+        <div className="border-2 border-dashed border-slate-200 rounded-2xl p-4 space-y-4">
+          <div className="text-center">
+            <img
+              src={qrSrc(JSON.stringify(ticket), 220)}
+              alt="QR"
+              className="mx-auto h-40 w-40"
+            />
+            <p className="mt-3 font-mono font-bold text-lg">{ticket.kode}</p>
+          </div>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-slate-500">Destinasi</span>
+              <span className="font-semibold">{ticket.objekNama}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Pemesan</span>
+              <span className="font-semibold">{ticket.namaPemesan}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Kunjungan</span>
+              <span className="font-semibold">{ticket.tanggalKunjungan}</span>
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          className="w-full mt-6 py-3 bg-slate-900 text-white rounded-2xl font-medium"
+        >
+          Tutup
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}
 /* ----------------------- RIWAYAT PEMESANAN ----------------------------- */
 function HistorySheet({ session, onClose }) {
   const [selectedTicket, setSelectedTicket] = useState(null);
