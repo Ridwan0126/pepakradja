@@ -49,11 +49,12 @@ export default function Home() {
       {/* Header Tetap Berada di Atas */}
       <Header />
 
-      {/* Ambiance Watermark Logo Background Tetap Tembus Pandang */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1] flex items-center justify-center">
+      {/* Watermark di file Home.js */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
         <img
-          src="/images/logopepakraja.png"
+          src="/images/call.png"
           alt=""
+          // Pastikan z-index watermark ini benar-benar di belakang
           className="absolute left-[-250px] top-1/2 -translate-y-1/2 w-[850px] opacity-[0.06] select-none mix-blend-multiply filter blur-[2px]"
         />
       </div>
