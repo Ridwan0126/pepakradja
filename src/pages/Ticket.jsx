@@ -861,30 +861,47 @@ function HistorySheet({ session, onClose }) {
               Belum ada riwayat.
             </p>
           ) : (
-            list.map((t) => (
-              <button
-                key={t.kode}
-                onClick={() => setSelectedTicket(t)}
-                className="w-full"
-              >
-                <div className="flex gap-4 p-4 rounded-2xl border border-slate-100 bg-white hover:bg-slate-50 text-left transition">
-                  <img
-                    src={t.img}
-                    className="h-16 w-16 rounded-xl object-cover"
-                    alt=""
-                  />
-                  <div>
-                    <p className="font-semibold text-sm">{t.objekNama}</p>
-                    <p className="text-[11px] text-slate-500">
-                      {t.tanggalKunjungan}
-                    </p>
-                    <p className="text-xs font-bold text-sky-600 mt-1">
-                      {RUPIAH(t.total)}
-                    </p>
+            list.map((t) => {
+              const status = statusBadge(t);
+              return (
+                <button
+                  key={t.kode}
+                  onClick={() => setSelectedTicket(t)}
+                  className="w-full"
+                >
+                  <div className="flex gap-4 p-4 rounded-2xl border border-slate-100 bg-white hover:bg-slate-50 text-left transition">
+                    <img
+                      src={t.img}
+                      className="h-16 w-16 rounded-xl object-cover"
+                      alt=""
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">{t.objekNama}</p>
+                      <p className="text-[11px] text-slate-500">
+                        {t.tanggalKunjungan}
+                      </p>
+
+                      {/* --- KETERANGAN STATUS --- */}
+                      <div className="mt-2">
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${status.cls}`}
+                        >
+                          {status.txt}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right flex flex-col justify-between">
+                      <p className="text-xs font-bold text-sky-600">
+                        {RUPIAH(t.total)}
+                      </p>
+                      <p className="text-[9px] font-mono text-slate-400">
+                        {t.kode}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))
+                </button>
+              );
+            })
           )}
         </div>
       </motion.div>
