@@ -18,6 +18,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCartStore } from "../stores/cartStore";
 import { retributiAPI_Endpoints } from "../services/api";
+import Swal from "sweetalert2";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -95,12 +96,23 @@ export default function ProductDetail() {
 
   const handleSPTRD = () => {
     if (product?.is_laku) {
-      alert("Obyek retribusi ini sudah disewa/digunakan.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Obyek retribusi ini sudah disewa/digunakan.",
+        confirmButtonColor: "#d33",
+      });
       return;
     }
 
     if (!wr?.nama) {
-      alert("Silakan login terlebih dahulu");
+      Swal.fire({
+        icon: "warning",
+        title: "Belum Login",
+        text: "Silakan login terlebih dahulu untuk membuat perjanjian.",
+        confirmButtonText: "Login",
+        confirmButtonColor: "#3085d6",
+      });
       return;
     }
 
