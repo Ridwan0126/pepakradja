@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, Lock, CheckCircle2 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const SetPassword = () => {
