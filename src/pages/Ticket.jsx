@@ -771,6 +771,8 @@ function LoginAlert({ onLogin, onCancel }) {
 
 /* ----------------------- RIWAYAT PEMESANAN ----------------------------- */
 function HistorySheet({ session, onClose }) {
+  const [selectedTicket, setSelectedTicket] = useState(null);
+
   const list = useMemo(() => {
     const all = readTickets();
     const mine = session?.user?.id
@@ -833,6 +835,7 @@ function HistorySheet({ session, onClose }) {
                 return (
                   <motion.div
                     key={t.kode}
+                    onClick={() => setSelectedTicket(t)}
                     initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ ...spring, delay: i * 0.04 }}
@@ -871,6 +874,91 @@ function HistorySheet({ session, onClose }) {
                   </motion.div>
                 );
               })}
+              // Di dalam HistorySheet, setelah penutup list.map
+              <AnimatePresence>
+                {selectedTicket && (
+                  <motion.div
+                    className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <div
+                      className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                      onClick={() => setSelectedTicket(null)}
+                    />
+                    <motion.div
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      exit={{ y: "100%" }}
+                      className="relative z-10 w-full max-w-md bg-white rounded-t-[2rem] p-6 pb-8"
+                    >
+                      <button
+                        onClick={() => setSelectedTicket(null)}
+                        className="absolute right-4 top-4 p-2 rounded-full bg-slate-100"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+
+                      <h2 className="text-lg font-bold mb-6">Detail E-Tiket</h2>
+
+                      {/* REUSE TICKET COMPONENT */}
+                      <div className="relative overflow-hidden rounded-3xl border border-slate-200 shadow-xl">
+                        {/* Header Ticket */}
+                        <div className="bg-sky-500 px-5 py-3 text-white flex justify-between">
+                          <span className="text-sm font-semibold">
+                            E-Tiket Wisata
+                          </span>
+                          <span className="text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">
+                            {selectedTicket.statusBayar === "Lunas"
+                              ? "LUNAS"
+                              : "AKTIF"}
+                          </span>
+                        </div>
+
+                        <div className="p-5 bg-white">
+                          <p className="text-xl font-bold">
+                            {selectedTicket.objekNama}
+                          </p>
+                          <p className="text-sm text-slate-500">
+                            {selectedTicket.lokasi}
+                          </p>
+
+                          <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+                            <Info
+                              label="Pemesan"
+                              value={selectedTicket.namaPemesan}
+                            />
+                            <Info
+                              label="Tanggal"
+                              value={selectedTicket.tanggalKunjungan}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Perforation line */}
+                        <div className="relative flex items-center bg-white">
+                          <div className="h-5 w-5 -translate-x-2.5 rounded-full bg-slate-100" />
+                          <div className="flex-1 border-t-2 border-dashed border-slate-200" />
+                          <div className="h-5 w-5 translate-x-2.5 rounded-full bg-slate-100" />
+                        </div>
+
+                        {/* QR Area */}
+                        <div className="flex flex-col items-center pb-6 pt-3 bg-white">
+                          <img
+                            src={qrSrc(JSON.stringify(selectedTicket), 220)}
+                            alt="QR Tiket"
+                            className="h-40 w-40"
+                          />
+                          <p className="mt-3 font-mono font-bold">
+                            {selectedTicket.kode}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )}
         </div>
