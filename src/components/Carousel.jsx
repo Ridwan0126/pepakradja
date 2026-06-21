@@ -141,7 +141,7 @@ export default function Carousel({ slides = [] }) {
               </div>
 
               {/* SISI KANAN: Visual Ilustrasi Produk Terapung */}
-              <div className="hidden md:flex items-center justify-center h-full py-6 z-10 pr-4">
+              {/* <div className="hidden md:flex items-center justify-center h-full py-6 z-10 pr-4">
                 <motion.img
                   key={`carousel-img-${current}`}
                   initial={{ scale: 0.85, opacity: 0, x: 20 }}
@@ -154,10 +154,10 @@ export default function Carousel({ slides = [] }) {
                     delay: 0.08,
                   }}
                   src={slides[current].image}
-                  alt={slides[current].title}
+                  // alt={slides[current].title}
                   className="h-full max-h-[160px] lg:max-h-[200px] object-contain drop-shadow-[0_12px_32px_rgba(0,0,0,0.12)]"
                 />
-              </div>
+              </div> */}
             </div>
           </motion.div>
         </AnimatePresence>

@@ -265,7 +265,8 @@ export default function Footer() {
       </footer>
 
       {/* WhatsApp Floating */}
-      <div className="fixed bottom-6 right-6 z-50">
+      {/* Pastikan kode ini ada di bagian bawah Footer.js */}
+      <div className="fixed bottom-6 right-6 z-50 hidden-on-home">
         <a
           href="https://wa.me/6285642312609"
           target="_blank"
@@ -274,7 +275,7 @@ export default function Footer() {
         >
           <img
             src="/images/call.png"
-            alt="PEPAK RAJA"
+            alt="WhatsApp"
             className="w-20 h-20 object-contain floating-logo"
           />
         </a>

@@ -45,19 +45,9 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-50 isolate relative overflow-hidden font-sans antialiased selection:bg-blue-500/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-50 isolate relative overflow-x-hidden font-sans antialiased selection:bg-blue-500/20">
       {/* Header Tetap Berada di Atas */}
       <Header />
-
-      {/* Watermark di file Home.js */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
-        <img
-          src="/images/call.png"
-          alt=""
-          // Pastikan z-index watermark ini benar-benar di belakang
-          className="absolute left-[-250px] top-1/2 -translate-y-1/2 w-[850px] opacity-[0.06] select-none mix-blend-multiply filter blur-[2px]"
-        />
-      </div>
 
       {/* Carousel Slider Section - iOS Clean Spacing */}
       <section className="relative z-10 pt-28 md:pt-30 px-4 pb-6 bg-transparent">
@@ -112,7 +102,7 @@ export default function Home() {
       </section>
 
       {/* Footer Area */}
-      <div className="relative z-10 border-t border-gray-200/50 bg-white/40 backdrop-blur-md">
+      <div className="relative z-10 border-t border-gray-200/50">
         <Footer />
       </div>
     </div>
