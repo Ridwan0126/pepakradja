@@ -50,7 +50,7 @@ export default function Home() {
       <Header />
 
       {/* Ambiance Watermark Logo Background Tetap Tembus Pandang */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1] flex items-center justify-center">
         <img
           src="/images/logopepakraja.png"
           alt=""
