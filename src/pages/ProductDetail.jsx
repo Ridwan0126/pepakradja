@@ -117,8 +117,8 @@ export default function ProductDetail() {
       telepon: wr?.telepon || "-",
       email: wr?.email || "-",
 
-      jenis: wr?.email || "Jasa",
-      rincian: wr?.email || "Sewa",
+      jenis: wr?.golongan?.golongan || "Jasa",
+      rincian: wr?.obyek_retribusi || "Sewa",
       pelayanan:
         product?.jenis?.jenis_retribusi || product?.tariftbl?.penerimaan || "-",
 
