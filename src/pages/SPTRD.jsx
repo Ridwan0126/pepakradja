@@ -147,10 +147,7 @@ export default function SPTRD() {
 
         email: wr?.email || "-",
 
-        pelayanan:
-          selectedObyek?.jenis?.jenis_retribusi ||
-          selectedObyek?.tariftbl?.penerimaan ||
-          "-",
+        pelayanan: selectedObyek?.golongan?.golongan || "-",
 
         namaPelayanan: selectedObyek?.obyek_retribusi || "-",
 
