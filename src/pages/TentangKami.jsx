@@ -1,1209 +1,908 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu,
   X,
-  ChevronDown,
-  Star,
-  Users,
-  Zap,
-  Heart,
-  Eye,
-  CheckCircle,
   ArrowRight,
-  Sparkles,
-  Bell,
-  Search,
-  Settings,
-  Globe,
-  Code,
-  Palette,
-  BarChart3,
-  Lock,
-  Smartphone,
-  TrendingUp,
-  DollarSign,
-  FileText,
-  Building2,
-  Briefcase,
-  Award,
   MapPin,
   Phone,
   Mail,
-  Clock,
-  Download,
-  FileCheck,
-  AlertCircle,
-  Target,
-  Percent,
-  Home,
-  Car,
-  Landmark,
-  Utensils,
-  Ticket,
-  Building,
-  Plus,
-  ChevronRight,
-  BookOpen,
-  PieChart,
-  Headphones,
-  Shield,
+  ExternalLink,
+  Star,
+  Zap,
+  Users,
+  Award,
+  TrendingUp,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
+import Swal from "sweetalert2";
 
-export default function BapendaJateng() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedService, setSelectedService] = useState(null);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [notification, setNotification] = useState("");
-  const [expandedFaq, setExpandedFaq] = useState(0);
-  const [activeTab, setActiveTab] = useState("pajak");
-
-  useEffect(() => {
-    const timer = setTimeout(() => setPopupVisible(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const showNotification = (message) => {
-    setNotification(message);
-    setTimeout(() => setNotification(""), 3000);
+const TentangKami = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [isExpanded, setIsExpanded] = useState(false);
+  // Scroll to section handler
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    setIsMenuOpen(false);
   };
 
-  // Main Navigation
-  const navItems = [
-    "Beranda",
-    "Profil",
-    "Layanan",
-    "Informasi",
-    "Tim",
-    "Kontak",
-  ];
+  // Alert handler untuk tombol link
+  const handleLinkClick = () => {
+    Swal.fire({
+      title: "Segera Hadir!",
+      text: "Platform kami sedang dalam tahap pengembangan. Terima kasih atas antusiasme Anda!",
+      icon: "info",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#003d82",
+      background: "#f0f9ff",
+      didOpen: (modal) => {
+        modal.classList.add("backdrop-blur-md");
+      },
+    });
+  };
 
-  // Kategori Pajak & Retribusi
-  const pajakRetribusi = [
+  // Contact form handler
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Terima Kasih!",
+      text: "Pesan Anda telah kami terima. Kami akan menghubungi Anda segera.",
+      icon: "success",
+      confirmButtonText: "Tutup",
+      confirmButtonColor: "#003d82",
+      background: "#f0f9ff",
+    });
+    e.target.reset();
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, scale: 0.8, rotate: -10 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  // Data fitur unggulan
+  const features = [
     {
       id: 1,
-      title: "Pajak Kendaraan Bermotor",
-      desc: "Pajak atas kepemilikan kendaraan bermotor",
-      icon: Car,
-      detail:
-        "Meliputi mobil pribadi, motor, kendaraan komersial dengan tarif progressif",
-      revenue: "Rp 2.5 Triliun",
-      color: "from-blue-500 to-cyan-500",
+      title: "Keamanan Tingkat Enterprise",
+      description:
+        "Enkripsi end-to-end dengan standar internasional untuk melindungi data Anda. Sistem keamanan berlapis dengan monitoring 24/7.",
+      icon: Award,
     },
     {
       id: 2,
-      title: "Pajak Air Permukaan",
-      desc: "Pajak penggunaan air dari sumber air permukaan",
+      title: "Integrasi Seamless",
+      description:
+        "Terhubung dengan ratusan aplikasi populer. API yang powerful dan dokumentasi lengkap untuk developer.",
       icon: Zap,
-      detail: "Untuk keperluan pertanian, industri, dan komersial",
-      revenue: "Rp 850 Miliar",
-      color: "from-green-500 to-emerald-500",
     },
     {
       id: 3,
-      title: "Retribusi Jasa Umum",
-      desc: "Retribusi untuk pelayanan kesehatan, parkir, pasar",
-      icon: Home,
-      detail: "Mencakup layanan publik yang diberikan pemerintah daerah",
-      revenue: "Rp 450 Miliar",
-      color: "from-purple-500 to-pink-500",
+      title: "Skalabilitas Unlimited",
+      description:
+        "Grow your business tanpa khawatir tentang kapasitas. Infrastructure yang robust untuk menangani jutaan transaksi.",
+      icon: TrendingUp,
     },
     {
       id: 4,
-      title: "Retribusi Perizinan",
-      desc: "Retribusi untuk perizinan usaha dan bangunan",
-      icon: FileCheck,
-      detail: "IMB, izin trayek, izin usaha komersial",
-      revenue: "Rp 320 Miliar",
-      color: "from-orange-500 to-yellow-500",
+      title: "Kolaborasi Real-Time",
+      description:
+        "Bekerja bersama tim dengan seamless. Update instant dan komunikasi yang lancar dalam satu platform.",
+      icon: Users,
     },
     {
       id: 5,
-      title: "Bea Perolehan Hak atas Tanah",
-      desc: "Pajak atas transaksi tanah dan bangunan",
-      icon: Building2,
-      detail: "Dikenakan pada setiap pembelian properti",
-      revenue: "Rp 1.8 Triliun",
-      color: "from-red-500 to-rose-500",
-    },
-    {
-      id: 6,
-      title: "Pajak Hiburan",
-      desc: "Pajak atas penyelenggaraan hiburan umum",
-      icon: Sparkles,
-      detail: "Konser, teater, pertandingan olahraga",
-      revenue: "Rp 180 Miliar",
-      color: "from-indigo-500 to-violet-500",
+      title: "Analytics Mendalam",
+      description:
+        "Dapatkan insight berharga dari data Anda. Dashboard yang customizable dengan visualisasi yang intuitif.",
+      icon: TrendingUp,
     },
   ];
 
-  // Divisi & Layanan Bapenda
-  const divisions = [
-    {
-      id: 1,
-      title: "Direktorat Pajak Daerah",
-      desc: "Mengelola semua jenis pajak lokal",
-      icon: DollarSign,
-      services: [
-        "Pajak Kendaraan Bermotor",
-        "Pajak Air Permukaan",
-        "Pajak Properti",
-        "Pajak Hiburan",
-      ],
-    },
-    {
-      id: 2,
-      title: "Direktorat Retribusi Daerah",
-      desc: "Mengelola retribusi jasa dan perizinan",
-      icon: FileText,
-      services: [
-        "Retribusi Jasa Umum",
-        "Retribusi Usaha",
-        "Retribusi Perizinan",
-        "Retribusi Parkir",
-      ],
-    },
-    {
-      id: 3,
-      title: "Direktorat Manajemen Aset",
-      desc: "Pengelolaan aset daerah yang optimal",
-      icon: Building2,
-      services: [
-        "Inventarisasi Aset",
-        "Penilaian Aset",
-        "Pemeliharaan Aset",
-        "Pelaporan Aset",
-      ],
-    },
-    {
-      id: 4,
-      title: "Direktorat Teknologi Informasi",
-      desc: "Digitalisasi dan transformasi sistem",
-      icon: Code,
-      services: [
-        "e-SAMSAT",
-        "Portal Online Pajak",
-        "Sistem Informasi Aset",
-        "Data Analytics",
-      ],
-    },
-    {
-      id: 5,
-      title: "Direktorat Kepatuhan",
-      desc: "Pengawasan dan compliance pajak",
-      icon: Shield,
-      services: [
-        "Pemeriksaan Pajak",
-        "Penindakan Pelanggaran",
-        "Konsultasi Pajak",
-        "Penyuluhan",
-      ],
-    },
-    {
-      id: 6,
-      title: "Direktorat Pelayanan Publik",
-      desc: "Layanan pelanggan terpadu",
-      icon: Headphones,
-      services: [
-        "Customer Service",
-        "Pengaduan Pelayanan",
-        "Informasi Publik",
-        "Mediasi Sengketa",
-      ],
-    },
-  ];
-
-  // Jenis Aset yang Dikelola
-  const assetTypes = [
-    {
-      icon: Home,
-      title: "Tanah & Bangunan",
-      value: "Rp 8.5 Triliun",
-      description: "Aset tetap berupa properti pemerintah",
-    },
-    {
-      icon: Car,
-      title: "Kendaraan",
-      value: "12,450 unit",
-      description: "Kendaraan operasional berbagai instansi",
-    },
-    {
-      icon: Landmark,
-      title: "Infrastruktur",
-      value: "Rp 5.2 Triliun",
-      description: "Jalan, jembatan, dan fasilitas publik",
-    },
-    {
-      icon: Building,
-      title: "Peralatan",
-      value: "45,800 unit",
-      description: "Mesin, peralatan kantor, dan furniture",
-    },
-  ];
-
-  // Tim Management
-  const teamMembers = [
-    {
-      id: 1,
-      name: "Drs. H. Hadi Sutrisno, M.Si",
-      role: "Kepala Bapenda",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-      bio: "Berpengalaman lebih dari 25 tahun di bidang administrasi pemerintahan",
-      phone: "+62-274-1234567",
-    },
-    {
-      id: 2,
-      name: "Ir. Siti Nurhaliza, M.Eng",
-      role: "Kepala Seksi Pajak Daerah",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-      bio: "Spesialis dalam sistem perpajakan daerah modern",
-      phone: "+62-274-1234568",
-    },
-    {
-      id: 3,
-      name: "Bambang Suryanto, S.H., M.H",
-      role: "Kepala Seksi Retribusi",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
-      bio: "Ahli dalam regulasi retribusi daerah",
-      phone: "+62-274-1234569",
-    },
-    {
-      id: 4,
-      name: "Dr. Rini Widiastuti, S.E., M.E",
-      role: "Kepala Seksi Manajemen Aset",
-      image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-      bio: "Doktor ekonomi dengan fokus pada pengelolaan aset publik",
-      phone: "+62-274-1234570",
-    },
-    {
-      id: 5,
-      name: "Agus Prabowo, S.T., M.T",
-      role: "Kepala Seksi IT",
-      image:
-        "https://images.unsplash.com/photo-1507239711619-18f1d1f60f78?w=400&h=400&fit=crop",
-      bio: "Insinyur teknologi dengan keahlian transformasi digital",
-      phone: "+62-274-1234571",
-    },
-    {
-      id: 6,
-      name: "Dewi Lestari, S.A.B",
-      role: "Kepala Seksi Pelayanan Publik",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-      bio: "Berpengalaman dalam manajemen layanan pelanggan",
-      phone: "+62-274-1234572",
-    },
-  ];
-
-  // FAQ Section
-  const faqs = [
-    {
-      question: "Apa itu Bapenda Provinsi Jawa Tengah?",
-      answer:
-        "Bapenda (Badan Pendapatan Daerah) Provinsi Jawa Tengah adalah lembaga pemerintah daerah yang bertanggung jawab mengelola pendapatan asli daerah melalui perpajakan, retribusi, dan pengelolaan aset daerah untuk mendukung pembangunan ekonomi berkelanjutan di Jawa Tengah.",
-    },
-    {
-      question: "Apa perbedaan pajak, retribusi, dan aset?",
-      answer:
-        "Pajak adalah pungutan wajib tanpa imbalan langsung, retribusi adalah pungutan atas jasa atau perizinan tertentu yang diberikan pemerintah, sedangkan aset adalah barang milik daerah yang dikelola untuk kemaksimalan pemanfaatannya dalam melayani masyarakat.",
-    },
-    {
-      question: "Bagaimana cara membayar pajak kendaraan?",
-      answer:
-        "Anda dapat membayar melalui e-SAMSAT di website https://esamsat.jatengprov.go.id/, kantor SAMSAT, atau agen resmi. Untuk kendaraan baru, dapat langsung ke kantor Bapenda dengan membawa dokumen kendaraan.",
-    },
-    {
-      question: "Apa saja jenis retribusi yang ada?",
-      answer:
-        "Retribusi dibagi menjadi 3 jenis: (1) Retribusi Jasa Umum untuk pelayanan kesehatan, parkir, pasar; (2) Retribusi Jasa Usaha untuk terminal, tempat rekreasi; (3) Retribusi Perizinan untuk IMB, izin trayek, dan izin usaha.",
-    },
-    {
-      question: "Bagaimana manajemen aset daerah?",
-      answer:
-        "Manajemen aset mencakup perencanaan, pengadaan, penggunaan, pemeliharaan, penilaian, pemindahtanganan, dan pelaporan aset daerah sesuai Peraturan Pemerintah Nomor 27 Tahun 2014 yang diubah dengan PP Nomor 28 Tahun 2020.",
-    },
-    {
-      question: "Bagaimana cara konsultasi atau mengadukan masalah?",
-      answer:
-        "Anda dapat menghubungi Call Center Bapenda di nomor telepon yang tersedia, email, atau datang langsung ke kantor pusat Bapenda di Semarang. Tim pelayanan kami siap membantu 24 jam untuk non-darurat pada hari kerja.",
-    },
-  ];
-
-  // Statistics
-  const stats = [
-    { label: "Total PAD Terkelola", value: "Rp 6.1 Triliun", icon: TrendingUp },
-    { label: "Jenis Pajak", value: "6+", icon: BarChart3 },
-    { label: "Aset Terkelola", value: "Rp 18.5T+", icon: Building2 },
-    { label: "Kepuasan Publik", value: "92%", icon: Star },
+  // Data kolaborasi
+  const collaborations = [
+    { name: "Google Workspace", logo: "🔷" },
+    { name: "Microsoft Teams", logo: "📱" },
+    { name: "Slack", logo: "💬" },
+    { name: "Figma", logo: "🎨" },
+    { name: "Notion", logo: "📝" },
+    { name: "Zapier", logo: "⚡" },
   ];
 
   return (
-    <div className="bg-white text-gray-900 min-h-screen overflow-hidden">
-      {/* NAVBAR */}
-      <motion.nav
-        className="fixed top-0 left-0 right-0 bg-white bg-opacity-95 backdrop-blur-lg border-b border-gray-100 z-50"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute -top-40 -right-40 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-25"
+          animate={{
+            x: [0, 150, 0],
+            y: [0, 80, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"
+          animate={{
+            x: [0, -150, 0],
+            y: [0, -80, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            delay: 5,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 right-1/3 w-72 h-72 bg-cyan-500 rounded-full mix-blend-screen filter blur-3xl opacity-15"
+          animate={{
+            x: [0, 80, 0],
+            y: [0, -100, 0],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 10,
+          }}
+        />
+      </div>
+
+      {/* HEADER - Floating */}
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="fixed top-4 left-4 right-4 z-50 backdrop-blur-2xl bg-gradient-to-b from-blue-950/60 to-slate-900/30 border border-white/15 shadow-2xl rounded-2xl"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          {/* Logo */}
-          <motion.div
-            className="flex items-center gap-3"
-            whileHover={{ scale: 1.05 }}
-          >
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white p-2 rounded-lg">
-              <Building2 size={24} />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">BAPENDA</h1>
-              <p className="text-xs text-gray-600">Jawa Tengah</p>
-            </div>
-          </motion.div>
+        <nav className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-2">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <img
+                src="/images/logopepakraja.png"
+                alt="Logo Pepakraja"
+                className="w-16 h-16 object-contain"
+              />
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-300 to-yellow-300 bg-clip-text text-transparent">
+                Pepak Raja
+              </span>
+            </motion.div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
-            {navItems.map((item, i) => (
-              <motion.a
-                key={i}
-                href="#"
-                className="text-gray-700 hover:text-blue-600 font-medium text-sm transition-colors"
-                whileHover={{ y: -2 }}
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center gap-8">
+              {[
+                { name: "Tentang Kami", id: "tentang" },
+                { name: "Fitur Unggulan", id: "fitur" },
+                { name: "Kolaborasi", id: "kolaborasi" },
+                { name: "Kontak", id: "kontak" },
+              ].map((item) => (
+                <motion.button
+                  key={item.id}
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => scrollToSection(item.id)}
+                  className="text-sm font-medium hover:text-yellow-300 transition-colors relative group"
+                >
+                  {item.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-yellow-300 group-hover:w-full transition-all duration-300" />
+                </motion.button>
+              ))}
+            </div>
+
+            {/* CTA Button */}
+            <div className="hidden md:block rounded-lg">
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 0 30px rgba(59, 130, 246, 0.5)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleLinkClick}
+                className="px-6 py-2  bg-gradient-to-r from-blue-500 to-yellow-400 text-blue-900 font-semibold rounded-lg backdrop-blur-sm hover:shadow-xl transition-all duration-300"
               >
-                {item}
-              </motion.a>
-            ))}
-          </div>
+                Mulai Sekarang
+              </motion.button>
+            </div>
 
-          {/* Right Actions */}
-          <div className="flex items-center gap-3">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2 hover:bg-gray-100 rounded-lg"
-            >
-              <Search size={20} className="text-gray-700" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2 hover:bg-gray-100 rounded-lg relative"
-            >
-              <Bell size={20} className="text-gray-700" />
-              <span className="absolute top-1 right-1 bg-red-500 w-2 h-2 rounded-full"></span>
-            </motion.button>
+            {/* Mobile Menu Button */}
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-        </div>
-      </motion.nav>
 
-      {/* HERO SECTION */}
-      <motion.section
-        className="pt-40 pb-20 px-4 bg-gradient-to-br from-blue-50 via-white to-gray-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
+          {/* Mobile Menu */}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="md:hidden mt-4 space-y-3 pb-4"
+              >
+                {[
+                  { name: "Tentang Kami", id: "tentang" },
+                  { name: "Fitur Unggulan", id: "fitur" },
+                  { name: "Kolaborasi", id: "kolaborasi" },
+                  { name: "Kontak", id: "kontak" },
+                ].map((item) => (
+                  <motion.button
+                    key={item.id}
+                    whileHover={{ x: 5 }}
+                    onClick={() => scrollToSection(item.id)}
+                    className="block w-full text-left px-4 py-2 hover:bg-white/5 rounded-lg transition-colors"
+                  >
+                    {item.name}
+                  </motion.button>
+                ))}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  onClick={handleLinkClick}
+                  className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-yellow-400 text-blue-900 font-semibold rounded-lg"
+                >
+                  Mulai Sekarang
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </nav>
+      </motion.header>
+
+      {/* BODY */}
+      <main className="relative pt-32 pb-20">
+        {/* HERO SECTION */}
+        <motion.section
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2"
+        >
+          <div className="text-center relative">
+            {/* Glow effect behind title */}
             <motion.div
-              initial={{ x: -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="absolute inset-0 top-10 left-1/2 -translate-x-1/2 w-96 h-64 bg-gradient-to-r from-blue-500/30 to-yellow-500/30 rounded-full blur-3xl pointer-events-none"
+            />
+
+            <motion.h1
+              variants={itemVariants}
+              className="text-6xl md:text-8xl pb-4 font-black mb-8 bg-gradient-to-r from-blue-200 via-yellow-200 to-blue-200 bg-clip-text text-transparent relative z-10 drop-shadow-2xl"
             >
-              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full mb-6">
-                <Sparkles size={16} />
-                <span className="text-sm font-semibold">
-                  Platform Pendapatan Digital Jawa Tengah
-                </span>
-              </div>
+              Selamat Datang di <br /> Pepak Raja
+            </motion.h1>
+            <motion.p
+              variants={itemVariants}
+              className="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto leading-relaxed relative z-10"
+            >
+              Platform digital layanan retribusi Daerah Provinsi Jawa Tengah
+              yang memberikan kemudahan, transparansi, dan keamanan dalam proses
+              pembayaran serta pengelolaan retribusi secara modern.
+            </motion.p>
+          </div>
+        </motion.section>
 
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                  Mengelola Pendapatan
-                </span>
-                <br />
-                Daerah dengan Transparan
-              </h1>
+        {/* TENTANG KAMI SECTION */}
+        <motion.section
+          id="tentang"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative"
+        >
+          {/* Section title with gradient underline */}
+          <motion.div
+            variants={itemVariants}
+            className="mb-16 flex items-center gap-4"
+          >
+            <div className="w-1.5 h-12 bg-gradient-to-b from-blue-400 to-yellow-400 rounded-full" />
+            <h2 className="text-5xl md:text-6xl font-black text-white">
+              Tentang Kami
+            </h2>
+          </motion.div>
 
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Bapenda Provinsi Jawa Tengah berkomitmen mengoptimalkan
-                pendapatan asli daerah melalui digitalisasi, transparansi, dan
-                pelayanan terbaik untuk masyarakat.
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            {/* Text */}
+            <motion.div variants={itemVariants} className="relative">
+              <div className="absolute -left-8 top-0 w-1 h-32 bg-gradient-to-b from-yellow-400 to-transparent opacity-50" />
+              <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
+                Pepak dalam Bahasa Jawa mengandung arti sebuah buku
+                panduan/daftar yang lengkap dan Radja merupakan pelafalan lama
+                dari kata “raja” sehingga makna dari Pepak Radja adalah sebuah
+                panduan lengkap utama yang selalu digunakan oleh raja dalam
+                mendapatkan informasi. Pepak Radja sendiri merupakan kependekan
+                dari singkatan Pelayanan Pajak, Retribusi dan Pemanfaatan Aset
+                Daerah Jawa Tengah.
               </p>
-
-              <div className="flex flex-wrap gap-4">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveModal("info")}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:shadow-lg"
-                >
-                  Pelajari Lebih Lanjut
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveModal("layanan")}
-                  className="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50"
-                >
-                  Lihat Layanan
-                </motion.button>
-              </div>
+              <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
+                Istilah “pembeli adalah raja” dirasa sangat tepat diperuntukkan
+                kepada Masyarakat, dimana mereka harus ditempatkan sebagai
+                prioritas tertinggi dan dilayani sebaik mungkin, dengan tujuan
+                para “raja” akan ikut berkontribusi dalam memanfaatkan aset atau
+                jasa yang ditawarkan.{" "}
+              </p>
+              <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
+                Aplikasi Pepak Radja sendiri merupakan perangkat lunak berbasis
+                web, yang menyediakan daftar/informasi lengkap layanan Pajak dan
+                Retribusi Daerah yang disediakan oleh Pemerintah Provinsi Jawa
+                Tengah dan dapat dimanfaatkan oleh para “raja”, serta dapat
+                diakses secara online kapanpun dimanapun dengan memanfaatkan
+                jaringan internet
+              </p>
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
+                      Digitalisasi layanan melalui aplikasi Pepak Radja
+                      merupakan perwujudan konkret pemerintah Provinsi Jawa
+                      Tengah dalam pelayanan publik melalui penerapan terobosan
+                      digital untuk menjawab tuntutan masyarakat terhadap
+                      pelayanan yang cepat, mudah dan transparan. Sebelum adanya
+                      digitalisasi, pengurusan administrasi dalam mendapat
+                      pelayanan, masyarakat harus mendatangi kantor pelayanan,
+                      mengisi beragam formulir, dan menunggu dalam antrean yang
+                      menyita waktu. Selain itu, ketidakterbukaan informasi
+                      mengenai alur birokrasi sering memicu kecurigaan dan
+                      membuka ruang terjadinya pungutan liar.
+                    </p>
+                    <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
+                      Melalui Pepak Radja, masyarakat dapat mencari atau
+                      mendapatkan informasi dan bertransaksi, hingga melakukan
+                      pengunduhan dokumen tanpa harus meninggalkan rumah.
+                      Pengurangan proses tatap muka juga dianggap efektif
+                      menurunkan potensi penyimpangan karena setiap permohonan
+                      terekam secara digital dan memiliki jejak audit yang
+                      jelas. Tidak hanya mempercepat pelayanan, digitalisasi
+                      layanan juga meningkatkan akuntabilitas instansi
+                      pemerintah, memangkas rantai birokrasi yang berbelit.
+                    </p>
+                    <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed font-medium">
+                      Harapannya dengan kemudahan yang diberikan oleh fitur pada
+                      aplikasi Pepak Radja, pada akhirnya akan memunculkan
+                      dorongan kepada masyarakat untuk berkontribusi dalam
+                      pendapatan daerah dengan cara memanfaatkan aset dan jasa
+                      yang disediakan pemerintah Provinsi Jawa Tengah sehingga
+                      berimbas pula pada peningkatkan Pendapatan Asli Daerah
+                      (PAD) Provinsi Jawa Tengah baik dari sektor Retribusi
+                      maupun Pajak Daerah.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <motion.button
+                whileHover={{ x: 5 }}
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex items-center gap-2 text-yellow-300 hover:text-yellow-400 font-bold transition-all duration-300 mb-8 text-lg"
+              >
+                {isExpanded ? "Tampilkan Lebih Sedikit" : "Selengkapnya"}
+                {isExpanded ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
+              </motion.button>
             </motion.div>
 
-            {/* Right Floating Cards */}
-            <motion.div
-              className="relative h-96"
-              initial={{ x: 100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-            >
-              {/* Floating Card 1 */}
+            {/* Image */}
+            <motion.div variants={imageVariants} className="relative group">
               <motion.div
-                className="absolute top-0 right-0 w-56 bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
-                <DollarSign className="text-blue-600 mb-3" size={28} />
-                <p className="text-sm text-gray-600">Total PAD Terkelola</p>
-                <p className="text-2xl font-bold text-gray-900 mt-2">Rp 6.1T</p>
-              </motion.div>
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-blue-500 to-yellow-400 rounded-3xl blur-2xl opacity-40 group-hover:opacity-60 transition-opacity"
+              />
+              <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/20 to-white/5 border-2 border-white/20 rounded-3xl p-12 overflow-hidden group-hover:border-yellow-400/50 transition-all duration-300">
+                <motion.div
+                  animate={{ y: [0, 30, 0], rotate: [0, 5, 0] }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                  className="aspect-square bg-gradient-to-br from-blue-600/40 to-yellow-500/30 rounded-2xl flex items-center justify-center text-8xl shadow-2xl"
+                >
+                  🚀
+                </motion.div>
+              </div>
 
-              {/* Floating Card 2 */}
+              {/* Floating elements */}
               <motion.div
-                className="absolute top-32 left-0 w-56 bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
-                animate={{ y: [0, 20, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                animate={{ float: [0, 20, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute -top-8 -right-8 text-6xl opacity-60"
               >
-                <Building2 className="text-green-600 mb-3" size={28} />
-                <p className="text-sm text-gray-600">Aset Daerah</p>
-                <p className="text-2xl font-bold text-gray-900 mt-2">
-                  Rp 18.5T+
+                ✨
+              </motion.div>
+              <motion.div
+                animate={{ float: [0, -20, 0] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+                className="absolute -bottom-8 -left-8 text-5xl opacity-60"
+              >
+                💡
+              </motion.div>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* FITUR UNGGULAN SECTION */}
+        <motion.section
+          id="fitur"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative"
+        >
+          <motion.div
+            variants={itemVariants}
+            className="mb-20 flex items-center gap-4"
+          >
+            <h2 className="text-5xl md:text-6xl font-black text-white">
+              Fitur Unggulan
+            </h2>
+            <div className="w-1.5 h-12 bg-gradient-to-r from-blue-400 to-yellow-400 rounded-full" />
+          </motion.div>
+
+          <motion.p
+            variants={itemVariants}
+            className="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto mb-20 text-center font-medium"
+          >
+            Temukan keunggulan platform kami yang dirancang khusus untuk
+            memaksimalkan produktivitas dan efisiensi bisnis Anda.
+          </motion.p>
+
+          <div className="space-y-24">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              const isLeft = [0, 2, 4].includes(index);
+              const emojis = ["🔐", "🔗", "📈", "👥", "📊"];
+
+              return (
+                <motion.div
+                  key={feature.id}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-100px" }}
+                  variants={containerVariants}
+                  className={`grid md:grid-cols-2 gap-16 items-center ${!isLeft ? "md:[&>*:first-child]:order-2 md:[&>*:last-child]:order-1" : ""}`}
+                >
+                  {/* Text */}
+                  <motion.div
+                    variants={itemVariants}
+                    className="backdrop-blur-2xl bg-gradient-to-br from-white/15 to-white/5 border-2 border-white/20 rounded-3xl p-10 hover:border-yellow-400/60 transition-all duration-300 group relative overflow-hidden"
+                  >
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 to-blue-400/0 group-hover:from-yellow-400/10 group-hover:to-blue-400/10 transition-all duration-300 rounded-3xl" />
+
+                    <div className="relative z-10">
+                      <div className="flex items-start gap-5 mb-6">
+                        <motion.div
+                          whileHover={{ scale: 1.15, rotate: 10 }}
+                          className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-yellow-400 flex items-center justify-center flex-shrink-0 shadow-lg"
+                        >
+                          <Icon
+                            size={32}
+                            className="text-slate-950 font-bold"
+                          />
+                        </motion.div>
+                        <h3 className="text-2xl md:text-3xl font-black text-white mt-2">
+                          {feature.title}
+                        </h3>
+                      </div>
+                      <p className="text-blue-100 text-lg leading-relaxed mb-8 font-medium">
+                        {feature.description}
+                      </p>
+                      <motion.button
+                        whileHover={{ x: 8, scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          Swal.fire({
+                            title: feature.title,
+                            text: feature.description,
+                            icon: "info",
+                            confirmButtonText: "OK",
+                            confirmButtonColor: "#003d82",
+                          });
+                        }}
+                        className="flex items-center gap-3 text-yellow-300 hover:text-yellow-400 font-bold transition-all duration-300 text-lg"
+                      >
+                        Selengkapnya
+                        <ArrowRight
+                          size={22}
+                          className="group-hover:translate-x-1 transition-transform"
+                        />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+
+                  {/* Image */}
+                  <motion.div
+                    variants={imageVariants}
+                    className="relative group"
+                  >
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 20,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      className="absolute inset-0 bg-gradient-to-r from-blue-600 to-yellow-500 rounded-3xl blur-3xl opacity-40 group-hover:opacity-60 transition-opacity"
+                    />
+                    <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/20 to-white/5 border-2 border-white/20 rounded-3xl p-12 overflow-hidden group-hover:border-yellow-400/50 transition-all duration-300">
+                      <motion.div
+                        animate={{ rotate: [0, 15, 0], scale: [1, 1.1, 1] }}
+                        transition={{ duration: 5, repeat: Infinity }}
+                        className="aspect-square bg-gradient-to-br from-blue-600/50 to-yellow-500/40 rounded-2xl flex items-center justify-center text-8xl shadow-2xl"
+                      >
+                        {emojis[index]}
+                      </motion.div>
+                    </div>
+
+                    {/* Decorative elements */}
+                    <motion.div
+                      animate={{ float: [0, 25, 0] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                      className="absolute -top-6 -right-6 text-6xl opacity-50"
+                    >
+                      ✨
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.section>
+
+        {/* KOLABORASI SECTION */}
+        <motion.section
+          id="kolaborasi"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative"
+        >
+          <motion.div variants={itemVariants} className="mb-20">
+            <div className="flex items-center gap-4 mb-6">
+              <h2 className="text-5xl md:text-6xl font-black text-white">
+                Kolaborasi Kami
+              </h2>
+              <div className="w-1.5 h-12 bg-gradient-to-r from-blue-400 to-yellow-400 rounded-full" />
+            </div>
+            <p className="text-lg md:text-xl text-blue-100 max-w-3xl font-medium">
+              Kami bekerja sama dengan platform-platform terkemuka dunia untuk
+              memberikan pengalaman terbaik dan terintegrasi kepada klien kami.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
+          >
+            {collaborations.map((collab, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={{ scale: 1.15, rotateZ: 8, y: -15 }}
+                whileTap={{ scale: 0.95 }}
+                className="backdrop-blur-2xl bg-gradient-to-br from-white/15 to-white/5 border-2 border-white/20 rounded-2xl p-8 flex flex-col items-center justify-center gap-4 cursor-pointer group hover:border-yellow-400/60 transition-all duration-300 shadow-xl relative overflow-hidden min-h-32"
+              >
+                {/* Animated background on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 to-blue-400/0 group-hover:from-yellow-400/15 group-hover:to-blue-400/15 transition-all duration-300" />
+
+                <motion.span
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: index * 0.2,
+                  }}
+                  className="text-6xl group-hover:scale-150 transition-transform relative z-10"
+                >
+                  {collab.logo}
+                </motion.span>
+                <p className="text-sm md:text-base font-bold text-center text-blue-100 group-hover:text-yellow-300 transition-colors relative z-10">
+                  {collab.name}
                 </p>
               </motion.div>
-
-              {/* Floating Card 3 */}
-              <motion.div
-                className="absolute bottom-0 right-8 w-56 bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-              >
-                <Star className="text-yellow-500 mb-3" size={28} />
-                <p className="text-sm text-gray-600">Kepuasan Pelanggan</p>
-                <p className="text-2xl font-bold text-gray-900 mt-2">92%</p>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* QUICK STATS */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={i}
-                  className="text-center"
-                  whileHover={{ y: -5 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <div className="bg-gradient-to-br from-blue-50 to-gray-50 rounded-lg p-6 mb-3">
-                    <Icon className="text-blue-600 mx-auto" size={32} />
-                  </div>
-                  <p className="text-2xl md:text-3xl font-bold text-gray-900">
-                    {stat.value}
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2">{stat.label}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* PAJAK & RETRIBUSI SECTION */}
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Pajak & Retribusi Daerah
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Enam kategori utama pendapatan yang menopang pembangunan Jawa
-              Tengah
-            </p>
-          </motion.div>
-
-          {/* Tabs */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {["pajak", "retribusi", "semua"].map((tab) => (
-              <motion.button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-                  activeTab === tab
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {tab === "pajak" && "Pajak"}
-                {tab === "retribusi" && "Retribusi"}
-                {tab === "semua" && "Semua"}
-              </motion.button>
             ))}
-          </div>
-
-          {/* Cards Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {pajakRetribusi.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.id}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-2xl border border-gray-100 overflow-hidden cursor-pointer"
-                  whileHover={{ y: -8 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => setSelectedService(item)}
-                >
-                  {/* Gradient Header */}
-                  <div
-                    className={`h-32 bg-gradient-to-br ${item.color} relative overflow-hidden`}
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Icon size={64} className="text-white opacity-20" />
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <Icon className="text-blue-600 mb-3" size={32} />
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">{item.desc}</p>
-                    <div className="pt-4 border-t border-gray-100">
-                      <p className="text-sm text-gray-600">
-                        Estimasi Pendapatan Tahunan
-                      </p>
-                      <p className="text-2xl font-bold text-blue-600 mt-1">
-                        {item.revenue}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* DIVISIONS SECTION */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Divisi & Layanan
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Tim profesional yang siap melayani kebutuhan pajak, retribusi, dan
-              aset daerah
-            </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {divisions.map((div, i) => {
-              const Icon = div.icon;
-              return (
-                <motion.div
-                  key={div.id}
-                  className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg border border-gray-100 p-8 hover:shadow-2xl"
-                  whileHover={{ scale: 1.05 }}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <div className="bg-blue-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
-                    <Icon className="text-blue-600" size={32} />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {div.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-6">{div.desc}</p>
-
-                  <div className="space-y-2">
-                    {div.services.map((service, j) => (
-                      <div key={j} className="flex items-center gap-2">
-                        <CheckCircle
-                          size={16}
-                          className="text-green-600 flex-shrink-0"
-                        />
-                        <span className="text-sm text-gray-700">{service}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ASSET MANAGEMENT */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-white">
-        <div className="max-w-7xl mx-auto">
+          {/* Stats */}
           <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            variants={containerVariants}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-24"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Manajemen Aset Daerah
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Pengelolaan aset publik yang transparan dan efisien
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
-            {/* Left */}
-            <motion.div
-              initial={{ x: -100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="space-y-6">
-                {assetTypes.map((asset, i) => {
-                  const Icon = asset.icon;
-                  return (
-                    <motion.div
-                      key={i}
-                      className="flex gap-4 items-start p-4 rounded-lg hover:bg-white transition-colors"
-                      whileHover={{ x: 8 }}
-                    >
-                      <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0">
-                        <Icon className="text-blue-600" size={24} />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-gray-900 mb-1">
-                          {asset.title}
-                        </h4>
-                        <p className="text-blue-600 font-semibold mb-1">
-                          {asset.value}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {asset.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-
-            {/* Right */}
-            <motion.div
-              initial={{ x: 100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              className="bg-white rounded-2xl shadow-2xl p-8"
-            >
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Siklus Manajemen Aset
-              </h3>
-              <div className="space-y-4">
-                {[
-                  "Perencanaan Kebutuhan",
-                  "Pengadaan Aset",
-                  "Penggunaan & Pemanfaatan",
-                  "Pemeliharaan & Pengamanan",
-                  "Penilaian Aset",
-                  "Pemindahtanganan/Pemusnahan",
-                  "Penatausahaan",
-                  "Pengawasan & Pengendalian",
-                ].map((step, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-white flex items-center justify-center text-sm font-bold">
-                      {i + 1}
-                    </div>
-                    <span className="text-gray-700 font-medium">{step}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* TEAM SECTION */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Tim Manajemen
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Para profesional berpengalaman yang memimpin transformasi
-              pendapatan daerah
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, i) => (
+            {[
+              { label: "Integrasi Aktif", value: "50+" },
+              { label: "Perusahaan Mitra", value: "100+" },
+              { label: "Uptime Jaminan", value: "99.9%" },
+              { label: "Dukungan 24/7", value: "✓" },
+            ].map((stat, index) => (
               <motion.div
-                key={member.id}
-                className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer"
-                whileHover={{ y: -8 }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                onClick={() => setActiveModal("team")}
+                key={index}
+                variants={itemVariants}
+                whileHover={{ y: -10 }}
+                className="backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border-2 border-white/20 rounded-2xl p-6 text-center hover:border-yellow-400/50 transition-all duration-300"
               >
-                {/* Image */}
-                <div className="h-64 overflow-hidden">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-
-                {/* Info */}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-blue-600 font-semibold text-sm mb-3">
-                    {member.role}
-                  </p>
-                  <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
-                  <div className="flex items-center gap-2 text-blue-600 text-sm font-medium">
-                    <Phone size={16} />
-                    {member.phone}
-                  </div>
-                </div>
+                <p className="text-3xl md:text-4xl font-black text-yellow-300 mb-2">
+                  {stat.value}
+                </p>
+                <p className="text-sm md:text-base text-blue-100 font-medium">
+                  {stat.label}
+                </p>
               </motion.div>
             ))}
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </motion.section>
 
-      {/* FAQ SECTION */}
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-white">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Pertanyaan Umum
-            </h2>
-            <p className="text-xl text-gray-600">
-              Temukan jawaban atas pertanyaan yang sering diajukan
+        {/* KONTAK SECTION */}
+        <motion.section
+          id="kontak"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative"
+        >
+          <motion.div variants={itemVariants} className="mb-20">
+            <div className="flex items-center gap-4 mb-6">
+              <h2 className="text-5xl md:text-6xl font-black text-white">
+                Hubungi Kami
+              </h2>
+              <div className="w-1.5 h-12 bg-gradient-to-r from-blue-400 to-yellow-400 rounded-full" />
+            </div>
+            <p className="text-lg md:text-xl text-blue-100 max-w-3xl font-medium">
+              Kami siap membantu Anda dengan pertanyaan atau kebutuhan apapun.
+              Tim support kami tersedia 24/7 untuk memberikan solusi terbaik.
             </p>
           </motion.div>
 
-          <div className="space-y-4">
-            {faqs.map((faq, i) => (
-              <motion.div
-                key={i}
-                className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <motion.button
-                  onClick={() => setExpandedFaq(expandedFaq === i ? -1 : i)}
-                  className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors"
-                  whileHover={{ backgroundColor: "rgba(0,0,0,0.02)" }}
-                >
-                  <span className="text-lg font-semibold text-gray-900 text-left">
-                    {faq.question}
-                  </span>
+          <div className="grid md:grid-cols-2 gap-12 flex">
+            {/* Contact Info */}
+            <motion.div variants={containerVariants} className="space-y-8">
+              {[
+                {
+                  icon: MapPin,
+                  title: "Alamat",
+                  content: "Jl. Teknologi No. 123, Jakarta, Indonesia",
+                },
+                {
+                  icon: Phone,
+                  title: "Telepon",
+                  content: "+62 (021) 1234-5678",
+                },
+                {
+                  icon: Mail,
+                  title: "Email",
+                  content: "hello@tentangkami.com",
+                },
+              ].map((info, index) => {
+                const Icon = info.icon;
+                return (
                   <motion.div
-                    animate={{ rotate: expandedFaq === i ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
+                    key={index}
+                    variants={itemVariants}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="flex backdrop-blur-2xl bg-gradient-to-br from-white/15 to-white/5 border-2 border-white/20 rounded-2xl p-8 group hover:border-yellow-400/60 transition-all duration-300 relative overflow-hidden"
                   >
-                    <ChevronDown className="text-blue-600" size={24} />
-                  </motion.div>
-                </motion.button>
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 to-blue-400/0 group-hover:from-yellow-400/10 group-hover:to-blue-400/10 transition-all duration-300" />
 
-                <AnimatePresence>
-                  {expandedFaq === i && (
-                    <motion.div
-                      className="px-6 pb-6 text-gray-600 border-t border-gray-100"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {faq.answer}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
+                    <div className="relative z-10 flex items-start gap-6">
+                      <motion.div
+                        whileHover={{ scale: 1.2, rotate: 10 }}
+                        className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-yellow-400 flex items-center justify-center flex-shrink-0 shadow-lg"
+                      >
+                        <Icon size={28} className="text-slate-950 font-bold" />
+                      </motion.div>
+                      <div>
+                        <h3 className="font-bold text-xl mb-2 text-white">
+                          {info.title}
+                        </h3>
+                        <p className="text-blue-100 font-medium text-lg">
+                          {info.content}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </div>
-        </div>
-      </section>
+        </motion.section>
+      </main>
 
       {/* FOOTER */}
       <motion.footer
-        className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-16 px-4"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
+        className="bg-gradient-to-t from-slate-950 via-blue-950/30 to-transparent border-t-2 border-white/10 mt-32 py-20 relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            {/* Column 1 */}
-            <div>
-              <h3 className="text-xl font-bold mb-4">BAPENDA</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Badan Pendapatan Daerah Provinsi Jawa Tengah berkomitmen
-                mengoptimalkan pendapatan asli daerah.
-              </p>
-            </div>
+        {/* Decorative elements */}
+        <motion.div
+          animate={{ opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 pointer-events-none"
+        />
 
-            {/* Column 2 */}
-            <div>
-              <h4 className="font-semibold mb-4">Layanan Utama</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Pajak Daerah
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Retribusi Daerah
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Manajemen Aset
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    e-SAMSAT
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 3 */}
-            <div>
-              <h4 className="font-semibold mb-4">Informasi</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Tentang Kami
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Tim
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Kontak
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 4 */}
-            <div>
-              <h4 className="font-semibold mb-4">Hubungi Kami</h4>
-              <div className="space-y-3 text-sm text-gray-400">
-                <div className="flex items-center gap-2">
-                  <MapPin size={16} />
-                  <span>Jl. Pandanaran, Semarang, Jateng</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone size={16} />
-                  <span>(024) 3545-5678</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail size={16} />
-                  <span>info@bapenda.jatengprov.go.id</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock size={16} />
-                  <span>Senin - Jumat, 08:00 - 16:00</span>
-                </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 md:gap-8 mb-12">
+            {/* Brand */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="lg:col-span-2"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-400 to-yellow-400 flex items-center justify-center text-slate-950 font-bold text-lg"
+                >
+                  ✨
+                </motion.div>
+                <span className="text-2xl font-black bg-gradient-to-r from-blue-300 to-yellow-300 bg-clip-text text-transparent">
+                  TentangKami
+                </span>
               </div>
-            </div>
+              <p className="text-blue-200 mb-6 font-medium leading-relaxed">
+                Platform digital terdepan untuk transformasi bisnis Anda dengan
+                teknologi canggih dan dukungan profesional.
+              </p>
+              <div className="flex gap-4">
+                {["Facebook", "Twitter", "LinkedIn"].map((social, idx) => (
+                  <motion.a
+                    key={idx}
+                    href="#"
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center hover:border-yellow-400/50 hover:bg-white/15 transition-all duration-300 text-sm font-bold text-blue-300 hover:text-yellow-300"
+                  >
+                    {social.charAt(0)}
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Quick Links */}
+            {[
+              {
+                title: "Produk",
+                links: ["Fitur", "Harga", "Dokumentasi", "API"],
+              },
+              {
+                title: "Perusahaan",
+                links: ["Tentang", "Blog", "Karir", "Press"],
+              },
+              {
+                title: "Dukungan",
+                links: ["Bantuan", "Kontak", "FAQ", "Status"],
+              },
+            ].map((section, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 + index * 0.1 }}
+              >
+                <h3 className="font-black text-white mb-5 text-lg">
+                  {section.title}
+                </h3>
+                <ul className="space-y-3">
+                  {section.links.map((link, idx) => (
+                    <li key={idx}>
+                      <motion.a
+                        href="#"
+                        whileHover={{ x: 5 }}
+                        className="text-blue-200 hover:text-yellow-300 transition-colors font-medium flex items-center gap-2 group"
+                      >
+                        <span className="w-1 h-1 rounded-full bg-yellow-300 opacity-0 group-hover:opacity-100 transition-all" />
+                        {link}
+                      </motion.a>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
-            <p>
-              &copy; 2024 BAPENDA Provinsi Jawa Tengah. All rights reserved.
+          {/* Divider */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="h-1 bg-gradient-to-r from-transparent via-blue-400/50 to-transparent mb-8 origin-left"
+          />
+
+          {/* Bottom Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col md:flex-row justify-between items-center gap-6"
+          >
+            <p className="text-blue-200 font-medium">
+              © 2024 TentangKami. Semua hak dilindungi dengan teknologi terbaik.
             </p>
-          </div>
+            <div className="flex gap-8">
+              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(
+                (item, index) => (
+                  <motion.a
+                    key={index}
+                    href="#"
+                    whileHover={{ color: "#fcd34d" }}
+                    className="text-blue-200 hover:text-yellow-300 transition-colors font-medium text-sm"
+                  >
+                    {item}
+                  </motion.a>
+                ),
+              )}
+            </div>
+          </motion.div>
         </div>
       </motion.footer>
 
-      {/* WELCOME POPUP */}
-      <AnimatePresence>
-        {popupVisible && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setPopupVisible(false)}
-          >
-            <motion.div
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8"
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="text-center">
-                <Sparkles className="text-blue-600 mx-auto mb-4" size={48} />
-                <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                  Selamat Datang di Bapenda
-                </h2>
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  Kami adalah lembaga yang mengelola pendapatan asli daerah Jawa
-                  Tengah dengan profesional dan transparan.
-                </p>
-                <motion.button
-                  onClick={() => setPopupVisible(false)}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Mulai Jelajahi
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* MODALS */}
-      <AnimatePresence>
-        {activeModal === "info" && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4 overflow-y-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setActiveModal(null)}
-          >
-            <motion.div
-              className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 my-8"
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start mb-6">
-                <h2 className="text-3xl font-bold text-gray-900">
-                  Tentang Bapenda Jateng
-                </h2>
-                <button
-                  onClick={() => setActiveModal(null)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="space-y-6 text-gray-600">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Visi</h3>
-                  <p>
-                    Menjadi lembaga pendapatan daerah yang modern, transparan,
-                    dan berpihak pada masyarakat dalam mendukung pembangunan
-                    berkelanjutan Jawa Tengah.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Misi</h3>
-                  <ul className="space-y-2 list-disc list-inside">
-                    <li>
-                      Mengoptimalkan Pendapatan Asli Daerah melalui digitalisasi
-                      dan inovasi
-                    </li>
-                    <li>
-                      Memberikan layanan pajak dan retribusi yang mudah, cepat,
-                      dan transparan
-                    </li>
-                    <li>Mengelola aset daerah secara efisien dan akuntabel</li>
-                    <li>
-                      Meningkatkan kesadaran masyarakat tentang pentingnya pajak
-                      dan retribusi
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    Fungsi Utama
-                  </h3>
-                  <p>
-                    Bapenda bertugas memungut, mengelola, dan melaporkan semua
-                    jenis pajak daerah, retribusi daerah, dan aset daerah sesuai
-                    dengan peraturan perundang-undangan yang berlaku.
-                  </p>
-                </div>
-
-                <motion.button
-                  onClick={() => {
-                    setActiveModal(null);
-                    showNotification(
-                      "Terima kasih telah membaca informasi tentang kami!",
-                    );
-                  }}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Tutup
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {activeModal === "layanan" && selectedService && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setActiveModal(null)}
-          >
-            <motion.div
-              className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8"
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start mb-6">
-                <h2 className="text-3xl font-bold text-gray-900">
-                  {selectedService.title}
-                </h2>
-                <button
-                  onClick={() => setActiveModal(null)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                <div
-                  className={`h-32 bg-gradient-to-br ${selectedService.color} rounded-lg flex items-center justify-center`}
-                >
-                  <selectedService.icon
-                    size={64}
-                    className="text-white opacity-20"
-                  />
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Deskripsi</h3>
-                  <p className="text-gray-600">{selectedService.detail}</p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-600">Estimasi Pendapatan</p>
-                    <p className="text-2xl font-bold text-blue-600 mt-1">
-                      {selectedService.revenue}
-                    </p>
-                  </div>
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-600">Status</p>
-                    <p className="text-2xl font-bold text-green-600 mt-1">
-                      Aktif
-                    </p>
-                  </div>
-                </div>
-
-                <motion.button
-                  onClick={() => {
-                    setActiveModal(null);
-                    showNotification(
-                      `Anda telah memilih: ${selectedService.title}`,
-                    );
-                  }}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Pelajari Lebih Lanjut
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* NOTIFICATION TOAST */}
-      <AnimatePresence>
-        {notification && (
-          <motion.div
-            className="fixed top-24 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3"
-            initial={{ x: 400, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 400, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <CheckCircle size={20} />
-            <span>{notification}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Scroll to Top Button */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="fixed bottom-10 right-10 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 via-blue-400 to-yellow-400 text-slate-950 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 z-40 font-bold text-xl"
+        whileHover={{
+          scale: 1.15,
+          boxShadow: "0 0 30px rgba(59, 130, 246, 0.6)",
+        }}
+        whileTap={{ scale: 0.85 }}
+      >
+        ↑
+      </motion.button>
     </div>
   );
-}
+};
+
+export default TentangKami;
