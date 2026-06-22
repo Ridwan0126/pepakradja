@@ -649,7 +649,7 @@ export default function ProductDetail() {
             {/* BASIC */}
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-gray-500">Judul Penawaran</p>
+                <p className="text-gray-500">Barang / Jasa</p>
                 <p className="font-semibold">{product.judul_penawaran}</p>
               </div>
 
@@ -660,7 +660,7 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-              <div>
+              {/* <div>
                 <p className="text-gray-500">Dasar Pengenaan</p>
                 <p className="font-semibold">{product.dasar_pengenaan}</p>
               </div>
@@ -668,7 +668,7 @@ export default function ProductDetail() {
               <div>
                 <p className="text-gray-500">Dasar Penetapan</p>
                 <p className="font-semibold">{product.dasar_penetapan}</p>
-              </div>
+              </div> */}
             </div>
 
             {/* LOKASI */}

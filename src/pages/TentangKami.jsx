@@ -204,7 +204,7 @@ const TentangKami = () => {
                 className="w-16 h-16 object-contain"
               />
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-300 to-yellow-300 bg-clip-text text-transparent">
-                Pepak Raja
+                Pepak Radja
               </span>
             </motion.div>
 
@@ -310,7 +310,7 @@ const TentangKami = () => {
               variants={itemVariants}
               className="text-6xl md:text-8xl pb-4 font-black mb-8 bg-gradient-to-r from-blue-200 via-yellow-200 to-blue-200 bg-clip-text text-transparent relative z-10 drop-shadow-2xl"
             >
-              Selamat Datang di <br /> Pepak Raja
+              Selamat Datang di <br /> Pepak Radja
             </motion.h1>
             <motion.p
               variants={itemVariants}
@@ -352,24 +352,23 @@ const TentangKami = () => {
                 panduan/daftar yang lengkap dan Radja merupakan pelafalan lama
                 dari kata “raja” sehingga makna dari Pepak Radja adalah sebuah
                 panduan lengkap utama yang selalu digunakan oleh raja dalam
-                mendapatkan informasi. Pepak Radja sendiri merupakan kependekan
-                dari singkatan Pelayanan Pajak, Retribusi dan Pemanfaatan Aset
-                Daerah Jawa Tengah.
+                mendapatkan informasi. Pepak Radja sendiri merupakan singkatan
+                dari Pelayanan Pajak, Retribusi dan Pemanfaatan Aset Daerah Jawa
+                Tengah.
               </p>
               <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
                 Istilah “pembeli adalah raja” dirasa sangat tepat diperuntukkan
-                kepada Masyarakat, dimana mereka harus ditempatkan sebagai
-                prioritas tertinggi dan dilayani sebaik mungkin, dengan tujuan
-                para “raja” akan ikut berkontribusi dalam memanfaatkan aset atau
-                jasa yang ditawarkan.{" "}
+                kepada Masyarakat, dimana mereka ditempatkan sebagai prioritas
+                tertinggi dan harus dilayani sebaik mungkin, dengan tujuan para
+                “raja” akan ikut berkontribusi dalam memanfaatkan aset atau jasa
+                yang ditawarkan.{" "}
               </p>
               <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
                 Aplikasi Pepak Radja sendiri merupakan perangkat lunak berbasis
                 web, yang menyediakan daftar/informasi lengkap layanan Pajak dan
                 Retribusi Daerah yang disediakan oleh Pemerintah Provinsi Jawa
-                Tengah dan dapat dimanfaatkan oleh para “raja”, serta dapat
-                diakses secara online kapanpun dimanapun dengan memanfaatkan
-                jaringan internet
+                Tengah dan dapat dimanfaatkan oleh para “raja”, diakses secara
+                online kapanpun dimanapun dengan memanfaatkan jaringan internet
               </p>
               <AnimatePresence>
                 {isExpanded && (
@@ -386,22 +385,23 @@ const TentangKami = () => {
                       digital untuk menjawab tuntutan masyarakat terhadap
                       pelayanan yang cepat, mudah dan transparan. Sebelum adanya
                       digitalisasi, pengurusan administrasi dalam mendapat
-                      pelayanan, masyarakat harus mendatangi kantor pelayanan,
+                      pelayanan masyarakat harus mendatangi kantor pelayanan,
                       mengisi beragam formulir, dan menunggu dalam antrean yang
-                      menyita waktu. Selain itu, ketidakterbukaan informasi
-                      mengenai alur birokrasi sering memicu kecurigaan dan
+                      menyita waktu. Selain itu, keterbatasan informasi mengenai
+                      alur pelayanan birokrasi sering memicu kecurigaan dan
                       membuka ruang terjadinya pungutan liar.
                     </p>
                     <p className="text-lg md:text-xl text-blue-100 mb-6 leading-relaxed font-medium">
                       Melalui Pepak Radja, masyarakat dapat mencari atau
-                      mendapatkan informasi dan bertransaksi, hingga melakukan
-                      pengunduhan dokumen tanpa harus meninggalkan rumah.
-                      Pengurangan proses tatap muka juga dianggap efektif
-                      menurunkan potensi penyimpangan karena setiap permohonan
-                      terekam secara digital dan memiliki jejak audit yang
-                      jelas. Tidak hanya mempercepat pelayanan, digitalisasi
-                      layanan juga meningkatkan akuntabilitas instansi
-                      pemerintah, memangkas rantai birokrasi yang berbelit.
+                      mendapatkan informasi layanan birokrasi hingga
+                      bertransaksi, dan melakukan pengunduhan dokumen tanpa
+                      harus meninggalkan rumah. Pengurangan proses tatap muka
+                      dianggap efektif dalam menurunkan potensi penyimpangan
+                      karena setiap proses layanan terekam secara digital dan
+                      memiliki jejak audit yang jelas. Tidak hanya mempercepat
+                      pelayanan, digitalisasi juga meningkatkan akuntabilitas
+                      instansi pemerintah, memangkas rantai birokrasi yang
+                      berbelit dan meningkatkan kepercayaan masyarakat
                     </p>
                     <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed font-medium">
                       Harapannya dengan kemudahan yang diberikan oleh fitur pada
