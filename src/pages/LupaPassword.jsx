@@ -9,7 +9,8 @@ import {
   Loader2,
 } from "lucide-react";
 
-const BASE_URL = "/api-reset/lupa-password";
+// API Configuration - Disamakan formatnya dengan SetPassword
+const BASE_URL = "/api/lupa-password";
 const API_TOKEN = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
 
 export default function LupaPassword() {
@@ -41,9 +42,7 @@ export default function LupaPassword() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          token: API_TOKEN,
-          // Mengirimkan spoofing langsung dari client side untuk melewati F5 Web Application Firewall
-          "X-Requested-With": "XMLHttpRequest",
+          token: API_TOKEN, // Menggunakan key header 'token' sesuai standarisasi backend Anda
         },
         body: JSON.stringify({
           nik_npwp: formData.nik_npwp,
@@ -56,7 +55,7 @@ export default function LupaPassword() {
       if (!text.trim().startsWith("{")) {
         console.error("Server Response:", text);
         throw new Error(
-          "Akses diblokir oleh Firewall Server. Pastikan data yang dimasukkan terdaftar.",
+          "Server tidak mengembalikan JSON. Mungkin akses diblokir.",
         );
       }
 
@@ -240,10 +239,6 @@ export default function LupaPassword() {
             </div>
           </div>
         </div>
-
-        <p className="text-center text-xs text-gray-400 mt-6 tracking-wide">
-          Kami tidak akan membagikan data Anda kepada pihak ketiga
-        </p>
       </motion.div>
     </div>
   );
