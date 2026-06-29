@@ -9,8 +9,8 @@ import {
   Loader2,
 } from "lucide-react";
 
-// API Configuration - Disamakan formatnya dengan SetPassword
-const BASE_URL = "/api/lupa-password";
+// API Configuration - Menggunakan proxy /api-proxy yang sudah ada di vite.config.js Anda
+const BASE_URL = "/api-proxy/lupa-password";
 const API_TOKEN = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
 
 export default function LupaPassword() {
@@ -42,7 +42,7 @@ export default function LupaPassword() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          token: API_TOKEN, // Menggunakan key header 'token' sesuai standarisasi backend Anda
+          token: API_TOKEN, // Menggunakan header 'token' sesuai standarisasi backend Anda
         },
         body: JSON.stringify({
           nik_npwp: formData.nik_npwp,
@@ -55,7 +55,7 @@ export default function LupaPassword() {
       if (!text.trim().startsWith("{")) {
         console.error("Server Response:", text);
         throw new Error(
-          "Server tidak mengembalikan JSON. Mungkin akses diblokir.",
+          "Server tidak mengembalikan JSON. Mungkin akses diblokir atau server sedang error.",
         );
       }
 
@@ -97,6 +97,7 @@ export default function LupaPassword() {
       >
         {/* Card Container */}
         <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-2xl rounded-3xl overflow-hidden">
+          {/* Top Decorative Gradient Bar */}
           <div className="h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
 
           <div className="p-8 sm:p-10">
@@ -239,6 +240,11 @@ export default function LupaPassword() {
             </div>
           </div>
         </div>
+
+        {/* Bottom Info */}
+        <p className="text-center text-xs text-gray-400 mt-6 tracking-wide">
+          Kami tidak akan membagikan data Anda kepada pihak ketiga
+        </p>
       </motion.div>
     </div>
   );
