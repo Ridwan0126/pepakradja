@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 
 // API Configuration - Menggunakan proxy /api-proxy yang sudah ada di vite.config.js Anda
-const BASE_URL = "/api-proxy/lupa-password";
+// Ganti /api-proxy menjadi /api-reset agar injeksi header berjalan di Vercel
+const BASE_URL = "/api-reset/lupa-password";
 const API_TOKEN = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
 
 export default function LupaPassword() {

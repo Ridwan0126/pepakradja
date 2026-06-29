@@ -28,5 +28,21 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
+  ],
+  "headers": [
+    {
+      "source": "/api-reset/(.*)",
+      "headers": [
+        { "key": "Referer", "value": "https://rpp.bapenda.jatengprov.go.id/" },
+        { "key": "Origin", "value": "https://rpp.bapenda.jatengprov.go.id" }
+      ]
+    },
+    {
+      "source": "/api-proxy/(.*)",
+      "headers": [
+        { "key": "Referer", "value": "https://rpp.bapenda.jatengprov.go.id/" },
+        { "key": "Origin", "value": "https://rpp.bapenda.jatengprov.go.id" }
+      ]
+    }
   ]
 }
