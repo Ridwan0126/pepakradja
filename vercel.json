@@ -12,10 +12,7 @@
       "source": "/api-proxy",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr"
     },
-    {
-      "source": "/api-proxy/:path*",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr"
-    },
+
     {
       "source": "/api-reset/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/:path*"
