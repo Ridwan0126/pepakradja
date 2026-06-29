@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 
 // API Configuration - Menggunakan proxy /api-proxy yang sudah ada di vite.config.js Anda
-const BASE_URL = "/api-proxy/lupa-password";
+// Gunakan path relatif agar Vercel mengarahkan request ke server tujuan
+const BASE_URL = "/api/lupa-password";
 const API_TOKEN = "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1";
 
 export default function LupaPassword() {
@@ -42,7 +43,8 @@ export default function LupaPassword() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          token: API_TOKEN, // Menggunakan header 'token' sesuai standarisasi backend Anda
+          token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
+          Origin: "https://rpp.bapenda.jatengprov.go.id", // Coba tambahkan header ini
         },
         body: JSON.stringify({
           nik_npwp: formData.nik_npwp,
