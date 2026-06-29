@@ -322,7 +322,7 @@ export default function Login() {
 
                   <div className="flex justify-end mt-3">
                     <a
-                      href="https://rpp.bapenda.jatengprov.go.id/"
+                      href="/lupapassword"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-cyan-300 text-sm hover:underline"

@@ -43,7 +43,25 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api-proxy/, ""),
       },
-
+      "/api-reset": {
+        target:
+          "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr",
+        changeOrigin: true,
+        secure: false, // Menghindari isu sertifikat SSL di lingkungan dev
+        rewrite: (path) => path.replace(/^\/api-proxy/, ""),
+        configure: (proxy) => {
+          proxy.on("proxyReq", (proxyReq, req, res) => {
+            proxyReq.setHeader(
+              "Referer",
+              "https://rpp.bapenda.jatengprov.go.id/",
+            );
+            proxyReq.setHeader(
+              "Origin",
+              "https://rpp.bapenda.jatengprov.go.id",
+            );
+          });
+        },
+      },
       // 4. Catch-all /api (Mengarah ke root domain)
       // Pastikan diletakkan di urutan paling bawah agar tidak membajak path lain
       "^/api/": {

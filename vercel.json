@@ -5,6 +5,14 @@
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/:path*"
     },
     {
+      "source": "/api-reset/:path*",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/:path*"
+    },
+    {
+      "source": "/api/set-password",
+      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password"
+    },
+    {
       "source": "/bapenda/:path*",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/:path*"
     },

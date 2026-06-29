@@ -24,6 +24,7 @@ import SetPassword from "./pages/SetPassword";
 import TentangKami from "./pages/TentangKami";
 import ScanTicket from "./pages/ScanTicket";
 import Ticket from "./pages/Ticket";
+import LupaPassword from "./pages/LupaPassword";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -55,6 +56,7 @@ function App() {
 
             <Route path="/skrd" element={<SKRD />} />
             <Route path="/tentangkami" element={<TentangKami />} />
+            <Route path="/lupapassword" element={<LupaPassword />} />
 
             <Route path="/sptrd" element={<SPTRD />} />
 
