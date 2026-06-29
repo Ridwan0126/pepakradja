@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 export default function Login() {
   const navigate = useNavigate();
 
-  const [npwrd, setNpwrd] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -50,9 +50,9 @@ export default function Login() {
       const response = await fetch(API_URL, {
         method: "POST",
         headers,
-
         body: JSON.stringify({
-          npwrd: Number(npwrd),
+          // Kirim apa adanya (string) agar bisa menerima email atau angka
+          npwrd: identifier,
           password,
         }),
       });
@@ -270,19 +270,20 @@ export default function Login() {
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* NPWRD */}
+                {/* NPWRD / EMAIL INPUT */}
                 <div>
                   <label className="block text-sm mb-2 text-gray-300">
-                    NPWRD/Email
+                    NPWRD atau Email
                   </label>
 
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-300" />
 
                     <input
-                      type="number"
-                      value={npwrd}
-                      onChange={(e) => setNpwrd(e.target.value)}
-                      placeholder="Masukkan NPWRD/Email"
+                      type="text" // Diubah dari "number" ke "text"
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
+                      placeholder="Masukkan NPWRD atau Email"
                       required
                       className="w-full bg-white/10 border border-white/20 rounded-2xl py-4 pl-12 pr-4 outline-none text-white placeholder:text-gray-400 focus:ring-4 focus:ring-cyan-400/20 focus:border-cyan-400 transition-all"
                     />
