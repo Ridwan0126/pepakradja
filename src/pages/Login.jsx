@@ -355,6 +355,16 @@ export default function Login() {
                     )}
                   </div>
                 </button>
+                {/* LINK KE REGISTER */}
+                <div className="mt-6 text-center text-sm text-gray-400">
+                  Belum punya akun?{" "}
+                  <a
+                    href="/register"
+                    className="text-cyan-400 font-bold hover:underline transition-all"
+                  >
+                    Daftar Sekarang
+                  </a>
+                </div>
               </form>
 
               <div className="mt-8 text-center text-xs text-gray-400">

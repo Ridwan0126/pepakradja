@@ -734,13 +734,13 @@ export default function Header() {
                         to="/login"
                         className="px-4 md:px-5 py-2 md:py-3 rounded-lg md:rounded-2xl border border-gray-200 bg-gray-50 text-slate-700 hover:bg-gray-100 transition-all duration-200 font-semibold text-sm shadow-sm"
                       >
-                        Login
+                        Masuk
                       </Link>
                       <Link
                         to="/register"
                         className="px-4 md:px-5 py-2 md:py-3 rounded-lg md:rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 font-semibold text-sm"
                       >
-                        Sign Up
+                        Daftar
                       </Link>
                     </div>
                   )}

@@ -30,9 +30,9 @@ export default function QuickServices() {
 
       Swal.fire({
         icon: "warning",
-        title: "Login Diperlukan",
-        text: "Silakan login terlebih dahulu untuk mengakses layanan ini.",
-        confirmButtonText: "Login",
+        title: "Anda perlu Masuk",
+        text: "Silakan Masuk terlebih dahulu untuk mengakses layanan ini.",
+        confirmButtonText: "Masuk",
         showCancelButton: true,
         cancelButtonText: "Batal",
       }).then((result) => {
@@ -47,8 +47,8 @@ export default function QuickServices() {
     {
       id: 2,
       icon: Download,
-      title: "Bukti Bayar",
-      count: "5000+",
+      title: "Bukti Pembayaran",
+      count: "Unduh",
       color: "from-violet-500 to-purple-500",
       status: "active",
       link: "/transactions",
@@ -68,7 +68,7 @@ export default function QuickServices() {
       id: 4,
       icon: Flag,
       title: "Ketetapan Retribusi",
-      count: "Tersedia",
+      count: "Unduh",
       color: "from-emerald-500 to-green-500",
       status: "active",
       link: "/skrd",
@@ -78,7 +78,7 @@ export default function QuickServices() {
       id: 5,
       icon: Users,
       title: "Layanan PAP",
-      count: "Soon",
+      count: "Segera Hadir",
       color: "from-orange-500 to-amber-500",
       status: "coming",
       link: "#",
@@ -87,7 +87,7 @@ export default function QuickServices() {
       id: 6,
       icon: AlertCircle,
       title: "NPWRD/NPWPD",
-      count: "Soon",
+      count: "Segera Hadir",
       color: "from-red-500 to-pink-500",
       status: "coming",
       link: "#",
@@ -182,7 +182,7 @@ export default function QuickServices() {
                 <div className="absolute inset-0 bg-red-300/50 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-end z-10">
                   <div className="px-4 py-1.5 mr-4 rounded-full bg-white border border-gray-200/60 shadow-md flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
                     <span className="text-xs font-black text-red-500 tracking-tight font-sans uppercase">
-                      Soon
+                      Segera Hadir
                     </span>
                   </div>
                 </div>

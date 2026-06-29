@@ -32,7 +32,7 @@ export default function CardTicket({ fotos = [] }) {
           <div className="absolute inset-0 bg-hite-300/30 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
             <div className="px-4 py-1.5 mr-4 rounded-full bg-white border border-gray-200/60 shadow-md flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
               <span className="text-xs font-black text-blue-500 tracking-tight font-sans uppercase">
-                Eksplore Sekarang
+                Jelajahi Sekarang
               </span>
             </div>
           </div>

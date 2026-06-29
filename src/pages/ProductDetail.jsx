@@ -746,6 +746,33 @@ export default function ProductDetail() {
                   <p className="text-gray-500">UPPD / Balai / Pengelola</p>
                   <p className="font-semibold">{product.uppd?.nama}</p>
                 </div>
+
+                {/* Tambahkan bagian ini untuk WA & Telp */}
+                {product.no_wa_pengelola && (
+                  <div>
+                    <p className="text-gray-500">WhatsApp</p>
+                    <a
+                      href={`https://wa.me/${product.no_wa_pengelola.replace(/[^0-9]/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-green-600 hover:underline cursor-pointer"
+                    >
+                      {product.no_wa_pengelola}
+                    </a>
+                  </div>
+                )}
+
+                {product.no_telp_pengelola && (
+                  <div>
+                    <p className="text-gray-500">Telepon</p>
+                    <a
+                      href={`tel:${product.no_telp_pengelola.replace(/[^0-9]/g, "")}`}
+                      className="font-semibold text-blue-600 hover:underline cursor-pointer"
+                    >
+                      {product.no_telp_pengelola}
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
 

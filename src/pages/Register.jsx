@@ -741,6 +741,16 @@ overflow-hidden
                           setFormData((prev) => ({ ...prev, dokumen: "NPWP" })); // Set otomatis ke NPWP
                         }}
                       />
+                      {/* LINK KE REGISTER */}
+                      <div className="mt-6 text-center text-sm text-gray-400">
+                        Sudah punya akun?{" "}
+                        <a
+                          href="/login"
+                          className="text-cyan-400 font-bold hover:underline transition-all"
+                        >
+                          Masuk Sekarang
+                        </a>
+                      </div>
                     </div>
                   </motion.div>
                 ) : (
