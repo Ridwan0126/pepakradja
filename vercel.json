@@ -4,10 +4,7 @@
       "source": "/api/set-password",
       "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/set-password"
     },
-    {
-      "source": "/api/lupa-password",
-      "destination": "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/wr/lupa-password"
-    },
+    { "source": "/api/lupa-password", "destination": "/api/proxy-bapenda" },
 
     {
       "source": "/api-proxy/:path*",

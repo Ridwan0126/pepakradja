@@ -39,17 +39,10 @@ export default function LupaPassword() {
     setMessage("");
 
     try {
-      const response = await fetch(BASE_URL, {
+      const response = await fetch("/api/lupa-password", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: "xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
-          Origin: "https://rpp.bapenda.jatengprov.go.id", // Coba tambahkan header ini
-        },
-        body: JSON.stringify({
-          nik_npwp: formData.nik_npwp,
-          email_rpp: formData.email_rpp,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       const text = await response.text();
