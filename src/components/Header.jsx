@@ -469,27 +469,6 @@ export default function Header() {
                     onMouseEnter={() => setShowTooltip(true)}
                     onMouseLeave={() => setShowTooltip(false)}
                   >
-                    {/* TOOLTIP CONTAINER - Diposisikan relatif terhadap Link */}
-                    <AnimatePresence>
-                      {showTooltip && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          transition={{ duration: 0.2 }}
-                          // Mengatur posisi tepat di bawah dan kanan logo
-                          className="absolute top-10 left-8 z-[9999] w-32 pointer-events-none"
-                        >
-                          <img
-                            src="/images/popupsajak.png"
-                            alt="Home Mascot"
-                            className="w-full h-auto drop-shadow-lg"
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    {/* LOGO */}
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       className="flex items-center justify-center"
@@ -499,14 +478,23 @@ export default function Header() {
                         alt="Logo"
                         className="h-10 sm:h-12 w-auto object-contain"
                       />
-                    </motion.div>
 
-                    {/* TITLE */}
-                    <div className="hidden sm:flex flex-col leading-tight">
-                      <span className="text-sm sm:text-base md:text-lg font-bold text-slate-800">
-                        PEPAK RADJA
-                      </span>
-                    </div>
+                      {/* KONTAINER PEMBUNGKUS DENGAN LEBAR DINAMIS YANG STABIL */}
+                      <div className="hidden ml-2 p-2 rounded-lg sm:flex flex-col leading-tight relative h-10 w-[120px]">
+                        <AnimatePresence mode="popLayout">
+                          <motion.span
+                            key={showTooltip ? "beranda" : "pepak"}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="absolute left-2 text-sm sm:text-base md:text-lg font-bold text-slate-800 whitespace-nowrap"
+                          >
+                            {showTooltip ? "BERANDA" : "PEPAK RADJA"}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+                    </motion.div>
                   </Link>
 
                   {/* NAV MENU BUTTON LEVEL 1 */}
