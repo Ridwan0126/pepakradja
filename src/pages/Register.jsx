@@ -360,7 +360,7 @@ export default function Register() {
         await Swal.fire({
           icon: "success",
           title: "Berhasil",
-          text: "Berhasil menambahkan wajib retribusi",
+          text: "Berhasil menambahkan wajib retribusi. Silahkan cek Email, jika tidak ada coba cek spam / sampah.",
           confirmButtonColor: "#16a34a",
         });
 

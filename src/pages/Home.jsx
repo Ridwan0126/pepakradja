@@ -18,7 +18,7 @@ export default function Home() {
       description:
         "Pelayanan Pajak, Retribusi dan Aset Daerah Provinsi Jawa Tengah",
       cta: "Pelajari",
-      backgroundImage: "/images/banner-01.png",
+      backgroundImage: "/images/MONGKRANG.svg",
       image: "/images/hero1.png",
     },
     {
@@ -26,7 +26,7 @@ export default function Home() {
       title: "Mudah & Cepat",
       description: "Lakukan pembayaran dan monitoring retribusi kapan saja.",
       cta: "Mulai Sekarang",
-      backgroundImage: "/images/banner-02.png",
+      backgroundImage: "/images/banner-02.svg",
       image: "/images/hero2.png",
     },
   ];
