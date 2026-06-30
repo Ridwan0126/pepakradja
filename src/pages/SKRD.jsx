@@ -645,7 +645,7 @@ export default function SKRD() {
         <div className="bg-white rounded-2xl shadow-xl p-6">
           <h1 className="text-2xl font-bold flex items-center gap-2 mb-6">
             <FileText size={24} />
-            Pencarian SKRD
+            Riwayat Ketetapan Retribusi
           </h1>
 
           <div className="grid md:grid-cols-4 gap-4">
