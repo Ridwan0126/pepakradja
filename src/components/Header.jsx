@@ -415,10 +415,10 @@ export default function Header() {
   };
 
   const topMenus = [
-    // {
-    //   key: "home",
-    //   label: "Home",
-    // },
+    {
+      key: "home",
+      label: "Home",
+    },
 
     ...(isAuthenticated
       ? [

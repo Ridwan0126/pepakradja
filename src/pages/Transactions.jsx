@@ -171,7 +171,7 @@ export default function TransactionStatus() {
       <main className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full ">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-8">
           <h2 className="font-bold text-slate-800 mb-4 uppercase">
-            Cari TBP Berdasarkan No. SKRD
+            Masukkan kode bayar
           </h2>
           <div className="flex gap-2">
             <input
