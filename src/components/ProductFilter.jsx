@@ -114,7 +114,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-50"
           >
             <span className="truncate text-left pr-2">
-              {getSelectedLabel("city", cities, "Pilih Lokasi")} 
+              {getSelectedLabel("city", cities, "Semuanya")} 
             </span>
 
             <ChevronDown
@@ -166,7 +166,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-50"
           >
             <span className="truncate text-left pr-2">
-              {getSelectedLabel("manager", managers, "Pilih Pengelola")} 
+              {getSelectedLabel("manager", managers, " Semuanya")} 
             </span>
 
             <ChevronDown
@@ -221,7 +221,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-50"
           >
             <span className="truncate text-left pr-2">
-              {getSelectedLabel("serviceType", services, "Pilih Jenis Layanan")}
+              {getSelectedLabel("serviceType", services, "Semuanya")}
             </span>
 
             <ChevronDown
