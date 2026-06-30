@@ -176,16 +176,16 @@ export default function TransactionStatus() {
           <div className="flex gap-2">
             <input
               className="flex-1 border border-slate-300 rounded p-2"
-              placeholder="Masukkan Nomor SKRD..."
+              placeholder="Masukkan Kode Bayar"
               value={skrd}
               onChange={(e) => setSkrd(e.target.value)}
             />
-            <button
+            {/* <button
               onClick={() => setShowScanner(true)}
               className="bg-slate-700 text-white px-4 rounded"
             >
               <QrCode className="w-5 h-5" />
-            </button>
+            </button> */}
             <button
               onClick={handleSearch}
               className="bg-blue-700 text-white px-6 py-2 rounded"
