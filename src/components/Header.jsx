@@ -396,29 +396,29 @@ export default function Header() {
       ],
     },
 
-    lainnya: {
-      items: [
-        {
-          title: "PAP",
-          path: "/pap",
-        },
-        {
-          title: "PAB",
-          path: "/pab",
-        },
-        {
-          title: "DLL",
-          path: "/dll",
-        },
-      ],
-    },
+    // lainnya: {
+    //   items: [
+    //     {
+    //       title: "PAP",
+    //       path: "/pap",
+    //     },
+    //     {
+    //       title: "PAB",
+    //       path: "/pab",
+    //     },
+    //     {
+    //       title: "DLL",
+    //       path: "/dll",
+    //     },
+    //   ],
+    // },
   };
 
   const topMenus = [
-    {
-      key: "home",
-      label: "Home",
-    },
+    // {
+    //   key: "home",
+    //   label: "Home",
+    // },
 
     ...(isAuthenticated
       ? [
@@ -434,10 +434,10 @@ export default function Header() {
       label: "Tiket Online",
     },
 
-    {
-      key: "lainnya",
-      label: "Lain-lain",
-    },
+    // {
+    //   key: "lainnya",
+    //   label: "Lain-lain",
+    // },
   ];
 
   return (
