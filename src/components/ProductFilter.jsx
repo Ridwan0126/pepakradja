@@ -135,7 +135,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                   onClick={() => handleFilterChange("city", "")}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors ${filters.city === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
                 >
-                  Pilih Lokasi
+                  Semuanya
                 </button>
 
                 {cities.map((city) => (
@@ -187,7 +187,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                   onClick={() => handleFilterChange("manager", "")}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors ${filters.manager === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
                 >
-                  Pilih Pengelola
+                  Semuanya
                 </button>
 
                 {managers.map((manager) => (
@@ -242,7 +242,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                   onClick={() => handleFilterChange("serviceType", "")}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors ${filters.serviceType === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
                 >
-                  Pilih Jenis Layanan
+                  Semuanya
                 </button>
 
                 {services.map((service) => (
