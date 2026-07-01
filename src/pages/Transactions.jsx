@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, Printer, QrCode, X } from "lucide-react";
+import { Search, Printer, FileDown, QrCode, X } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function TransactionStatus() {
   const [skrd, setSkrd] = useState("");
@@ -20,6 +22,20 @@ export default function TransactionStatus() {
       ? `tbp_${data.nama.replace(/\s+/g, "_")}`
       : "tbp_dokumen",
   });
+
+  // FUNGSI UNDUH PDF
+  const handleDownloadPDF = async () => {
+    const element = componentRef.current;
+    const canvas = await html2canvas(element, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`tbp_${data.nama.replace(/\s+/g, "_")}.pdf`);
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -222,6 +238,12 @@ export default function TransactionStatus() {
               className="bg-emerald-700 text-white px-6 py-2 rounded flex items-center gap-2"
             >
               <Printer className="w-4 h-4" /> Cetak / PDF
+            </button>
+            <button
+              onClick={handleDownloadPDF}
+              className="bg-red-600 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-red-700"
+            >
+              <FileDown className="w-4 h-4" /> Unduh PDF
             </button>
             <div
               ref={componentRef}
