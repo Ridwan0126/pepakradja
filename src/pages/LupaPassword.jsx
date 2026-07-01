@@ -59,7 +59,7 @@ export default function LupaPassword() {
       if (response.ok || data.code === "00") {
         setStatus("success");
         setMessage(
-          "Email reset password telah dikirim ke email Anda!, dan cek folder SPAM jika tidak masuk.",
+          "Email reset password telah dikirim ke email Anda, jika tidak ditemukan pada Email masuk, cek folder SPAM.",
         );
         setFormData({ nik_npwp: "", email_rpp: "" });
       } else {
@@ -230,7 +230,7 @@ export default function LupaPassword() {
                 href="/login"
                 className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
               >
-                Login
+                Masuk
               </a>
             </div>
           </div>
