@@ -13,6 +13,7 @@ import {
   XCircle,
   ArrowRight,
   User,
+  Bell, // <-- Ditambahkan icon Bell untuk Notifikasi
 } from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";
@@ -29,7 +30,6 @@ export default function Header() {
   // =========================
   const searchRef = useRef(null);
   const profileRef = useRef(null);
-  const menuRef = useRef(null); // Tambahkan ref baru untuk menu level 1
 
   // =========================
   // STATE
@@ -113,11 +113,6 @@ export default function Header() {
       // PROFILE
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setProfileOpen(false);
-      }
-
-      // MENU CATEGORY (Menutup dropdown jika klik di luar area menu)
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowCategory(false);
       }
     };
 
@@ -301,11 +296,7 @@ export default function Header() {
     <div className="font-sans antialiased tracking-tight">
       <div className="fixed top-3 left-0 right-0 z-50 px-4 sm:px-6 md:px-6">
         <div className="max-w-7xl mx-auto">
-          {/* UTAMA: Menutup dropdown saat kursor mengarah ke header/pindah dari tombol menu */}
-          <header
-            onMouseEnter={() => setShowCategory(false)}
-            className="rounded-[24px] sm:rounded-[28px] border border-gray-200 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-visible hover:border-gray-300 transition-all duration-300"
-          >
+          <header className="rounded-[24px] sm:rounded-[28px] border border-gray-200 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-visible hover:border-gray-300 transition-all duration-300">
             <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
                 <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
@@ -353,13 +344,7 @@ export default function Header() {
                   </Link>
 
                   {/* NAV MENU BUTTON LEVEL 1 */}
-                  {/* Diubah: Hanya menggunakan ref, onMouseEnter dihilangkan, ditambahkan stopPropagation */}
-                  <div
-                    ref={menuRef}
-                    className="relative hidden md:block z-[10001]"
-                    onMouseEnter={(e) => e.stopPropagation()}
-                  >
-                    {/* Diubah: Membuka lewat onClick klik */}
+                  <div className="relative hidden md:block z-[10001]">
                     <button
                       onClick={() => setShowCategory(!showCategory)}
                       className="flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-xl md:rounded-2xl bg-gray-100 hover:bg-gray-200 border border-gray-200 text-slate-800 font-semibold transition-all duration-200"
@@ -381,20 +366,30 @@ export default function Header() {
                           transition={{ duration: 0.25, ease: "easeOut" }}
                           className="absolute mt-4 left-0 w-[min(calc(100vw-24px),950px)] overflow-hidden rounded-[28px] border border-white/60 bg-white/20 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_30px_60px_rgba(0,0,0,0.1)]"
                         >
-                          <div className="flex items-center gap-2 sm:gap-3 px-5 py-3.5 border-b border-gray-200/20 bg-white/10 flex-wrap">
-                            {topMenus.map((menu) => (
-                              <button
-                                key={menu.key}
-                                onClick={() => setActiveMenu(menu.key)}
-                                className={`px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wide transition-all duration-200 ${
-                                  activeMenu === menu.key
-                                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
-                                    : "bg-black/5 hover:bg-black/10 text-slate-800"
-                                }`}
-                              >
-                                {menu.label}
-                              </button>
-                            ))}
+                          <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-200/20 bg-white/10">
+                            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                              {topMenus.map((menu) => (
+                                <button
+                                  key={menu.key}
+                                  onClick={() => setActiveMenu(menu.key)}
+                                  className={`px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wide transition-all duration-200 ${
+                                    activeMenu === menu.key
+                                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                                      : "bg-black/5 hover:bg-black/10 text-slate-800"
+                                  }`}
+                                >
+                                  {menu.label}
+                                </button>
+                              ))}
+                            </div>
+
+                            <button
+                              onClick={() => setShowCategory(false)}
+                              className="w-8 h-8 rounded-full bg-black/5 hover:bg-black/15 flex items-center justify-center transition-all"
+                              title="Tutup Menu"
+                            >
+                              <X className="w-4 h-4 text-slate-700" />
+                            </button>
                           </div>
 
                           <div
@@ -404,31 +399,43 @@ export default function Header() {
                                 : "grid-cols-1"
                             }`}
                           >
-                            <div className="bg-black/5 border-r border-gray-200/10 p-4 h-auto sm:h-[400px] md:h-[430px] overflow-y-auto space-y-1">
-                              {Object.keys(menuData.home.categories).map(
-                                (item, index) => (
-                                  <button
-                                    key={index}
-                                    onClick={() => setActiveCategory(item)}
-                                    className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 text-xs font-black tracking-tight ${
-                                      activeCategory === item
-                                        ? "bg-white/80 text-blue-600 shadow-sm border border-white/40"
-                                        : "text-slate-800 hover:bg-white/40"
-                                    }`}
-                                  >
-                                    {item}
-                                  </button>
-                                ),
-                              )}
-                            </div>
+                            {activeMenu === "home" && (
+                              <div className="bg-black/5 border-r border-gray-200/10 p-4 h-auto sm:h-[400px] md:h-[430px] overflow-y-auto space-y-1">
+                                {Object.keys(menuData.home.categories).map(
+                                  (item, index) => (
+                                    <button
+                                      key={index}
+                                      onClick={() => setActiveCategory(item)}
+                                      className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 text-xs font-black tracking-tight ${
+                                        activeCategory === item
+                                          ? "bg-white/80 text-blue-600 shadow-sm border border-white/40"
+                                          : "text-slate-800 hover:bg-white/40"
+                                      }`}
+                                    >
+                                      {item}
+                                    </button>
+                                  ),
+                                )}
+                              </div>
+                            )}
 
                             <div className="p-4 h-auto sm:h-[400px] md:h-[430px] overflow-y-auto bg-white/5">
-                              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+                              <div
+                                className={`grid gap-3 ${
+                                  activeMenu === "home"
+                                    ? "grid-cols-1 sm:grid-cols-2"
+                                    : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                                }`}
+                              >
                                 {(activeMenu === "home"
                                   ? menuData.home.categories[activeCategory]
                                   : menuData[activeMenu]?.items || []
                                 ).map((item, index) => (
-                                  <Link key={index} to={item.path || "/"}>
+                                  <Link
+                                    key={index}
+                                    to={item.path || "/"}
+                                    onClick={() => setShowCategory(false)}
+                                  >
                                     <motion.div
                                       whileHover={{
                                         y: -2,
@@ -454,6 +461,7 @@ export default function Header() {
                   </div>
                 </div>
 
+                {/* SISI TENGAH (INPUT FORM SEARCH BAR) */}
                 <div ref={searchRef} className="hidden lg:flex flex-1 relative">
                   <div className="relative w-full">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10" />
@@ -462,6 +470,7 @@ export default function Header() {
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       onFocus={() => {
+                        setShowCategory(false);
                         if (search.trim()) {
                           setSearchOpen(true);
                         }
@@ -470,7 +479,10 @@ export default function Header() {
                       className="w-full pl-12 pr-32 py-2.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100/80 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
                     <button
-                      onClick={() => handleSearch(search)}
+                      onClick={() => {
+                        setShowCategory(false);
+                        handleSearch(search);
+                      }}
                       className="absolute right-12 top-1/2 -translate-y-1/2 text-slate-500 hover:text-blue-600 text-xs sm:text-sm font-semibold transition-all duration-200 z-10"
                     >
                       Cari
@@ -494,86 +506,110 @@ export default function Header() {
 
                 <div className="flex items-center gap-2 sm:gap-3">
                   {isAuthenticated ? (
-                    <div ref={profileRef} className="relative hidden md:block">
-                      <button
-                        onClick={() => setProfileOpen(!profileOpen)}
-                        className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 rounded-lg md:rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200"
+                    // PERBAIKAN & PENAMBAHAN: Notifikasi dibungkus Flex Container bersama Profile
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      {/* PROFILE AREA */}
+                      <div
+                        ref={profileRef}
+                        className="relative hidden md:block"
                       >
-                        <div className="w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center justify-center font-bold text-xs md:text-sm shadow-sm">
-                          {user?.nama?.charAt(0) || "U"}
-                        </div>
-                        <div className="text-left hidden sm:block">
-                          <p className="font-semibold text-xs md:text-sm text-slate-800">
-                            {user?.nama || "User"}
-                          </p>
-                          <p className="text-xs text-slate-400">Profile</p>
-                        </div>
-                        <ChevronDown
-                          className={`w-3.5 md:w-4 h-3.5 md:h-4 text-slate-400 transition-all duration-200 ${
-                            profileOpen ? "rotate-180" : ""
-                          }`}
-                        />
-                      </button>
+                        <button
+                          onClick={() => {
+                            setShowCategory(false);
+                            setProfileOpen(!profileOpen);
+                          }}
+                          className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 rounded-lg md:rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200"
+                        >
+                          <div className="w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center justify-center font-bold text-xs md:text-sm shadow-sm">
+                            {user?.nama?.charAt(0) || "U"}
+                          </div>
+                          <div className="text-left hidden sm:block">
+                            <p className="font-semibold text-xs md:text-sm text-slate-800">
+                              {user?.nama || "User"}
+                            </p>
+                            <p className="text-xs text-slate-400">Profile</p>
+                          </div>
+                          <ChevronDown
+                            className={`w-3.5 md:w-4 h-3.5 md:h-4 text-slate-400 transition-all duration-200 ${
+                              profileOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
 
-                      <AnimatePresence>
-                        {profileOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 8 }}
-                            transition={{ duration: 0.2 }}
-                            className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/50 bg-white/70 backdrop-blur-xl shadow-2xl overflow-hidden z-[99999]"
-                          >
-                            <div className="p-4 md:p-5 border-b border-gray-200/30 bg-white/30">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 md:w-12 h-10 md:h-12 rounded-lg md:rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white flex items-center justify-center font-bold text-sm md:text-base">
-                                  {user?.nama?.charAt(0) || "U"}
-                                </div>
-                                <div>
-                                  <h3 className="font-bold text-slate-800 text-sm">
-                                    {user?.nama || "User"}
-                                  </h3>
-                                  <p className="text-xs text-slate-400">
-                                    {user?.email || "-"}
-                                  </p>
+                        <AnimatePresence>
+                          {profileOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 8 }}
+                              transition={{ duration: 0.2 }}
+                              className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/50 bg-white/70 backdrop-blur-xl shadow-2xl overflow-hidden z-[99999]"
+                            >
+                              <div className="p-4 md:p-5 border-b border-gray-200/30 bg-white/30">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 md:w-12 h-10 md:h-12 rounded-lg md:rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 text-white flex items-center justify-center font-bold text-sm md:text-base">
+                                    {user?.nama?.charAt(0) || "U"}
+                                  </div>
+                                  <div>
+                                    <h3 className="font-bold text-slate-800 text-sm">
+                                      {user?.nama || "User"}
+                                    </h3>
+                                    <p className="text-xs text-slate-400">
+                                      {user?.email || "-"}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
 
-                            <div className="p-2 space-y-1 bg-white/20">
-                              <button
-                                onClick={() => {
-                                  navigate("/profile");
-                                  setProfileOpen(false);
-                                }}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/5 text-slate-700 transition-colors text-xs font-bold"
-                              >
-                                <User className="w-4 h-4 text-slate-400" />
-                                <span className="text-sm">Profile</span>
-                              </button>
+                              <div className="p-2 space-y-1 bg-white/20">
+                                <button
+                                  onClick={() => {
+                                    navigate("/profile");
+                                    setProfileOpen(false);
+                                  }}
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/5 text-slate-700 transition-colors text-xs font-bold"
+                                >
+                                  <User className="w-4 h-4 text-slate-400" />
+                                  <span className="text-sm">Profile</span>
+                                </button>
 
-                              <button
-                                onClick={handleLogout}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-600 transition-colors text-xs font-bold"
-                              >
-                                <LogOut className="w-4 h-4 text-red-400" />
-                                <span className="text-sm">Logout</span>
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                                <button
+                                  onClick={handleLogout}
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-600 transition-colors text-xs font-bold"
+                                >
+                                  <LogOut className="w-4 h-4 text-red-400" />
+                                  <span className="text-sm">Logout</span>
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      {/* TOMBOL NOTIFIKASI (SAMPING KANAN DATA USER) */}
+                      <button
+                        onClick={() => navigate("/notifications")} // Silakan sesuaikan rute halaman notifikasi Anda
+                        className="relative p-2.5 rounded-lg md:rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200 text-slate-700 hover:text-blue-600 transition-all duration-200 shadow-sm group"
+                        title="Notifikasi"
+                      >
+                        <Bell className="w-5 h-5 transition-transform duration-200 group-hover:rotate-12" />
+
+                        {/* Dot Indikator Merah Notifikasi Baru */}
+                        <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white animate-pulse" />
+                      </button>
                     </div>
                   ) : (
                     <div className="hidden md:flex gap-2">
                       <Link
                         to="/login"
+                        onClick={() => setShowCategory(false)}
                         className="px-4 md:px-5 py-2 md:py-3 rounded-lg md:rounded-2xl border border-gray-200 bg-gray-50 text-slate-700 hover:bg-gray-100 transition-all duration-200 font-semibold text-sm shadow-sm"
                       >
                         Masuk
                       </Link>
                       <Link
                         to="/register"
+                        onClick={() => setShowCategory(false)}
                         className="px-4 md:px-5 py-2 md:py-3 rounded-lg md:rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 font-semibold text-sm"
                       >
                         Daftar
@@ -622,7 +658,7 @@ export default function Header() {
                               onClick={() => setActiveCategory(category)}
                               className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                                 activeCategory === category
-                                  ? "bg-white/80 text-blue-600 shadow-sm border border-white/20"
+                                  ? "bg-white/80 text-blue-600 shadow-sm border border-white/40"
                                   : "text-slate-800 hover:bg-white/40"
                               }`}
                             >
