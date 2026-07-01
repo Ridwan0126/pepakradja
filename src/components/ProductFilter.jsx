@@ -114,9 +114,8 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-50"
           >
             <span className="truncate text-left pr-2">
-              {getSelectedLabel("city", cities, "Semuanya")} 
+              {getSelectedLabel("city", cities, "Semuanya")}
             </span>
-
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "city" ? "rotate-180" : ""}`}
             />
@@ -129,11 +128,12 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.15 }}
-                className={`absolute z-[9999] mt-2 left-0 w-full md:w-[150%] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/80 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
+                /* PERBAIKAN: Menggunakan w-[300px] agar konsisten sama lebar dengan dropdown lainnya */
+                className={`absolute z-[9999] mt-2 left-0 w-[300px] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
               >
                 <button
                   onClick={() => handleFilterChange("city", "")}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors ${filters.city === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
+                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-150 ${filters.city === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-blue-50/80 hover:text-blue-600"}`}
                 >
                   Semuanya
                 </button>
@@ -142,7 +142,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                   <button
                     key={city.id}
                     onClick={() => handleFilterChange("city", city.value)}
-                    className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors whitespace-normal break-words leading-normal ${String(filters.city) === String(city.value) ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-150 whitespace-normal break-words leading-normal ${String(filters.city) === String(city.value) ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-blue-50/80 hover:text-blue-600"}`}
                   >
                     {city.name}
                   </button>
@@ -151,6 +151,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             )}
           </AnimatePresence>
         </div>
+
         {/* Dropdown 2: Pengelola */}
         <div className="relative z-40">
           <label className="flex items-center text-xs font-black text-slate-700 tracking-tight mb-2 uppercase">
@@ -166,9 +167,8 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-50"
           >
             <span className="truncate text-left pr-2">
-              {getSelectedLabel("manager", managers, " Semuanya")} 
+              {getSelectedLabel("manager", managers, " Semuanya")}
             </span>
-
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "manager" ? "rotate-180" : ""}`}
             />
@@ -181,11 +181,12 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.15 }}
-                className={`absolute z-[9999] mt-2 left-0 w-full md:w-[170%] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/80 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
+                /* PERBAIKAN: Menggunakan w-[300px] agar teks dinas panjang terbungkus rapi tanpa memaksa boks melar */
+                className={`absolute z-[9999] mt-2 left-0 w-[300px] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
               >
                 <button
                   onClick={() => handleFilterChange("manager", "")}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors ${filters.manager === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
+                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-150 ${filters.manager === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-blue-50/80 hover:text-blue-600"}`}
                 >
                   Semuanya
                 </button>
@@ -194,7 +195,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                   <button
                     key={manager.id}
                     onClick={() => handleFilterChange("manager", manager.value)}
-                    className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors whitespace-normal break-words leading-normal ${String(filters.manager) === String(manager.value) ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-150 whitespace-normal break-words leading-normal ${String(filters.manager) === String(manager.value) ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-blue-50/80 hover:text-blue-600"}`}
                   >
                     {manager.name}
                   </button>
@@ -223,7 +224,6 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             <span className="truncate text-left pr-2">
               {getSelectedLabel("serviceType", services, "Semuanya")}
             </span>
-
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "serviceType" ? "rotate-180" : ""}`}
             />
@@ -236,11 +236,12 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.15 }}
-                className={`absolute z-[9999] mt-2 left-0 xl:left-auto xl:right-0 w-full md:w-[160%] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/80 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
+                /* PERBAIKAN: w-[300px] dengan xl:right-0 agar simetris di ujung kanan grid */
+                className={`absolute z-[9999] mt-2 left-0 xl:left-auto xl:right-0 w-[300px] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
               >
                 <button
                   onClick={() => handleFilterChange("serviceType", "")}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors ${filters.serviceType === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
+                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-150 ${filters.serviceType === "" ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-blue-50/80 hover:text-blue-600"}`}
                 >
                   Semuanya
                 </button>
@@ -250,12 +251,8 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                     key={service.id}
                     onClick={() =>
                       handleFilterChange("serviceType", service.id)
-                    } // Kirim langsung (string)
-                    className={`... ${
-                      filters.serviceType === service.id // Bandingkan string dengan string
-                        ? "bg-white text-blue-600 shadow-sm"
-                        : "text-slate-800 hover:bg-white/50"
-                    }`}
+                    }
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-150 whitespace-normal break-words leading-normal ${filters.serviceType === service.id ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-blue-50/80 hover:text-blue-600"}`}
                   >
                     {service.name}
                   </button>
@@ -264,6 +261,7 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             )}
           </AnimatePresence>
         </div>
+
         {/* Dropdown 4: Status (is_laku) */}
         <div className="relative z-20">
           <label className="flex items-center text-xs font-black text-slate-700 tracking-tight mb-2 uppercase">
@@ -278,13 +276,10 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
             className="w-full h-11 px-4 rounded-xl bg-white/50 border border-gray-200/60 text-sm font-bold text-slate-800 flex items-center justify-between transition-all backdrop-blur-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
           >
             <span className="truncate text-left pr-2">
-              {/* DIPERBAIKI: Pengecekan tipe data murni agar 'false' (Belum Tersewa) tampil dengan benar */}
-
               {filters.is_laku === ""
                 ? "Keseluruhan"
                 : getSelectedLabel("is_laku", statusOptions, "Keseluruhan")}
             </span>
-
             <ChevronDown
               className={`w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ${openDropdown === "is_laku" ? "rotate-180" : ""}`}
             />
@@ -297,13 +292,14 @@ hover:[&::-webkit-scrollbar-thumb]:bg-slate-400/40
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.15 }}
-                className={`absolute z-[9999] mt-2 left-0 xl:left-auto xl:right-0 w-full md:w-[130%] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/80 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
+                /* PERBAIKAN: w-[300px] agar seluruh baris dropdown seimbang tanpa kecuali */
+                className={`absolute z-[9999] mt-2 left-0 xl:left-auto xl:right-0 w-[300px] max-h-72 overflow-y-auto rounded-2xl border border-white/60 bg-white/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-1.5 space-y-0.5 ${glassScrollbarClass}`}
               >
                 {statusOptions.map((option, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleFilterChange("is_laku", option.value)}
-                    className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-extrabold transition-colors whitespace-normal break-words leading-normal ${filters.is_laku === option.value ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-150 whitespace-normal break-words leading-normal ${filters.is_laku === option.value ? "bg-white text-blue-600 shadow-sm" : "text-slate-800 hover:bg-blue-50/80 hover:text-blue-600"}`}
                   >
                     {option.name}
                   </button>
