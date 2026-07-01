@@ -34,7 +34,7 @@ export default function TransactionStatus() {
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`tbp_${data.nama.replace(/\s+/g, "_")}-${data.no_tbp}`);
+    pdf.save(`tbp_${data.nama}-${data.no_tbp}.pdf`);
   };
 
   const formatDate = (dateString) => {
