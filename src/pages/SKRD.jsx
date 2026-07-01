@@ -676,7 +676,7 @@ export default function SKRD() {
                 {loading ? "Loading..." : "Cari"}
               </button>
               <div className="bg-blue-700 ml-4 hover:bg-blue-800 text-white rounded-xl flex items-center justify-center gap-2 transition-all">
-                <a href="/transaction" className="px-2">
+                <a href="/transactions" className="px-2">
                   Bukti Bayar
                 </a>
               </div>
