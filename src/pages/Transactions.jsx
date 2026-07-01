@@ -19,7 +19,7 @@ export default function TransactionStatus() {
     contentRef: componentRef,
     // Mengatur nama file: "tbp_NamaUser.pdf"
     documentTitle: data
-      ? `tbp_${data.nama.replace(/\s+/g, "_")}`
+      ? `tbp_${data.nama.replace(/\s+/g, "_")}-${data.no_tbp}`
       : "tbp_dokumen",
   });
 
@@ -34,7 +34,7 @@ export default function TransactionStatus() {
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`tbp_${data.nama.replace(/\s+/g, "_")}.pdf`);
+    pdf.save(`tbp_${data.nama.replace(/\s+/g, "_")}-${data.no_tbp}`);
   };
 
   const formatDate = (dateString) => {
@@ -233,18 +233,23 @@ export default function TransactionStatus() {
 
         {data && (
           <div className="space-y-4">
-            <button
-              onClick={handlePrint}
-              className="bg-emerald-700 text-white px-6 py-2 rounded flex items-center gap-2"
-            >
-              <Printer className="w-4 h-4" /> Cetak / PDF
-            </button>
-            <button
-              onClick={handleDownloadPDF}
-              className="bg-red-600 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-red-700"
-            >
-              <FileDown className="w-4 h-4" /> Unduh PDF
-            </button>
+            <div className="flex gap-3">
+              {/* Tombol Cetak */}
+              <button
+                onClick={handlePrint}
+                className="bg-emerald-700 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-emerald-800"
+              >
+                <Printer className="w-4 h-4" /> Cetak
+              </button>
+
+              {/* Tombol Unduh PDF (Warna Merah) */}
+              <button
+                onClick={handleDownloadPDF}
+                className="bg-red-600 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-red-700"
+              >
+                <FileDown className="w-4 h-4" /> Unduh PDF
+              </button>
+            </div>
             <div
               ref={componentRef}
               className="bg-white text-black mx-auto w-[210mm] min-h-[297mm] px-12 py-10 font-['Times_New_Roman'] text-[12px] leading-relaxed"
