@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sparkles,
+  key,
 } from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";
@@ -630,7 +631,7 @@ export default function Header() {
                                   }}
                                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/5 text-slate-700 transition-colors text-xs font-bold"
                                 >
-                                  <User className="w-4 h-4 text-slate-400" />
+                                  <key className="w-4 h-4 text-slate-400" />
                                   <span className="text-sm">
                                     Ganti Password
                                   </span>
