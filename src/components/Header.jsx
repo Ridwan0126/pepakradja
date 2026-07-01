@@ -631,7 +631,7 @@ export default function Header() {
                                   }}
                                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/5 text-slate-700 transition-colors text-xs font-bold"
                                 >
-                                  <key className="w-4 h-4 text-slate-400" />
+                                  <KeyRound className="w-4 h-4 text-slate-400" />
                                   <span className="text-sm">
                                     Ganti Password
                                   </span>
