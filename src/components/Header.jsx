@@ -13,7 +13,11 @@ import {
   XCircle,
   ArrowRight,
   User,
-  Bell, // <-- Ditambahkan icon Bell untuk Notifikasi
+  Bell,
+  KeyRound,
+  CheckCircle2,
+  AlertTriangle,
+  Sparkles,
 } from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";
@@ -30,6 +34,7 @@ export default function Header() {
   // =========================
   const searchRef = useRef(null);
   const profileRef = useRef(null);
+  const notifRef = useRef(null); // <-- Ref baru untuk dropdown notifikasi
 
   // =========================
   // STATE
@@ -47,8 +52,9 @@ export default function Header() {
   const [searchResults, setSearchResults] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
-  // PROFILE
+  // PROFILE & NOTIFICATION
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false); // <-- State untuk buka/tutup dropdown notif
 
   // DETAIL
   const [selectedDetail, setSelectedDetail] = useState(null);
@@ -59,6 +65,46 @@ export default function Header() {
   // AUTH
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+
+  // Dummy Data Notifikasi
+  const notifications = [
+    {
+      id: 1,
+      type: "password",
+      title: "Reset Password Berhasil",
+      desc: "Keamanan akun Anda diperbarui. Silakan gunakan password baru.",
+      time: "10 Menit lalu",
+      icon: <KeyRound className="w-4 h-4 text-amber-500" />,
+      bg: "bg-amber-500/10",
+    },
+    {
+      id: 2,
+      type: "payment",
+      title: "Pembayaran Sukses",
+      desc: "Transaksi pembayaran SKRD Nomor #29402 telah berhasil diverifikasi.",
+      time: "2 Jam lalu",
+      icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
+      bg: "bg-emerald-500/10",
+    },
+    {
+      id: 3,
+      type: "warning",
+      title: "Keterlambatan Bayar",
+      desc: "Pemberitahuan: Masa berlaku sewa Gedung Aula tersisa 3 hari lagi.",
+      time: "1 Hari lalu",
+      icon: <AlertTriangle className="w-4 h-4 text-rose-500" />,
+      bg: "bg-rose-500/10",
+    },
+    {
+      id: 4,
+      type: "product",
+      title: "Objek Retribusi Baru",
+      desc: "Dinas Kelautan menambahkan Lahan Kios Terminal baru di area pesisir.",
+      time: "3 Hari lalu",
+      icon: <Sparkles className="w-4 h-4 text-blue-500" />,
+      bg: "bg-blue-500/10",
+    },
+  ];
 
   // =========================
   // CHECK SESSION
@@ -113,6 +159,11 @@ export default function Header() {
       // PROFILE
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setProfileOpen(false);
+      }
+
+      // NOTIFICATION (Click Outside handler)
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setNotifOpen(false);
       }
     };
 
@@ -506,7 +557,6 @@ export default function Header() {
 
                 <div className="flex items-center gap-2 sm:gap-3">
                   {isAuthenticated ? (
-                    // PERBAIKAN & PENAMBAHAN: Notifikasi dibungkus Flex Container bersama Profile
                     <div className="flex items-center gap-2 sm:gap-3">
                       {/* PROFILE AREA */}
                       <div
@@ -516,6 +566,7 @@ export default function Header() {
                         <button
                           onClick={() => {
                             setShowCategory(false);
+                            setNotifOpen(false); // Menutup notif jika profil dibuka
                             setProfileOpen(!profileOpen);
                           }}
                           className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 rounded-lg md:rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200"
@@ -586,17 +637,84 @@ export default function Header() {
                         </AnimatePresence>
                       </div>
 
-                      {/* TOMBOL NOTIFIKASI (SAMPING KANAN DATA USER) */}
-                      <button
-                        onClick={() => navigate("/notifications")} // Silakan sesuaikan rute halaman notifikasi Anda
-                        className="relative p-2.5 rounded-lg md:rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200 text-slate-700 hover:text-blue-600 transition-all duration-200 shadow-sm group"
-                        title="Notifikasi"
-                      >
-                        <Bell className="w-5 h-5 transition-transform duration-200 group-hover:rotate-12" />
+                      {/* PERBAIKAN: DROPDOWN NOTIFIKASI */}
+                      <div ref={notifRef} className="relative">
+                        <button
+                          onClick={() => {
+                            setShowCategory(false);
+                            setProfileOpen(false); // Menutup profil jika notif dibuka
+                            setNotifOpen(!notifOpen);
+                          }}
+                          className={`relative p-2.5 rounded-lg md:rounded-2xl border border-gray-200 transition-all duration-200 shadow-sm group ${
+                            notifOpen
+                              ? "bg-blue-50 text-blue-600 border-blue-200"
+                              : "bg-gray-50 hover:bg-gray-100 text-slate-700"
+                          }`}
+                          title="Notifikasi"
+                        >
+                          <Bell className="w-5 h-5 transition-transform duration-200 group-hover:rotate-12" />
+                          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white animate-pulse" />
+                        </button>
 
-                        {/* Dot Indikator Merah Notifikasi Baru */}
-                        <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white animate-pulse" />
-                      </button>
+                        <AnimatePresence>
+                          {notifOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                              transition={{ duration: 0.2, ease: "easeOut" }}
+                              className="absolute right-0 mt-3 w-[320px] sm:w-[360px] rounded-2xl border border-white/50 bg-white/80 backdrop-blur-xl shadow-2xl overflow-hidden z-[99999]"
+                            >
+                              <div className="px-4 py-3 border-b border-gray-200/30 bg-white/40 flex justify-between items-center">
+                                <h3 className="font-extrabold text-xs text-slate-900 tracking-wider uppercase">
+                                  Pemberitahuan Baru
+                                </h3>
+                                <span className="text-[10px] bg-blue-100 text-blue-600 font-bold px-2 py-0.5 rounded-full">
+                                  {notifications.length} Info
+                                </span>
+                              </div>
+
+                              <div className="max-h-[350px] overflow-y-auto divide-y divide-gray-100/50 bg-white/20">
+                                {notifications.map((notif) => (
+                                  <div
+                                    key={notif.id}
+                                    className="p-3.5 hover:bg-slate-900/5 transition-colors cursor-pointer flex gap-3 items-start"
+                                  >
+                                    <div
+                                      className={`w-8 h-8 rounded-xl ${notif.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}
+                                    >
+                                      {notif.icon}
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <h4 className="font-bold text-xs text-slate-900 leading-snug tracking-tight">
+                                        {notif.title}
+                                      </h4>
+                                      <p className="text-[11px] text-slate-500 leading-normal mt-0.5 font-medium line-clamp-2">
+                                        {notif.desc}
+                                      </p>
+                                      <span className="text-[9px] text-slate-400 font-bold block mt-1 tracking-wide uppercase">
+                                        {notif.time}
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+
+                              <div className="p-2 border-t border-gray-200/30 bg-white/40 text-center">
+                                <button
+                                  onClick={() => {
+                                    setNotifOpen(false);
+                                    navigate("/notifications");
+                                  }}
+                                  className="w-full py-1.5 text-[11px] font-black text-blue-600 hover:text-blue-700 transition-colors uppercase tracking-wider"
+                                >
+                                  Lihat Semua Notifikasi
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
                     </div>
                   ) : (
                     <div className="hidden md:flex gap-2">
@@ -658,7 +776,7 @@ export default function Header() {
                               onClick={() => setActiveCategory(category)}
                               className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                                 activeCategory === category
-                                  ? "bg-white/80 text-blue-600 shadow-sm border border-white/40"
+                                  ? "bg-white/80 text-blue-600 shadow-sm border border-white/20"
                                   : "text-slate-800 hover:bg-white/40"
                               }`}
                             >
