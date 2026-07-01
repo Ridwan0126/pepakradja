@@ -417,7 +417,7 @@ export default function Header() {
   const topMenus = [
     {
       key: "home",
-      label: "Home",
+      label: "Kategori",
     },
 
     ...(isAuthenticated

@@ -227,7 +227,7 @@ export default function Footer() {
               {/* Flex-shrink-0 memastikan gambar tidak mengecil saat teks panjang */}
               <div className="flex-shrink-0">
                 <img
-                  src="/images/massajak.png"
+                  src="/images/bregada.png"
                   alt="PEPAK RAJA"
                   className="w-38 h-36 object-contain group-hover:scale-110 transition-all duration-500"
                 />
