@@ -13,7 +13,13 @@ export default function TransactionStatus() {
   const [loadingSearch, setLoadingSearch] = useState(false);
   const componentRef = useRef();
 
-  const handlePrint = useReactToPrint({ contentRef: componentRef });
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+    // Mengatur nama file: "tbp_NamaUser.pdf"
+    documentTitle: data
+      ? `tbp_${data.nama.replace(/\s+/g, "_")}`
+      : "tbp_dokumen",
+  });
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
