@@ -20,7 +20,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const navigate = useNavigate();
-  // Tambahkan di dalam komponen Header
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
@@ -30,27 +29,22 @@ export default function Header() {
   // =========================
   const searchRef = useRef(null);
   const profileRef = useRef(null);
+  const menuRef = useRef(null); // Tambahkan ref baru untuk menu level 1
 
   // =========================
   // STATE
   // =========================
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const [showCategory, setShowCategory] = useState(false);
-
   const [activeMenu, setActiveMenu] = useState("home");
-
   const [activeCategory, setActiveCategory] = useState("Tanah");
 
   // SEARCH
   const [searchOpen, setSearchOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [search, setSearch] = useState("");
-
   const [lastSearch, setLastSearch] = useState("");
-
   const [searchResults, setSearchResults] = useState([]);
-
   const [loadingSearch, setLoadingSearch] = useState(false);
 
   // PROFILE
@@ -64,7 +58,6 @@ export default function Header() {
 
   // AUTH
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const [user, setUser] = useState(null);
 
   // =========================
@@ -78,9 +71,9 @@ export default function Header() {
       setSearchOpen(false);
     }
   }, [selectedDetail]);
+
   const checkSession = () => {
     const session = localStorage.getItem("wr_session");
-
     if (!session) {
       setIsAuthenticated(false);
       setUser(null);
@@ -89,31 +82,20 @@ export default function Header() {
 
     try {
       const parsed = JSON.parse(session);
-
       if (Date.now() > parsed.expiredAt) {
         localStorage.removeItem("wr_session");
-
         localStorage.removeItem("wr_user_header");
-
         setIsAuthenticated(false);
-
         setUser(null);
-
         return;
       }
-
       setIsAuthenticated(true);
-
       setUser(parsed.user);
     } catch (err) {
       console.error(err);
-
       localStorage.removeItem("wr_session");
-
       localStorage.removeItem("wr_user_header");
-
       setIsAuthenticated(false);
-
       setUser(null);
     }
   };
@@ -132,10 +114,14 @@ export default function Header() {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setProfileOpen(false);
       }
+
+      // MENU CATEGORY (Menutup dropdown jika klik di luar area menu)
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowCategory(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -146,17 +132,11 @@ export default function Header() {
   // =========================
   const handleLogout = () => {
     localStorage.removeItem("wr_session");
-
     localStorage.removeItem("wr_user_header");
-
     setIsAuthenticated(false);
-
     setUser(null);
-
     setProfileOpen(false);
-
     navigate("/login");
-
     setMobileMenuOpen(false);
   };
 
@@ -169,7 +149,6 @@ export default function Header() {
         handleSearch(search);
       } else {
         setSearchResults([]);
-
         setSearchOpen(false);
       }
     }, 500);
@@ -182,15 +161,10 @@ export default function Header() {
   // =========================
   const getAllPhotos = (item) => {
     const photos = [];
-
     if (item?.foto) photos.push(item.foto);
-
     if (item?.foto2) photos.push(item.foto2);
-
     if (item?.foto3) photos.push(item.foto3);
-
     if (item?.foto4) photos.push(item.foto4);
-
     return [...new Set(photos)];
   };
 
@@ -224,7 +198,6 @@ export default function Header() {
       const result = await response.json();
       const apiData = result?.data || [];
 
-      // Cek apakah masih ada data selanjutnya (asumsi API memberikan info total atau berdasarkan panjang data)
       setHasMore(apiData.length === 20);
 
       if (isLoadMore) {
@@ -245,6 +218,7 @@ export default function Header() {
     setPage(nextPage);
     handleSearch(lastSearch, nextPage, true);
   };
+
   // =========================
   // MENU DATA
   // =========================
@@ -252,78 +226,35 @@ export default function Header() {
     home: {
       categories: {
         Tanah: [
-          {
-            title: "Sewa Tanah",
-            path: "/tanah/sewa-tanah",
-          },
+          { title: "Sewa Tanah", path: "/tanah/sewa-tanah" },
           {
             title: "Bangunan Semi Permanen",
             path: "/tanah/bangunan-semi-permanen",
           },
-          {
-            title: "Jalan Masuk",
-            path: "/tanah/jalan-masuk",
-          },
+          { title: "Jalan Masuk", path: "/tanah/jalan-masuk" },
         ],
-
         Bangunan: [
-          {
-            title: "Lantai Jemur",
-            path: "/bangunan/lantai-jemur",
-          },
-          {
-            title: "Rumah Dinas",
-            path: "/bangunan/rumah-dinas",
-          },
-          {
-            title: "Sewa Gedung",
-            path: "/bangunan/sewa-gedung",
-          },
+          { title: "Lantai Jemur", path: "/bangunan/lantai-jemur" },
+          { title: "Rumah Dinas", path: "/bangunan/rumah-dinas" },
+          { title: "Sewa Gedung", path: "/bangunan/sewa-gedung" },
         ],
-
         "Tanah Bangunan": [
-          {
-            title: "Sewa Lahan",
-            path: "/tanah-bangunan/sewa-lahan",
-          },
-          {
-            title: "Tegalan",
-            path: "/tanah-bangunan/tegalan",
-          },
-          {
-            title: "Jembatan",
-            path: "/tanah-bangunan/jembatan",
-          },
-          {
-            title: "Warung",
-            path: "/tanah-bangunan/warung",
-          },
+          { title: "Sewa Lahan", path: "/tanah-bangunan/sewa-lahan" },
+          { title: "Tegalan", path: "/tanah-bangunan/tegalan" },
+          { title: "Jembatan", path: "/tanah-bangunan/jembatan" },
+          { title: "Warung", path: "/tanah-bangunan/warung" },
         ],
-
         "Gedung Pertemuan": [
-          {
-            title: "Aula Sekolah",
-            path: "/gedung-pertemuan/aula-sekolah",
-          },
-          {
-            title: "Aula",
-            path: "/gedung-pertemuan/aula",
-          },
+          { title: "Aula Sekolah", path: "/gedung-pertemuan/aula-sekolah" },
+          { title: "Aula", path: "/gedung-pertemuan/aula" },
           {
             title: "Ruang Pertemuan",
             path: "/gedung-pertemuan/ruang-pertemuan",
           },
-          {
-            title: "Sewa Gedung",
-            path: "/gedung-pertemuan/sewa-gedung",
-          },
+          { title: "Sewa Gedung", path: "/gedung-pertemuan/sewa-gedung" },
         ],
-
         "Lahan Iklan": [
-          {
-            title: "Reklame",
-            path: "/lahan-iklan/reklame",
-          },
+          { title: "Reklame", path: "/lahan-iklan/reklame" },
           {
             title: "Lahan Tiang Reklame",
             path: "/lahan-iklan/lahan-tiang-reklame",
@@ -333,123 +264,50 @@ export default function Header() {
             path: "/lahan-iklan/pemasangan-media-promosi",
           },
         ],
-
         "Kios / Los": [
-          {
-            title: "Kios Terminal",
-            path: "/kios-los/kios-terminal",
-          },
-          {
-            title: "Los BPSPP",
-            path: "/kios-los/los-bpspp",
-          },
+          { title: "Kios Terminal", path: "/kios-los/kios-terminal" },
+          { title: "Los BPSPP", path: "/kios-los/los-bpspp" },
         ],
-
         "Lain-lain": [
           {
             title: "Produksi Perkebunan",
             path: "/lain-lain/produksi-perkebunan",
           },
-          {
-            title: "Sayur-sayuran",
-            path: "/lain-lain/sayur-sayuran",
-          },
-          {
-            title: "Kalibrasi Alat",
-            path: "/lain-lain/kalibrasi-alat",
-          },
-          {
-            title: "Pemakaian Ruang",
-            path: "/lain-lain/pemakaian-ruang",
-          },
-          {
-            title: "Pengujian",
-            path: "/lain-lain/pengujian",
-          },
+          { title: "Sayur-sayuran", path: "/lain-lain/sayur-sayuran" },
+          { title: "Kalibrasi Alat", path: "/lain-lain/kalibrasi-alat" },
+          { title: "Pemakaian Ruang", path: "/lain-lain/pemakaian-ruang" },
+          { title: "Pengujian", path: "/lain-lain/pengujian" },
         ],
       },
     },
-
     penetapan: {
       items: [
-        {
-          title: "SKRD",
-          path: "/skrd",
-        },
-        // {
-        //   title: "SPTRD",
-        //   path: "/sptrd",
-        // },
-        {
-          title: "Pembayaran",
-          path: "/Transactions",
-        },
+        { title: "SKRD", path: "/skrd" },
+        { title: "Pembayaran", path: "/Transactions" },
       ],
     },
-
     tiketonline: {
-      items: [
-        {
-          title: "Pariwisata",
-          path: "/ticket",
-        },
-      ],
+      items: [{ title: "Pariwisata", path: "/ticket" }],
     },
-
-    // lainnya: {
-    //   items: [
-    //     {
-    //       title: "PAP",
-    //       path: "/pap",
-    //     },
-    //     {
-    //       title: "PAB",
-    //       path: "/pab",
-    //     },
-    //     {
-    //       title: "DLL",
-    //       path: "/dll",
-    //     },
-    //   ],
-    // },
   };
 
   const topMenus = [
-    {
-      key: "home",
-      label: "Kategori",
-    },
-
-    ...(isAuthenticated
-      ? [
-          {
-            key: "penetapan",
-            label: "Penetapan",
-          },
-        ]
-      : []),
-
-    {
-      key: "tiketonline",
-      label: "Tiket Online",
-    },
-
-    // {
-    //   key: "lainnya",
-    //   label: "Lain-lain",
-    // },
+    { key: "home", label: "Kategori" },
+    ...(isAuthenticated ? [{ key: "penetapan", label: "Penetapan" }] : []),
+    { key: "tiketonline", label: "Tiket Online" },
   ];
 
   return (
     <div className="font-sans antialiased tracking-tight">
-      {/* FIXED CONTAINER NAVBAR */}
       <div className="fixed top-3 left-0 right-0 z-50 px-4 sm:px-6 md:px-6">
         <div className="max-w-7xl mx-auto">
-          {/* MAIN NAVBAR CONTAINER */}
-          <header className="rounded-[24px] sm:rounded-[28px] border border-gray-200 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-visible hover:border-gray-300 transition-all duration-300">
+          {/* UTAMA: Menutup dropdown saat kursor mengarah ke header/pindah dari tombol menu */}
+          <header
+            onMouseEnter={() => setShowCategory(false)}
+            className="rounded-[24px] sm:rounded-[28px] border border-gray-200 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-visible hover:border-gray-300 transition-all duration-300"
+          >
             <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
-                {/* SISI KIRI (NAV MOBILE TOGGLE & LOGO) */}
                 <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                   <button
                     className="md:hidden p-2 rounded-xl sm:rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-all duration-200"
@@ -462,7 +320,6 @@ export default function Header() {
                     )}
                   </button>
 
-                  {/* LOGO & APP TITLE */}
                   <Link
                     to="/"
                     className="flex items-center gap-2 sm:gap-3 group relative"
@@ -478,8 +335,6 @@ export default function Header() {
                         alt="Logo"
                         className="h-10 sm:h-12 w-auto object-contain"
                       />
-
-                      {/* KONTAINER PEMBUNGKUS DENGAN LEBAR DINAMIS YANG STABIL */}
                       <div className="hidden ml-2 p-2 rounded-lg sm:flex flex-col leading-tight relative h-10 w-[120px]">
                         <AnimatePresence mode="popLayout">
                           <motion.span
@@ -498,12 +353,17 @@ export default function Header() {
                   </Link>
 
                   {/* NAV MENU BUTTON LEVEL 1 */}
+                  {/* Diubah: Hanya menggunakan ref, onMouseEnter dihilangkan, ditambahkan stopPropagation */}
                   <div
+                    ref={menuRef}
                     className="relative hidden md:block z-[10001]"
-                    onMouseEnter={() => setShowCategory(true)}
-                    onMouseLeave={() => setShowCategory(false)}
+                    onMouseEnter={(e) => e.stopPropagation()}
                   >
-                    <button className="flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-xl md:rounded-2xl bg-gray-100 hover:bg-gray-200 border border-gray-200 text-slate-800 font-semibold transition-all duration-200">
+                    {/* Diubah: Membuka lewat onClick klik */}
+                    <button
+                      onClick={() => setShowCategory(!showCategory)}
+                      className="flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-xl md:rounded-2xl bg-gray-100 hover:bg-gray-200 border border-gray-200 text-slate-800 font-semibold transition-all duration-200"
+                    >
                       Menu
                       <ChevronDown
                         className={`w-4 h-4 text-slate-600 transition-transform duration-300 ${
@@ -512,7 +372,6 @@ export default function Header() {
                       />
                     </button>
 
-                    {/* DIUBAH: MAKSIMALISASI KACA TRANSPARAN PADA DROPDOWN UTAMA */}
                     <AnimatePresence>
                       {showCategory && (
                         <motion.div
@@ -522,7 +381,6 @@ export default function Header() {
                           transition={{ duration: 0.25, ease: "easeOut" }}
                           className="absolute mt-4 left-0 w-[min(calc(100vw-24px),950px)] overflow-hidden rounded-[28px] border border-white/60 bg-white/20 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_30px_60px_rgba(0,0,0,0.1)]"
                         >
-                          {/* TABS ATAS DROPDOWN */}
                           <div className="flex items-center gap-2 sm:gap-3 px-5 py-3.5 border-b border-gray-200/20 bg-white/10 flex-wrap">
                             {topMenus.map((menu) => (
                               <button
@@ -539,7 +397,6 @@ export default function Header() {
                             ))}
                           </div>
 
-                          {/* GRID DROPDOWN */}
                           <div
                             className={`grid ${
                               activeMenu === "home"
@@ -547,28 +404,24 @@ export default function Header() {
                                 : "grid-cols-1"
                             }`}
                           >
-                            {/* KIRI - KATEGORI CHIPS */}
-                            {activeMenu === "home" && (
-                              <div className="bg-black/5 border-r border-gray-200/10 p-4 h-auto sm:h-[400px] md:h-[430px] overflow-y-auto space-y-1">
-                                {Object.keys(menuData.home.categories).map(
-                                  (item, index) => (
-                                    <button
-                                      key={index}
-                                      onClick={() => setActiveCategory(item)}
-                                      className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 text-xs font-black tracking-tight ${
-                                        activeCategory === item
-                                          ? "bg-white/80 text-blue-600 shadow-sm border border-white/40"
-                                          : "text-slate-800 hover:bg-white/40"
-                                      }`}
-                                    >
-                                      {item}
-                                    </button>
-                                  ),
-                                )}
-                              </div>
-                            )}
+                            <div className="bg-black/5 border-r border-gray-200/10 p-4 h-auto sm:h-[400px] md:h-[430px] overflow-y-auto space-y-1">
+                              {Object.keys(menuData.home.categories).map(
+                                (item, index) => (
+                                  <button
+                                    key={index}
+                                    onClick={() => setActiveCategory(item)}
+                                    className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 text-xs font-black tracking-tight ${
+                                      activeCategory === item
+                                        ? "bg-white/80 text-blue-600 shadow-sm border border-white/40"
+                                        : "text-slate-800 hover:bg-white/40"
+                                    }`}
+                                  >
+                                    {item}
+                                  </button>
+                                ),
+                              )}
+                            </div>
 
-                            {/* KANAN - CARDS ITEM */}
                             <div className="p-4 h-auto sm:h-[400px] md:h-[430px] overflow-y-auto bg-white/5">
                               <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                                 {(activeMenu === "home"
@@ -601,7 +454,6 @@ export default function Header() {
                   </div>
                 </div>
 
-                {/* SISI TENGAH (INPUT FORM SEARCH BAR) */}
                 <div ref={searchRef} className="hidden lg:flex flex-1 relative">
                   <div className="relative w-full">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10" />
@@ -617,14 +469,12 @@ export default function Header() {
                       placeholder="Cari layanan atau retribusi..."
                       className="w-full pl-12 pr-32 py-2.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100/80 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
-
                     <button
                       onClick={() => handleSearch(search)}
                       className="absolute right-12 top-1/2 -translate-y-1/2 text-slate-500 hover:text-blue-600 text-xs sm:text-sm font-semibold transition-all duration-200 z-10"
                     >
                       Cari
                     </button>
-
                     {search && (
                       <button
                         onClick={() => {
@@ -642,7 +492,6 @@ export default function Header() {
                   </div>
                 </div>
 
-                {/* SISI KANAN (PROFILE BUTTON / LOGIN ACTION) */}
                 <div className="flex items-center gap-2 sm:gap-3">
                   {isAuthenticated ? (
                     <div ref={profileRef} className="relative hidden md:block">
@@ -666,7 +515,6 @@ export default function Header() {
                         />
                       </button>
 
-                      {/* POPUP PROFILE DROPDOWN */}
                       <AnimatePresence>
                         {profileOpen && (
                           <motion.div
@@ -844,7 +692,6 @@ export default function Header() {
                             {searchResults.length} Data Retribusi Ditemukan
                           </p>
                         </div>
-                        {/* Di dalam DROPDOWN SEARCH LIST PANEL, setelah grid results */}
                         {!loadingSearch &&
                           searchResults.length > 0 &&
                           hasMore && (
@@ -952,7 +799,6 @@ export default function Header() {
               >
                 <div className="max-w-7xl mx-auto px-4 h-full">
                   <div className="h-full rounded-[28px] border border-white/60 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_30px_60px_rgba(0,0,0,0.1)] flex flex-col overflow-hidden">
-                    {/* MODAL HEADER */}
                     <div className="px-5 py-4 border-b border-gray-200/20 bg-white/20 flex items-center justify-between">
                       <div>
                         <h2 className="text-xs font-bold text-blue-600 uppercase tracking-widest">
@@ -973,10 +819,8 @@ export default function Header() {
                       </button>
                     </div>
 
-                    {/* MODAL BODY CONTENT */}
                     <div className="flex-1 overflow-y-auto bg-white/5">
                       <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-                        {/* VIEW SISI KIRI - MEDIA GALLERY */}
                         <div className="flex flex-col border-r border-gray-200/20 bg-black/5">
                           <div className="h-[320px] sm:h-[380px] bg-slate-900 flex items-center justify-center overflow-hidden">
                             {activeImage ? (
@@ -1013,7 +857,6 @@ export default function Header() {
                           </div>
                         </div>
 
-                        {/* VIEW SISI KANAN - DATA TEXT */}
                         <div className="flex flex-col justify-between h-full bg-white/20">
                           <div className="p-5 sm:p-6 space-y-5">
                             <div>
@@ -1025,7 +868,6 @@ export default function Header() {
                               </p>
                             </div>
 
-                            {/* Harga Tarif */}
                             <div className="bg-blue-50/50 border border-blue-100/30 p-4 rounded-2xl backdrop-blur-sm">
                               <p className="text-[10px] text-blue-600 font-extrabold uppercase tracking-widest mb-0.5">
                                 Tarif Sewa Objek
@@ -1038,7 +880,6 @@ export default function Header() {
                               </p>
                             </div>
 
-                            {/* Grid Detail Metadata */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <div className="border border-white/30 rounded-xl p-3 bg-white/40 backdrop-blur-sm">
                                 <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wide mb-0.5">
@@ -1079,7 +920,6 @@ export default function Header() {
                             </div>
                           </div>
 
-                          {/* ACTION STICKY BUTTON */}
                           <div className="p-4 sm:p-5 border-t border-gray-200/20 bg-white/30 backdrop-blur-md">
                             <button
                               onClick={() => {
