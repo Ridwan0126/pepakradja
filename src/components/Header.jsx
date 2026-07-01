@@ -623,6 +623,18 @@ export default function Header() {
                                   <User className="w-4 h-4 text-slate-400" />
                                   <span className="text-sm">Profile</span>
                                 </button>
+                                <button
+                                  onClick={() => {
+                                    navigate("/lupapassword");
+                                    setProfileOpen(false);
+                                  }}
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/5 text-slate-700 transition-colors text-xs font-bold"
+                                >
+                                  <User className="w-4 h-4 text-slate-400" />
+                                  <span className="text-sm">
+                                    Ganti Password
+                                  </span>
+                                </button>
 
                                 <button
                                   onClick={handleLogout}

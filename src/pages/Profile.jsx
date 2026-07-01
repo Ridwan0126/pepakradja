@@ -156,10 +156,6 @@ export default function Profile() {
                       NPWRD : {user.npwrd || "-"}
                     </div>
 
-                    <div className="bg-green-500/10 border border-green-500/20 text-green-300 px-4 py-2 rounded-xl">
-                      <a href="/lupapassword">Lupa Password</a>
-                    </div>
-
                     <div className="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-4 py-2 rounded-xl">
                       Terverifikasi
                     </div>
