@@ -276,7 +276,7 @@ export default function Footer() {
           <img
             src="/images/call.png"
             alt="WhatsApp"
-            className="w-20 h-20 object-contain floating-logo"
+            className="w-32 h-32 object-contain floating-logo"
           />
         </a>
       </div>

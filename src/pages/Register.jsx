@@ -670,7 +670,7 @@ overflow-hidden
                   />
 
                   <img
-                    src="/images/massajak.png"
+                    src="/images/bregada.png"
                     alt="Logo"
                     className="w-32 h-32 object-contain drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]"
                   />
@@ -1024,6 +1024,20 @@ disabled:opacity-70
             </div>
           </div>
         </motion.div>
+        <div className="fixed bottom-6 right-6 z-50 hidden-on-home">
+          <a
+            href="https://wa.me/6285642312609"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block hover:scale-110 transition-transform duration-300"
+          >
+            <img
+              src="/images/call.png"
+              alt="WhatsApp"
+              className="w-32 h-32 object-contain floating-logo"
+            />
+          </a>
+        </div>
       </div>
     </div>
   );
