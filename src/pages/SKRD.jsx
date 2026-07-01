@@ -666,14 +666,19 @@ export default function SKRD() {
               }
             />
 
-            <button
-              onClick={handleSearchAPI}
-              disabled={loading}
-              className="bg-blue-700 hover:bg-blue-800 text-white rounded-xl flex items-center justify-center gap-2 transition-all"
-            >
-              <Search size={18} />
-              {loading ? "Loading..." : "Cari"}
-            </button>
+            <div className="flex">
+              <button
+                onClick={handleSearchAPI}
+                disabled={loading}
+                className="bg-blue-700 hover:bg-blue-800 text-white rounded-xl flex items-center justify-center gap-2 transition-all"
+              >
+                <Search size={18} />
+                {loading ? "Loading..." : "Cari"}
+              </button>
+              <div className="bg-blue-700 hover:bg-blue-800 text-white rounded-xl flex items-center justify-center gap-2 transition-all">
+                <a href="/transaction">Bukti Bayar</a>
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex gap-2 mb-4 mt-4 rounded-3xl">
