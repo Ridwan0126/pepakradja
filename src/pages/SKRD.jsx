@@ -18,6 +18,16 @@ import Swal from "sweetalert2";
 const GlassSelect = ({ value, options, onChange }) => {
   const [open, setOpen] = useState(false);
 
+  // Tambahkan di dalam komponen SKRD
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // View awal 10
+
+  // Hitung data yang akan ditampilkan
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
   useEffect(() => {
     setOpen(false);
   }, [value]);
@@ -699,11 +709,11 @@ export default function SKRD() {
         </div>
 
         {/* List Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredData.map((item, index) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col gap-4"
+              className="bg-white p-6 rounded-3xl border shadow-sm hover:shadow-lg transition-all flex flex-col gap-4"
             >
               <div className="flex justify-between items-start">
                 <div>
@@ -734,6 +744,19 @@ export default function SKRD() {
             </div>
           ))}
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-2 mt-8">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-4 py-2 rounded-lg ${currentPage === i + 1 ? "bg-blue-700 text-white" : "bg-white"}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* MODAL */}
