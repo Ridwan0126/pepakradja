@@ -143,7 +143,7 @@ export default function SKRD() {
   // API
   const handleSearchAPI = async () => {
     const { tahun, bulan } = searchForm;
-    const id_wr = session?.user?.id_wr || 3314;
+    const id_wr = session?.user?.id;
 
     setLoading(true);
     try {
