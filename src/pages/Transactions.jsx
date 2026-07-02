@@ -14,7 +14,19 @@ export default function TransactionStatus() {
   const [showScanner, setShowScanner] = useState(false);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const componentRef = useRef();
-
+  // Di dalam komponen TransactionStatus
+  const [printInfo, setPrintInfo] = useState(null);
+  const getPrintTimestamp = () => {
+    const now = new Date();
+    return now.toLocaleString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
     // Mengatur nama file: "tbp_NamaUser.pdf"
@@ -22,6 +34,16 @@ export default function TransactionStatus() {
       ? `tbp_${data.nama.replace(/\s+/g, "_")}-${data.no_tbp}`
       : "tbp_dokumen",
   });
+  const handlePrintAction = () => {
+    const session = JSON.parse(localStorage.getItem("wr_session"));
+    setPrintInfo({
+      username: session?.user?.nama || "User", // Sesuaikan dengan key nama di session Anda
+      waktu: getPrintTimestamp(),
+    });
+
+    // Berikan sedikit jeda agar state terupdate sebelum render print
+    setTimeout(() => handlePrint(), 100);
+  };
 
   // FUNGSI UNDUH PDF
   const handleDownloadPDF = async () => {
@@ -32,7 +54,10 @@ export default function TransactionStatus() {
 
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
+    setPrintInfo({
+      username: session?.user?.nama || "User",
+      waktu: getPrintTimestamp(),
+    });
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save(`tbp_${data.nama}-${data.no_tbp}.pdf`);
   };
@@ -369,6 +394,12 @@ export default function TransactionStatus() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+        {printInfo && (
+          <div className="absolute bottom-10 left-12 text-[10px] italic text-slate-500">
+            <div>Dicetak oleh: {printInfo.username}</div>
+            <div>Waktu: {printInfo.waktu}</div>
           </div>
         )}
       </main>
