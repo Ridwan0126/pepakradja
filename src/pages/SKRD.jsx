@@ -74,8 +74,11 @@ export default function SKRD() {
   const [filter, setFilter] = useState("semua"); // "semua", "bayar", "belum"
 
   const filteredData = dataList.filter((item) => {
-    if (filter === "bayar") return item.is_bayar;
-    if (filter === "belum") return !item.is_bayar;
+    // Menentukan status bayar berdasarkan ada tidaknya tanggal_bayar
+    const isPaid = item.tanggal_bayar !== null && item.tanggal_bayar !== "";
+
+    if (filter === "bayar") return isPaid === true;
+    if (filter === "belum") return isPaid === false;
     return true;
   });
   const [searchForm, setSearchForm] = useState({
@@ -718,7 +721,7 @@ export default function SKRD() {
                       : "bg-rose-50 text-rose-600"
                   }`}
                 >
-                  {item.is_bayar ? "Lunas" : "Belum Bayar"}
+                  {item.tanggal_bayar ? "Lunas" : "Belum Bayar"}
                 </span>
               </div>
 
