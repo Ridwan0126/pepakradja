@@ -59,8 +59,18 @@ export default function TransactionStatus() {
       username: session?.user?.nama || "User",
       waktu: getPrintTimestamp(),
     });
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`tbp_${data.nama}-${data.no_tbp}.pdf`);
+    setTimeout(async () => {
+      const element = componentRef.current;
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`tbp_${data.nama}-${data.no_tbp}.pdf`);
+    }, 100);
   };
 
   const formatDate = (dateString) => {
@@ -265,7 +275,7 @@ export default function TransactionStatus() {
             <div className="flex gap-3">
               {/* Tombol Cetak */}
               <button
-                onClick={handlePrint}
+                onClick={handlePrintAction}
                 className="bg-emerald-700 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-emerald-800"
               >
                 <Printer className="w-4 h-4" /> Cetak
