@@ -72,15 +72,7 @@ export default function SKRD() {
   const [dataList, setDataList] = useState([]); // List hasil pencarian
   const [selectedItem, setSelectedItem] = useState(null); // Item yang sedang dibuka detailnya
   const [filter, setFilter] = useState("semua"); // "semua", "bayar", "belum"
-  // 1. Tambahkan state pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // 2. Potong data berdasarkan halaman
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const filteredData = dataList.filter((item) => {
     // Jika item.tbp ada datanya, maka sudah bayar
     const isPaid = item.tbp !== null && item.tbp !== undefined;
