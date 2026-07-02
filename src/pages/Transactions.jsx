@@ -145,7 +145,7 @@ export default function TransactionStatus() {
         lokasi: item.obyek.alamat,
         nama_bendahara: pejabat.nama_bendahara,
         nip: pejabat.nip_bendahara,
-        uppd: data.uppd.nama,
+        uppd: item.uppd.nama,
       });
     } catch (err) {
       Swal.fire(
