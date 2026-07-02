@@ -35,8 +35,6 @@ import Footer from "../components/Footer";
 
 /* =========================================================================
    PEMASARAN PARIWISATA JAWA TENGAH — TICKETING (iOS GLASS THEME)
-   Single file. TailwindCSS + Framer Motion + Lucide React.
-   Pembayaran nontunai (Bank Jateng) — data dummy.
    ========================================================================= */
 
 const STORAGE_KEY = "jateng_tickets";
@@ -45,12 +43,11 @@ const SESSION_KEY = "wr_session";
 const RUPIAH = (n) =>
   "Rp" + Number(n).toLocaleString("id-ID", { maximumFractionDigits: 0 });
 
-// Baca sesi login dari localStorage (wr_session)
 const readSession = () => {
   try {
     const s = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
     if (!s || !s.isLoggedIn) return null;
-    if (s.expiredAt && Date.now() > s.expiredAt) return null; // sesi kedaluwarsa
+    if (s.expiredAt && Date.now() > s.expiredAt) return null;
     return s;
   } catch (e) {
     console.log("[v0] baca sesi gagal:", e);
@@ -66,7 +63,6 @@ const readTickets = () => {
   }
 };
 
-// QR via free image API (no extra npm package needed)
 const qrSrc = (data, size = 260) =>
   `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=12&data=${encodeURIComponent(
     data,
@@ -78,107 +74,7 @@ const genKode = () =>
   "-" +
   Math.random().toString(36).slice(2, 6).toUpperCase();
 
-/* ----------------------------- DUMMY DATA ------------------------------ */
 const KATEGORI = ["Semua", "Candi", "Alam", "Sejarah", "Pantai", "Rekreasi"];
-
-const DESTINASI = [
-  {
-    id: "OBJ-001",
-    nama: "Candi Borobudur",
-    lokasi: "Magelang",
-    kategori: "Candi",
-    rating: 4.9,
-    harga: 50000,
-    img: "/images/borobudur.png",
-    desc: "Candi Buddha terbesar di dunia, warisan dunia UNESCO dengan panorama matahari terbit yang ikonik.",
-    jam: "06.00 - 17.00",
-    satuan: "orang",
-  },
-  {
-    id: "OBJ-002",
-    nama: "Candi Prambanan",
-    lokasi: "Klaten",
-    kategori: "Candi",
-    rating: 4.8,
-    harga: 50000,
-    img: "/images/prambanan.png",
-    desc: "Kompleks candi Hindu termegah di Indonesia dengan arsitektur menjulang yang memukau.",
-    jam: "06.30 - 17.00",
-    satuan: "orang",
-  },
-  {
-    id: "OBJ-003",
-    nama: "Dataran Tinggi Dieng",
-    lokasi: "Wonosobo",
-    kategori: "Alam",
-    rating: 4.7,
-    harga: 25000,
-    img: "/images/dieng.png",
-    desc: "Negeri di atas awan dengan telaga warna, kawah, dan udara sejuk pegunungan.",
-    jam: "24 Jam",
-    satuan: "orang",
-  },
-  {
-    id: "OBJ-004",
-    nama: "Lawang Sewu",
-    lokasi: "Semarang",
-    kategori: "Sejarah",
-    rating: 4.6,
-    harga: 20000,
-    img: "/images/lawangsewu.png",
-    desc: "Bangunan kolonial bersejarah dengan seribu pintu, ikon Kota Semarang.",
-    jam: "08.00 - 21.00",
-    satuan: "orang",
-  },
-  {
-    id: "OBJ-005",
-    nama: "Karimunjawa",
-    lokasi: "Jepara",
-    kategori: "Pantai",
-    rating: 4.9,
-    harga: 75000,
-    img: "/images/karimunjawa.png",
-    desc: "Gugusan pulau tropis dengan air laut sebening kristal, surga snorkeling.",
-    jam: "07.00 - 18.00",
-    satuan: "orang",
-  },
-  {
-    id: "OBJ-006",
-    nama: "Umbul Ponggok",
-    lokasi: "Klaten",
-    kategori: "Rekreasi",
-    rating: 4.5,
-    harga: 30000,
-    img: "/images/ponggok.png",
-    desc: "Mata air jernih untuk snorkeling dan foto bawah air yang fenomenal.",
-    jam: "07.00 - 17.00",
-    satuan: "orang",
-  },
-  {
-    id: "OBJ-007",
-    nama: "Kota Lama Semarang",
-    lokasi: "Semarang",
-    kategori: "Sejarah",
-    rating: 4.6,
-    harga: 15000,
-    img: "/images/kotalama.png",
-    desc: "Little Netherlands dengan deretan bangunan tua estetik dan Gereja Blenduk.",
-    jam: "24 Jam",
-    satuan: "orang",
-  },
-  {
-    id: "OBJ-008",
-    nama: "Saloka Theme Park",
-    lokasi: "Semarang",
-    kategori: "Rekreasi",
-    rating: 4.7,
-    harga: 100000,
-    img: "/images/saloka.png",
-    desc: "Taman rekreasi keluarga terbesar di Jawa Tengah dengan puluhan wahana seru.",
-    jam: "09.00 - 17.00",
-    satuan: "orang",
-  },
-];
 
 /* --------------------------- SMALL UI PARTS ---------------------------- */
 function Glass({ className = "", children, ...rest }) {
@@ -196,6 +92,14 @@ const spring = { type: "spring", stiffness: 320, damping: 30 };
 
 /* ------------------------------ CARD ----------------------------------- */
 function DestinationCard({ item, onSelect, index }) {
+  // Pemetaan field API ke tampilan UI (Sesuaikan default value jika field null)
+  const nama = item.nama_obyek || item.nama || "Destinasi Wisata";
+  const lokasi = item.kab_kota || item.lokasi || "Jawa Tengah";
+  const kategori = item.kategori || "Umum";
+  const harga = item.harga_tiket || item.harga || 0;
+  const rating = item.rating || 4.7;
+  const img = item.foto_obyek || item.img || "/placeholder.svg";
+
   return (
     <motion.button
       layout
@@ -211,32 +115,33 @@ function DestinationCard({ item, onSelect, index }) {
       <Glass className="overflow-hidden rounded-3xl">
         <div className="relative h-40 w-full overflow-hidden">
           <img
-            src={item.img || "/placeholder.svg"}
-            alt={item.nama}
+            src={img}
+            alt={nama}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              e.target.src = "/placeholder.svg";
+            }}
           />
           <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-slate-700 backdrop-blur">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-            {item.rating}
+            {rating}
           </div>
           <div className="absolute right-3 top-3 rounded-full bg-sky-500/90 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
-            {item.kategori}
+            {kategori}
           </div>
         </div>
         <div className="p-4">
           <div className="flex items-center gap-1 text-xs text-slate-500">
             <MapPin className="h-3.5 w-3.5" />
-            {item.lokasi}
+            {lokasi}
           </div>
-          <h3 className="mt-1 text-base font-semibold text-slate-900">
-            {item.nama}
+          <h3 className="mt-1 text-base font-semibold text-slate-900 line-clamp-1">
+            {nama}
           </h3>
           <div className="mt-3 flex items-end justify-between">
             <div>
               <p className="text-[11px] text-slate-400">Mulai dari</p>
-              <p className="text-lg font-bold text-sky-600">
-                {RUPIAH(item.harga)}
-              </p>
+              <p className="text-lg font-bold text-sky-600">{RUPIAH(harga)}</p>
             </div>
             <span className="flex items-center gap-1 rounded-full bg-slate-900 px-3 py-2 text-xs font-medium text-white transition group-hover:bg-sky-600">
               Minat <ChevronRight className="h-3.5 w-3.5" />
@@ -250,22 +155,31 @@ function DestinationCard({ item, onSelect, index }) {
 
 /* --------------------------- BOOKING SHEET ----------------------------- */
 function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
-  // step: detail -> form -> pay -> done
-
   const [step, setStep] = useState("detail");
-  const [nama, setNama] = useState(session?.user?.nama || "");
+  const [namaPemesan, setNamaPemesan] = useState(session?.user?.nama || "");
   const [jumlah, setJumlah] = useState(2);
   const today = new Date().toISOString().slice(0, 10);
   const [tanggal, setTanggal] = useState(today);
   const [paying, setPaying] = useState(false);
   const [ticket, setTicket] = useState(null);
 
-  const total = item.harga * jumlah;
+  // Normalisasi field dari API
+  const id = item.id_obyek || item.id;
+  const namaObyek = item.nama_obyek || item.nama;
+  const harga = item.harga_tiket || item.harga || 0;
+  const lokasi = item.kab_kota || item.lokasi || "Jawa Tengah";
+  const kategori = item.kategori || "Umum";
+  const img = item.foto_obyek || item.img || "/placeholder.svg";
+  const jam = item.jam_operasional || "08.00 - 17.00";
+  const deskripsi =
+    item.deskripsi ||
+    "Destinasi wisata unggulan Jawa Tengah yang memukau dan wajib dikunjungi bersama keluarga.";
 
-  // Di dalam BookingSheet
+  const total = harga * jumlah;
+
   const handleBeliClick = () => {
     if (!session) {
-      onTriggerLogin(item); // Panggil prop yang di-pass dari parent
+      onTriggerLogin(item);
     } else {
       setStep("form");
     }
@@ -273,22 +187,21 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
 
   const handlePay = () => {
     setPaying(true);
-    // Simulasi pencatatan pemesanan (pembayaran offline / di lokasi)
     setTimeout(() => {
       const kode = genKode();
       const expiry = new Date(tanggal + "T23:59:59").toISOString();
       const t = {
         kode,
-        objekId: item.id,
-        objekNama: item.nama,
-        lokasi: item.lokasi,
-        kategori: item.kategori,
-        img: item.img,
-        namaPemesan: nama.trim() || session?.user?.nama || "Tamu",
+        objekId: id,
+        objekNama: namaObyek,
+        lokasi,
+        kategori,
+        img,
+        namaPemesan: namaPemesan.trim() || session?.user?.nama || "Tamu",
         pemesanId: session?.user?.id || null,
         npwrd: session?.user?.npwrd || null,
         jumlahOrang: jumlah,
-        hargaSatuan: item.harga,
+        hargaSatuan: harga,
         total,
         tanggalKunjungan: tanggal,
         createdAt: new Date().toISOString(),
@@ -298,7 +211,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
         status: "active",
         used: false,
       };
-      // simpan ke localStorage agar bisa di-scan & jadi riwayat
       try {
         const list = readTickets();
         list.push(t);
@@ -333,7 +245,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
         transition={spring}
         className="relative z-10 max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] border border-white/60 bg-white/80 p-1 backdrop-blur-2xl sm:max-w-md sm:rounded-[2rem]"
       >
-        {/* grabber */}
         <div className="sticky top-0 z-10 flex items-center justify-between rounded-t-[2rem] bg-white/60 px-4 pb-2 pt-3 backdrop-blur-xl">
           <div className="mx-auto h-1.5 w-12 rounded-full bg-slate-300 sm:hidden" />
           <button
@@ -347,7 +258,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
 
         <div className="px-5 pb-8">
           <AnimatePresence mode="wait">
-            {/* ----------------------- STEP: DETAIL ---------------------- */}
             {step === "detail" && (
               <motion.div
                 key="detail"
@@ -358,30 +268,29 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
               >
                 <div className="overflow-hidden rounded-3xl">
                   <img
-                    src={item.img || "/placeholder.svg"}
-                    alt={item.nama}
+                    src={img}
+                    alt={namaObyek}
                     className="h-48 w-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "/placeholder.svg";
+                    }}
                   />
                 </div>
                 <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
-                  <MapPin className="h-4 w-4" /> {item.lokasi}
+                  <MapPin className="h-4 w-4" /> {lokasi}
                   <span className="text-slate-300">&bull;</span>
-                  <Clock className="h-4 w-4" /> {item.jam}
+                  <Clock className="h-4 w-4" /> {jam}
                 </div>
                 <h2 className="mt-1 text-2xl font-bold text-slate-900">
-                  {item.nama}
+                  {namaObyek}
                 </h2>
                 <div className="mt-1 flex items-center gap-1 text-sm">
                   <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <span className="font-semibold text-slate-700">
-                    {item.rating}
-                  </span>
-                  <span className="text-slate-400">
-                    &middot; {item.kategori}
-                  </span>
+                  <span className="font-semibold text-slate-700">4.7</span>
+                  <span className="text-slate-400">&middot; {kategori}</span>
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                  {item.desc}
+                  {deskripsi}
                 </p>
 
                 <Glass className="mt-4 flex items-center justify-between rounded-2xl p-4">
@@ -390,7 +299,7 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                       Harga tiket / orang
                     </p>
                     <p className="text-xl font-bold text-sky-600">
-                      {RUPIAH(item.harga)}
+                      {RUPIAH(harga)}
                     </p>
                   </div>
                   <ShieldCheck className="h-7 w-7 text-emerald-500" />
@@ -405,7 +314,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
               </motion.div>
             )}
 
-            {/* ------------------------ STEP: FORM ----------------------- */}
             {step === "form" && (
               <motion.div
                 key="form"
@@ -417,7 +325,7 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                 <h2 className="mt-2 text-xl font-bold text-slate-900">
                   Detail Pemesanan
                 </h2>
-                <p className="text-sm text-slate-500">{item.nama}</p>
+                <p className="text-sm text-slate-500">{namaObyek}</p>
 
                 <label className="mt-5 block text-xs font-medium text-slate-500">
                   Nama Pemesan
@@ -425,8 +333,8 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                 <div className="mt-1 flex items-center gap-2 rounded-2xl border border-white/60 bg-white/70 px-4 py-3 backdrop-blur">
                   <User className="h-4 w-4 text-slate-400" />
                   <input
-                    value={nama}
-                    onChange={(e) => setNama(e.target.value)}
+                    value={namaPemesan}
+                    onChange={(e) => setNamaPemesan(e.target.value)}
                     placeholder="cth. Budi Santoso"
                     className="w-full bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
                   />
@@ -473,7 +381,7 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                 <Glass className="mt-5 rounded-2xl p-4">
                   <div className="flex items-center justify-between text-sm text-slate-500">
                     <span>
-                      {RUPIAH(item.harga)} &times; {jumlah}
+                      {RUPIAH(harga)} &times; {jumlah}
                     </span>
                     <span>{RUPIAH(total)}</span>
                   </div>
@@ -502,7 +410,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
               </motion.div>
             )}
 
-            {/* ------------------------ STEP: PAY ------------------------ */}
             {step === "pay" && (
               <motion.div
                 key="pay"
@@ -554,7 +461,7 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                   <div className="mt-1 flex items-center justify-between text-sm">
                     <span className="text-slate-500">Tujuan</span>
                     <span className="font-medium text-slate-700">
-                      {item.nama}
+                      {namaObyek}
                     </span>
                   </div>
                   <div className="mt-1 flex items-center justify-between text-sm">
@@ -591,7 +498,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
               </motion.div>
             )}
 
-            {/* ------------------------ STEP: DONE ----------------------- */}
             {step === "done" && ticket && (
               <motion.div
                 key="done"
@@ -614,7 +520,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                   E-Tiket Anda sudah terbit &middot; bayar di lokasi
                 </p>
 
-                {/* TICKET */}
                 <div className="relative mt-5 overflow-hidden rounded-3xl border border-white/60 bg-white/80 shadow-xl backdrop-blur-xl">
                   <div className="flex items-center justify-between bg-sky-500 px-5 py-3 text-white">
                     <div className="flex items-center gap-2">
@@ -631,9 +536,12 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                   <div className="p-5">
                     <div className="flex gap-4">
                       <img
-                        src={ticket.img || "/placeholder.svg"}
+                        src={ticket.img}
                         alt={ticket.objekNama}
                         className="h-20 w-20 rounded-2xl object-cover"
+                        onError={(e) => {
+                          e.target.src = "/placeholder.svg";
+                        }}
                       />
                       <div className="min-w-0">
                         <p className="truncate text-base font-bold text-slate-900">
@@ -659,7 +567,6 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                     </div>
                   </div>
 
-                  {/* perforation */}
                   <div className="relative flex items-center">
                     <div className="h-5 w-5 -translate-x-2.5 rounded-full bg-slate-900/10" />
                     <div className="flex-1 border-t-2 border-dashed border-slate-200" />
@@ -672,7 +579,7 @@ function BookingSheet({ item, session, onClose, onIssued, onTriggerLogin }) {
                     </p>
                     <div className="mt-3 rounded-2xl bg-white p-3 shadow-inner">
                       <img
-                        src={qrSrc(ticketQrData, 220) || "/placeholder.svg"}
+                        src={qrSrc(ticketQrData, 220)}
                         alt="QR Tiket"
                         className="h-44 w-44"
                       />
@@ -768,6 +675,7 @@ function LoginAlert({ onLogin, onCancel }) {
     </motion.div>
   );
 }
+
 function TicketDetailView({ ticket, onClose }) {
   if (!ticket) return null;
   return (
@@ -824,6 +732,7 @@ function TicketDetailView({ ticket, onClose }) {
     </motion.div>
   );
 }
+
 const statusBadge = (t) => {
   if (t.used) return { txt: "Terpakai", cls: "bg-slate-200 text-slate-700" };
   if (new Date(t.expiryDate) < new Date())
@@ -861,7 +770,6 @@ function HistorySheet({ session, onClose }) {
           </button>
         </div>
 
-        {/* Container Scrollable */}
         <div className="flex-1 overflow-y-auto p-5 space-y-3">
           {list.length === 0 ? (
             <p className="text-center text-slate-400 py-10">
@@ -881,14 +789,15 @@ function HistorySheet({ session, onClose }) {
                       src={t.img}
                       className="h-16 w-16 rounded-xl object-cover"
                       alt=""
+                      onError={(e) => {
+                        e.target.src = "/placeholder.svg";
+                      }}
                     />
                     <div className="flex-1">
                       <p className="font-semibold text-sm">{t.objekNama}</p>
                       <p className="text-[11px] text-slate-500">
                         {t.tanggalKunjungan}
                       </p>
-
-                      {/* --- KETERANGAN STATUS --- */}
                       <div className="mt-2">
                         <span
                           className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${status.cls}`}
@@ -913,7 +822,6 @@ function HistorySheet({ session, onClose }) {
         </div>
       </motion.div>
 
-      {/* Modal Detail */}
       <AnimatePresence>
         {selectedTicket && (
           <TicketDetailView
@@ -928,6 +836,9 @@ function HistorySheet({ session, onClose }) {
 
 /* ------------------------------ MAIN ----------------------------------- */
 export default function Ticket() {
+  const [destinasi, setDestinasi] = useState([]); // State menampung data dari API asli
+  const [loading, setLoading] = useState(true);
+
   const [query, setQuery] = useState("");
   const [lokasi, setLokasi] = useState("Semua Lokasi");
   const [kategori, setKategori] = useState("Semua");
@@ -940,40 +851,74 @@ export default function Ticket() {
   const [showHistory, setShowHistory] = useState(false);
   const navigate = useNavigate();
 
+  // Ambil data dari API asli saat komponen mount
   useEffect(() => {
     setSession(readSession());
     setIssuedCount(readTickets().length);
+
+    const fetchDestinasi = async () => {
+      try {
+        const response = await fetch(
+          "https://rpp.bapenda.jatengprov.go.id/penatausahaan/api/pepakraja/obyek",
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer xV3nKd8QpL5rTyHuWc2MfZaJbE7sRt1",
+              "Content-Type": "application/json",
+            },
+          },
+        );
+        const resData = await response.json();
+
+        // Mengambil array data (biasanya berstruktur resData.data atau langsung resData)
+        const rawData = Array.isArray(resData) ? resData : resData.data || [];
+
+        // Saring: hanya data yang properti 'tiket' bernilai true
+        const filteredTiketTrue = rawData.filter((item) => item.tiket === true);
+
+        setDestinasi(filteredTiketTrue);
+      } catch (error) {
+        console.error("Gagal memuat data objek wisata dari API:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDestinasi();
   }, []);
 
-  // Klik "Pesan": wajib login dulu
   const handleSelect = (item) => {
     setSelected(item);
   };
 
-  // Tombol login pada SweetAlert — arahkan ke halaman login.
-  // Untuk demo: jika belum ada sesi, buat sesi dummy lalu lanjutkan pesanan.
   const handleLogin = () => {
     window.location.href = "/login";
   };
 
-  const lokasiList = useMemo(
-    () => [
-      "Semua Lokasi",
-      ...Array.from(new Set(DESTINASI.map((d) => d.lokasi))),
-    ],
-    [],
-  );
+  // List lokasi dinamis dari data API
+  const lokasiList = useMemo(() => {
+    const list = destinasi.map((d) => d.kab_kota || d.lokasi).filter(Boolean);
+    return ["Semua Lokasi", ...Array.from(new Set(list))];
+  }, [destinasi]);
 
+  // Melakukan filter berdasarkan pencarian kata kunci, lokasi, dan kategori
   const filtered = useMemo(() => {
-    return DESTINASI.filter((d) => {
+    return destinasi.filter((d) => {
+      const namaObyek = (d.nama_obyek || d.nama || "").toLowerCase();
+      const kotaObyek = (d.kab_kota || d.lokasi || "").toLowerCase();
+      const katObyek = d.kategori || "Umum";
+
       const okQuery =
-        d.nama.toLowerCase().includes(query.toLowerCase()) ||
-        d.lokasi.toLowerCase().includes(query.toLowerCase());
-      const okLokasi = lokasi === "Semua Lokasi" || d.lokasi === lokasi;
-      const okKategori = kategori === "Semua" || d.kategori === kategori;
+        namaObyek.includes(query.toLowerCase()) ||
+        kotaObyek.includes(query.toLowerCase());
+
+      const currentLokasi = d.kab_kota || d.lokasi;
+      const okLokasi = lokasi === "Semua Lokasi" || currentLokasi === lokasi;
+      const okKategori = kategori === "Semua" || katObyek === kategori;
+
       return okQuery && okLokasi && okKategori;
     });
-  }, [query, lokasi, kategori]);
+  }, [destinasi, query, lokasi, kategori]);
 
   const triggerLogin = (item) => {
     setPendingItem(item);
@@ -987,11 +932,12 @@ export default function Ticket() {
       <main className="mx-auto max-w-5xl px-4 pb-16 pt-6 mt-20">
         <button
           onClick={() => navigate("/")}
-          className=" top-4 left-4 mb-2 flex items-center gap-1.5 py-2 px-4 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-all active:scale-95 shadow-xl border border-white/10"
+          className="mb-4 flex items-center gap-1.5 py-2 px-4 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-all active:scale-95 shadow-xl border border-white/10"
         >
           <ChevronLeft className="w-5 h-5" />
           <span className="font-medium text-sm">Kembali</span>
         </button>
+
         {/* HERO */}
         <Glass className="overflow-hidden rounded-[2rem] p-6 sm:p-8">
           <div className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-600">
@@ -1009,7 +955,7 @@ export default function Ticket() {
             untuk saat ini.
           </p>
 
-          {/* SEARCH */}
+          {/* SEARCH & ACTION */}
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
             <div className="flex flex-1 items-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 backdrop-blur">
               <Search className="h-4 w-4 text-slate-400" />
@@ -1030,19 +976,14 @@ export default function Ticket() {
             >
               <SlidersHorizontal className="h-4 w-4" /> Filter
             </button>
-            <button
-              onClick={() => setShowHistory(true)}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700 transition active:scale-95"
-            >
-              {session && (
-                <button
-                  onClick={() => setShowHistory(true)}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700 transition active:scale-95"
-                >
-                  <History className="h-4 w-4" /> Riwayat
-                </button>
-              )}{" "}
-            </button>
+            {session && (
+              <button
+                onClick={() => setShowHistory(true)}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700 transition active:scale-95"
+              >
+                <History className="h-4 w-4" /> Riwayat
+              </button>
+            )}
           </div>
 
           {/* FILTER PANEL */}
@@ -1109,34 +1050,49 @@ export default function Ticket() {
           ))}
         </div>
 
-        {/* RESULTS */}
+        {/* RESULTS BAR */}
         <div className="mt-5 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-slate-900">
             {filtered.length} Destinasi
           </h2>
         </div>
 
-        <motion.div
-          layout
-          className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered.map((item, i) => (
-              <DestinationCard
-                key={item.id}
-                item={item}
-                index={i}
-                onSelect={handleSelect}
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        {filtered.length === 0 && (
-          <div className="mt-12 text-center text-slate-400">
-            <MapPin className="mx-auto h-10 w-10" />
-            <p className="mt-2 text-sm">Tidak ada destinasi yang cocok.</p>
+        {/* LOADING / MAIN CONTENT CONDITION */}
+        {loading ? (
+          <div className="mt-20 flex flex-col items-center justify-center text-slate-500">
+            <Loader2 className="h-10 w-10 animate-spin text-sky-500" />
+            <p className="mt-3 text-sm font-medium">Memuat objek wisata...</p>
           </div>
+        ) : filtered.length === 0 ? (
+          /* FALLBACK JIKA DATA TIDAK ADA ATAU KOSONG SETELAH FILTER */
+          <div className="mt-12 text-center text-slate-400">
+            <div className="mx-auto w-full max-w-sm overflow-hidden rounded-3xl border border-slate-100 shadow-md">
+              <img
+                src="/images/notiket.jpg"
+                alt="Data Tidak Ditemukan"
+                className="w-full h-auto object-cover"
+              />
+            </div>
+            <p className="mt-5 text-sm font-semibold text-slate-600">
+              Tidak ada destinasi tiket aktif yang cocok.
+            </p>
+          </div>
+        ) : (
+          <motion.div
+            layout
+            className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            <AnimatePresence mode="popLayout">
+              {filtered.map((item, i) => (
+                <DestinationCard
+                  key={item.id_obyek || item.id || i}
+                  item={item}
+                  index={i}
+                  onSelect={handleSelect}
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
         )}
       </main>
 
@@ -1149,7 +1105,7 @@ export default function Ticket() {
             session={session}
             onClose={() => setSelected(null)}
             onIssued={() => setIssuedCount((c) => c + 1)}
-            onTriggerLogin={triggerLogin} // <--- Tambahkan ini
+            onTriggerLogin={triggerLogin}
           />
         )}
       </AnimatePresence>

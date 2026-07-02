@@ -18,7 +18,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sparkles,
-  key,
 } from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";

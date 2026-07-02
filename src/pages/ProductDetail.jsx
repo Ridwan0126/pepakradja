@@ -36,6 +36,9 @@ export default function ProductDetail() {
 
   const [showInfo, setShowInfo] = useState(false); // State untuk popup cara pengajuan
 
+  const [showShareModal, setShowShareModal] = useState(false);
+  const currentUrl = window.location.href; // Mengambil URL lengkap saat ini
+
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -93,6 +96,23 @@ export default function ProductDetail() {
     }).format(new Date(date));
 
   const today = formatDate(new Date());
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.obyek_retribusi,
+          text: `Lihat detail obyek retribusi: ${product.obyek_retribusi}`,
+          url: window.location.href, // Ini akan mengambil URL real website Anda
+        });
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      // Jika tidak support (misal di desktop), tampilkan modal kustom
+      setShowShareModal(true);
+    }
+  };
 
   const handleSPTRD = () => {
     if (product?.is_laku) {
@@ -587,7 +607,10 @@ export default function ProductDetail() {
               </div>
 
               <div className="flex gap-3">
-                <button className="p-3 rounded-xl bg-gray-100 hover:bg-green-100">
+                <button
+                  onClick={handleShare}
+                  className="p-3 rounded-xl bg-gray-100 hover:bg-green-100"
+                >
                   <Share2 />
                 </button>
               </div>
@@ -1132,6 +1155,35 @@ export default function ProductDetail() {
             <button
               onClick={() => setShowInfo(false)}
               className="mt-6 w-full py-2 bg-gray-200 rounded-lg font-semibold hover:bg-gray-300"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+            <h3 className="font-bold text-lg mb-4">Bagikan Produk</h3>
+            <div className="flex gap-4">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(currentUrl)}`}
+                target="_blank"
+                className="flex-1 text-center bg-green-500 text-white p-2 rounded-lg"
+              >
+                WA
+              </a>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`}
+                target="_blank"
+                className="flex-1 text-center bg-blue-600 text-white p-2 rounded-lg"
+              >
+                FB
+              </a>
+            </div>
+            <button
+              onClick={() => setShowShareModal(false)}
+              className="mt-4 w-full text-gray-500"
             >
               Tutup
             </button>
