@@ -62,7 +62,7 @@ export default function Footer() {
                   <div className="absolute inset-0 bg-cyan-500/30 blur-xl rounded-full group-hover:scale-125 transition-all duration-500" />
 
                   <img
-                    src="/images/logopepakraja.png"
+                    src="/images/pepak1.png"
                     alt="PEPAK RAJA"
                     className="relative w-16 h-16 object-contain group-hover:scale-110 transition-all duration-500"
                   />

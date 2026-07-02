@@ -373,7 +373,7 @@ export default function Header() {
                       className="flex items-center justify-center"
                     >
                       <img
-                        src="/images/logopepakraja.png"
+                        src="/images/pepak1.png"
                         alt="Logo"
                         className="h-10 sm:h-12 w-auto object-contain"
                       />

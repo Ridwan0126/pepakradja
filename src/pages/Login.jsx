@@ -174,7 +174,7 @@ export default function Login() {
           >
             <div className="flex">
               <img
-                src="/images/logopepakraja.png"
+                src="/images/pepak1.png"
                 alt="PEPAKRAJA"
                 className="m-2 w-32 mb-8 drop-shadow-[0_0_40px_rgba(34,211,238,0.6)]"
               />
@@ -227,22 +227,17 @@ export default function Login() {
             <div className="backdrop-blur-3xl bg-white/10 border border-white/20 rounded-[32px] p-8 shadow-[0_0_80px_rgba(34,211,238,0.15)] text-white">
               {/* LOGO MOBILE */}
               <div className="flex justify-center lg:hidden mb-5">
-                <img
-                  src="/images/logopepakraja.png"
-                  alt="PEPAKRAJA"
-                  className="w-24"
-                />
                 <div className="flex">
                   <img
-                    src="/images/logopepakraja.png"
+                    src="/images/pepak1.png"
                     alt="PEPAKRAJA"
                     className="w-24"
                   />
 
                   <img
-                    src="/images/massajak.png"
+                    src="/images/bregada.png"
                     alt="PEPAKRAJA"
-                    className="w-24"
+                    className="w-24 ml-2"
                   />
                 </div>
               </div>

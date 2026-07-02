@@ -145,6 +145,7 @@ export default function TransactionStatus() {
         lokasi: item.obyek.alamat,
         nama_bendahara: pejabat.nama_bendahara,
         nip: pejabat.nip_bendahara,
+        uppd: data.uppd.nama,
       });
     } catch (err) {
       Swal.fire(
@@ -263,9 +264,7 @@ export default function TransactionStatus() {
                 <div className="text-center font-bold text-[14px]">
                   <div>PEMERINTAH PROVINSI JAWA TENGAH</div>
                   <div>BADAN PENGELOLA PENDAPATAN DAERAH</div>
-                  <div className="font-normal text-[12px]">
-                    UPPD Banjarnegara
-                  </div>
+                  <div className="font-normal text-[12px]">{data.uppd}</div>
                   <div className="text-right font-bold mt-4">{data.nik}</div>
                   <div className="border-b-2 border-black mt-2"></div>
                 </div>

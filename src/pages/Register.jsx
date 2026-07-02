@@ -652,7 +652,7 @@ overflow-hidden
               <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-white/10 rounded-full"></div>
               <div className="relative z-10">
                 <div className="flex mb-8">
-                  <img
+                  {/* <img
                     src="/images/logo-jateng-official.png"
                     alt="Logo"
                     className="w-32 h-32 object-contain drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]"
@@ -661,10 +661,10 @@ overflow-hidden
                     src="/images/logo-bapenda.png"
                     alt="Logo"
                     className="w-32 h-32 object-contain drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]"
-                  />
+                  /> */}
 
                   <img
-                    src="/images/logopepakraja.png"
+                    src="/images/pepak1.png"
                     alt="Logo"
                     className="w-32 h-32 object-contain drop-shadow-[0_0_25px_rgba(34,211,238,0.7)]"
                   />
