@@ -393,13 +393,13 @@ export default function TransactionStatus() {
                   NIP. {data.nip}
                 </div>
               </div>
+              {printInfo && (
+                <div className="absolute bottom-10 left-12 text-[10px] italic text-slate-500">
+                  <div>Dicetak oleh: {printInfo.username}</div>
+                  <div>Waktu: {printInfo.waktu}</div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
-        {printInfo && (
-          <div className="absolute bottom-10 left-12 text-[10px] italic text-slate-500">
-            <div>Dicetak oleh: {printInfo.username}</div>
-            <div>Waktu: {printInfo.waktu}</div>
           </div>
         )}
       </main>
