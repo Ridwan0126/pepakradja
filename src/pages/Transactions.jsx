@@ -47,6 +47,7 @@ export default function TransactionStatus() {
 
   // FUNGSI UNDUH PDF
   const handleDownloadPDF = async () => {
+    const session = JSON.parse(localStorage.getItem("wr_session"));
     const element = componentRef.current;
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL("image/png");
