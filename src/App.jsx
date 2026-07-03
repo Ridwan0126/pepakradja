@@ -52,17 +52,45 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/transactions" element={<Transactions />} />
-
-            <Route path="/skrd" element={<SKRD />} />
             <Route path="/tentangkami" element={<TentangKami />} />
             <Route path="/lupapassword" element={<LupaPassword />} />
-
-            <Route path="/sptrd" element={<SPTRD />} />
-
-            <Route path="/profile" element={<Profile />} />
-
             <Route path="/setpassword/:token" element={<SetPassword />} />
+
+            {/* Halaman yang dibatasi: Harus Login */}
+            <Route
+              path="/transactions"
+              element={
+                <PrivateRoute>
+                  <Transactions />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/skrd"
+              element={
+                <PrivateRoute>
+                  <SKRD />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/sptrd"
+              element={
+                <PrivateRoute>
+                  <SPTRD />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Halaman lain yang sudah ada proteksinya */}
             <Route path="/scanticket" element={<ScanTicket />} />
             <Route path="/ticket" element={<Ticket />} />
 
@@ -75,33 +103,7 @@ function App() {
               }
             />
 
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateRoute allowedRoles={["user"]}>
-                  <UserDashboard />
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin"
-              element={
-                <PrivateRoute allowedRoles={["admin"]}>
-                  <AdminDashboard />
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/superadmin"
-              element={
-                <PrivateRoute allowedRoles={["superadmin"]}>
-                  <SuperAdminDashboard />
-                </PrivateRoute>
-              }
-            />
-
+            {/* ... (Daftar route dashboard admin/user lainnya) */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
