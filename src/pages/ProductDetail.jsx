@@ -505,13 +505,15 @@ export default function ProductDetail() {
   };
 
   const handleBerminat = () => {
-    // Cek apakah nomor ada dan tidak kosong
     if (product?.no_wa_pengelola && product.no_wa_pengelola.trim() !== "") {
       const phone = product.no_wa_pengelola.replace(/[^0-9]/g, "");
-      window.open(`https://wa.me/${phone}`, "_blank");
+      const message = encodeURIComponent(
+        `Halo, saya ingin menanyakan bantuan terkait kendala pada aset dengan ID: ${product.id} (${product.obyek_retribusi}).`,
+      );
+      window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
     } else {
-      // Jika null atau string kosong, arahkan ke halaman wanotfound
-      navigate("/wanotfound");
+      // KIRM ID MELALUI STATE
+      navigate("/wanotfound", { state: { idAset: product.id } });
     }
   };
 
@@ -797,8 +799,9 @@ export default function ProductDetail() {
                 <div>
                   <p className="text-gray-500">WhatsApp</p>
                   {product?.no_wa_pengelola ? (
+                    // Ubah bagian ini di JSX Anda
                     <a
-                      href={`https://wa.me/${product.no_wa_pengelola.replace(/[^0-9]/g, "")}`}
+                      href={`https://wa.me/${product.no_wa_pengelola.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Halo, saya ingin menanyakan bantuan terkait kendala pada aset ID: ${product.id}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-green-600 hover:underline cursor-pointer"
