@@ -601,9 +601,16 @@ export default function ProductDetail() {
                 <h2 className="text-2xl font-bold">
                   {product.obyek_retribusi}
                 </h2>
-                <p className="text-gray-500 text-sm">
-                  {product.jenis?.jenis_retribusi}
-                </p>
+                <div>
+                  <h4 className="font-semibold mt-4 mb-2">Keterangan</h4>
+                  {product?.keterangan ? (
+                    <p className="text-sm text-gray-700">
+                      {product.keterangan}
+                    </p>
+                  ) : (
+                    <p className="font-semibold text-gray-400">-</p>
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-3">
@@ -617,14 +624,15 @@ export default function ProductDetail() {
             </div>
 
             {/* LOCATION */}
-            <div className="flex gap-3 mt-6 text-gray-600">
+            <p className="font-semibold mt-4 mb-2">Lokasi</p>
+            <div className="flex gap-3 text-gray-600">
               <MapPin />
               <span>{product.alamat}</span>
             </div>
 
             {/* PRICE */}
-            <div className="mt-6">
-              <p className="text-sm text-gray-500">Tarif</p>
+            <div className="mt-6 font-semibold">
+              <p className="">Tarif</p>
               {/* <h3 className="text-3xl font-bold text-green-600">
                 Rp{" "}
                 {parseInt(product.tariftbl?.tarif || 0).toLocaleString("id-ID")}
@@ -770,10 +778,9 @@ export default function ProductDetail() {
                   <p className="font-semibold">{product.uppd?.nama}</p>
                 </div>
 
-                {/* Tambahkan bagian ini untuk WA & Telp */}
-                {product.no_wa_pengelola && (
-                  <div>
-                    <p className="text-gray-500">WhatsApp</p>
+                <div>
+                  <p className="text-gray-500">WhatsApp</p>
+                  {product?.no_wa_pengelola ? (
                     <a
                       href={`https://wa.me/${product.no_wa_pengelola.replace(/[^0-9]/g, "")}`}
                       target="_blank"
@@ -782,20 +789,26 @@ export default function ProductDetail() {
                     >
                       {product.no_wa_pengelola}
                     </a>
-                  </div>
-                )}
+                  ) : (
+                    <p className="font-semibold text-gray-400">-</p>
+                  )}
+                </div>
 
-                {product.no_telp_pengelola && (
-                  <div>
-                    <p className="text-gray-500">Telepon</p>
+                <div>
+                  <p className="text-gray-500">Telepon</p>{" "}
+                  {product?.no_wa_pengelola ? (
                     <a
                       href={`tel:${product.no_telp_pengelola.replace(/[^0-9]/g, "")}`}
                       className="font-semibold text-blue-600 hover:underline cursor-pointer"
                     >
                       {product.no_telp_pengelola}
                     </a>
-                  </div>
-                )}
+                  ) : (
+                    <p className="font-semibold text-gray-400">-</p>
+                  )}
+                </div>
+
+                {/* Tambahkan bagian ini untuk WA & Telp */}
               </div>
             </div>
 
@@ -812,12 +825,12 @@ export default function ProductDetail() {
             </div> */}
 
             {/* KETERANGAN */}
-            {product.keterangan && (
+            {/* {product.keterangan && (
               <div>
                 <h4 className="font-semibold mb-2">Keterangan</h4>
                 <p className="text-sm text-gray-700">{product.keterangan}</p>
               </div>
-            )}
+            )} */}
           </div>
         </motion.div>
 
@@ -865,12 +878,16 @@ export default function ProductDetail() {
                 </div>
               </>
             ) : (
-              <button
-                onClick={handleSPTRD}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold text-lg hover:scale-105 transition"
+              <a
+                href={`https://wa.me/${product?.no_wa_pengelola?.replace(/[^0-9]/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full"
               >
-                Buat Perjanjian
-              </button>
+                <button className="w-full py-4 rounded-xl bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold text-lg hover:scale-105 transition">
+                  Berminat
+                </button>
+              </a>
             )}
 
             {showNotif && (
