@@ -49,12 +49,12 @@ const NotFound = () => {
             Data Belum Tersedia
           </h1>
           <p className="text-lg text-gray-600 mb-10 leading-relaxed font-light">
-            Saat ini nomor WhatsApp untuk pengelola aset{" "}
+            Saat ini nomor WhatsApp untuk pengelola Layanan/Jasa{" "}
             <span className="font-semibold text-blue-700">{namaObyek}</span>{" "}
-            belum tersedia di sistem. Silakan hubungi{" "}
+            belum tercantum di Aplikasi Pepak Radja. Silakan hubungi{" "}
             <span className="font-semibold text-blue-700">PIC Pepak Radja</span>{" "}
-            secara langsung untuk mendapatkan informasi detail dan bantuan lebih
-            lanjut mengenai aset yang Anda cari.
+            untuk mendapatkan bantuan dan informasi lebih lanjut mengenai
+            Layanan/Jasa yang Anda inginkan.
           </p>
         </div>
 
@@ -66,12 +66,12 @@ const NotFound = () => {
             whileTap={{ scale: 0.97 }}
             className="px-8 py-4 bg-white border border-gray-200 text-gray-700 font-semibold rounded-2xl transition-all duration-200 hover:border-gray-300 hover:shadow-sm"
           >
-            Terima kasih, Lain Kali
+            Terima kasih, Lain Kali saja
           </motion.a>
           <motion.a
             // Menggunakan template literal untuk menyisipkan pesan otomatis beserta ID objek
             href={`https://wa.me/62895330823300?text=${encodeURIComponent(
-              `Halo PIC Pepak Radja, saya ingin mendapatkan informasi terkait aset ${namaObyek} dengan ID: ${idAset}, namun nomor WhatsApp pengelolanya tidak tersedia di Aplikasi Pepak Radja. Mohon bantuannya.`,
+              `Halo PIC Pepak Radja, saya berminat dan ingin mendapatkan informasi terkait layanan/jasa ${namaObyek} dengan ID : ${idAset}, namun nomor WhatsApp pengelola tidak tercantum di Aplikasi Pepak Radja. Mohon bantuannya, terima kasih.`,
             )}`}
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
