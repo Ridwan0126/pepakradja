@@ -25,7 +25,7 @@ import TentangKami from "./pages/TentangKami";
 import ScanTicket from "./pages/ScanTicket";
 import Ticket from "./pages/Ticket";
 import LupaPassword from "./pages/LupaPassword";
-import WANotFound from "./pages/wanotfound";
+import WANotFound from "./pages/WANotFound";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
