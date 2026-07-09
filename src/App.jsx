@@ -25,6 +25,7 @@ import TentangKami from "./pages/TentangKami";
 import ScanTicket from "./pages/ScanTicket";
 import Ticket from "./pages/Ticket";
 import LupaPassword from "./pages/LupaPassword";
+import WANotFound from "./pages/wanotfound";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -55,6 +56,7 @@ function App() {
             <Route path="/tentangkami" element={<TentangKami />} />
             <Route path="/lupapassword" element={<LupaPassword />} />
             <Route path="/setpassword/:token" element={<SetPassword />} />
+            <Route path="/wanotfound" element={<WANotFound />} />
 
             {/* Halaman yang dibatasi: Harus Login */}
             <Route

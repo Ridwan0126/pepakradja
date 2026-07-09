@@ -504,6 +504,17 @@ export default function ProductDetail() {
     return new Intl.NumberFormat("id-ID").format(angka || 0);
   };
 
+  const handleBerminat = () => {
+    // Cek apakah nomor ada dan tidak kosong
+    if (product?.no_wa_pengelola && product.no_wa_pengelola.trim() !== "") {
+      const phone = product.no_wa_pengelola.replace(/[^0-9]/g, "");
+      window.open(`https://wa.me/${phone}`, "_blank");
+    } else {
+      // Jika null atau string kosong, arahkan ke halaman wanotfound
+      navigate("/wanotfound");
+    }
+  };
+
   return (
     <div className="bg-[#F2F2F7] min-h-screen pt-[80px]">
       <Header />
@@ -601,6 +612,11 @@ export default function ProductDetail() {
                 <h2 className="text-2xl font-bold">
                   {product.obyek_retribusi}
                 </h2>
+                <div className="mt-4">
+                  <p className="font-semibold">
+                    ID Barang / Jasa : {product.id}
+                  </p>
+                </div>
                 <div>
                   <h4 className="font-semibold mt-4 mb-2">Keterangan</h4>
                   {product?.keterangan ? (
@@ -878,16 +894,12 @@ export default function ProductDetail() {
                 </div>
               </>
             ) : (
-              <a
-                href={`https://wa.me/${product?.no_wa_pengelola?.replace(/[^0-9]/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full"
+              <button
+                onClick={handleBerminat}
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold text-lg hover:scale-105 transition"
               >
-                <button className="w-full py-4 rounded-xl bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold text-lg hover:scale-105 transition">
-                  Berminat
-                </button>
-              </a>
+                Berminat
+              </button>
             )}
 
             {showNotif && (
