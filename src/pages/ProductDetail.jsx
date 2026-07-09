@@ -513,7 +513,9 @@ export default function ProductDetail() {
       window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
     } else {
       // KIRM ID MELALUI STATE
-      navigate("/wanotfound", { state: { idAset: product.id } });
+      navigate("/wanotfound", {
+        state: { idAset: product.id, namaObyek: product.obyek_retribusi },
+      });
     }
   };
 
