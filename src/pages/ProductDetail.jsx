@@ -523,7 +523,8 @@ export default function ProductDetail() {
     <div className="bg-[#F2F2F7] min-h-screen pt-[80px]">
       <Header />
 
-      <div className="w-full pt-[30px]">
+      <div className="w-full max-w-7xl mx-auto px-4 pt-[30px]">
+        {" "}
         <div className="relative w-full h-[420px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg group">
           {/* 1. Tombol Back (Lebih Kontras dengan Shadow) */}
           <button
@@ -573,7 +574,7 @@ export default function ProductDetail() {
                 if (offset.x > 100)
                   setActiveImage((prev) => Math.max(prev - 1, 0));
               }}
-              className="w-full h-full object-cover cursor-grab active:cursor-grabbing"
+              className="w-full h-full object-contain cursor-grab active:cursor-grabbing"
             />
           </AnimatePresence>
 
@@ -584,14 +585,13 @@ export default function ProductDetail() {
             </h1>
           </div>
         </div>
-
         {/* THUMBNAILS */}
         <div className="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">
           {finalImages.map((img, index) => (
             <button
               key={index}
               onClick={() => setActiveImage(index)}
-              className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+              className={`flex-shrink-0 w-20 h-20 m-2 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
                 activeImage === index
                   ? "border-blue-500 scale-105 shadow-md"
                   : "border-transparent opacity-60 hover:opacity-100"
